@@ -40,12 +40,18 @@ function App() {
 				</a>
 			</div> */}
 			<h1>{channel}</h1>
-			<div className="card">
-				<button onClick={() => {
+			<div className="card"  style={{display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+				<button style={{margin: 3}} onClick={() => {
 					setCount((count) => count + 1)
 					sendCount((count || 0) + 1)
 				}}>
 					count is {count}
+				</button>
+				<button style={{margin: 3}} onClick={() => {
+					setCount(0)
+					sendCount(0)
+				}}>
+					reset count
 				</button>
 				<p>
 					Participants: {participants.map(p => p.username).join(', ')}
