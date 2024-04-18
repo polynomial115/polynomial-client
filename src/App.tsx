@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
-import './login'
+import './auth'
 import { conn } from './party'
 import { discordSdk } from './discord'
-import { Events, Types } from '@discord/embedded-app-sdk'
+import { useAuth } from './useAuth'
+import { useParticipants } from './useParticipants'
 
 const sendCount = (count: number) => {
 	console.log('updating count')
@@ -14,20 +15,19 @@ const sendCount = (count: number) => {
 
 function App() {
 	const [count, setCount] = useState(0)
-	const [participants, setParticipants] = useState([] as Types.GetActivityInstanceConnectedParticipantsResponse['participants'])
 	const [channel, setChannel] = useState('')
+
+	const participants = useParticipants()
 
 	useEffect(() => {
 		conn.send('')
 		conn.addEventListener('message', (event) => {
 			setCount(+event.data)
 		})
-		discordSdk.subscribe(Events.ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE, e => {
-			console.log(e)
-			setParticipants(e.participants)
-		})
 		discordSdk.commands.getChannel({channel_id: discordSdk.channelId! }).then(channel => setChannel(channel.name!))
 	}, [])
+
+	const auth = useAuth()
 
 	return (
 		<>
@@ -58,6 +58,7 @@ function App() {
 				</p>
 			</div>
 			<p className="read-the-docs">
+				Connected to Firebase as user {auth.claims.user_id as string} with roles {JSON.stringify(auth.claims.roles)}
 			</p>
 		</>
 	)
