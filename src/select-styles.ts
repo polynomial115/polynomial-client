@@ -46,7 +46,7 @@ export const selectStyles: StylesConfig<{ value: string, label: string, color?: 
 		};
 	},
 	multiValue: (styles, { data }) => {
-		const color = chroma(data.color);
+		const color = chroma(data.color ?? 'black');
 		return {
 			...styles,
 			backgroundColor: color.alpha(0.1).css(),
