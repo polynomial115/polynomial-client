@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import type { APIRole, APIGuildMember } from 'discord-api-types/v10'
 import { discordSdk } from "./discord";
 import Select from 'react-select';
-import { styles } from './App.tsx'
+import { styles } from './styles'
+import { selectStyles } from "./select-styles";
 
 enum TaskStatus {
     ToDo = 'To Do',
@@ -38,6 +39,7 @@ export function CreateTask() {
             name="roles"
             options={users.map(u => ({value: u.user!.username, label: u.user!.username}))}
             placeholder="Select assignees..."
+            styles={selectStyles}
         />
         <h3>ahahahah :3</h3>
     </div>

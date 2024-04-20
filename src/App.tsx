@@ -13,6 +13,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { CreateProject } from './CreateProject'
 import { CreateTask } from './CreateTask'
+import { styles } from './styles'
 
 const swal = withReactContent(Swal)
 
@@ -93,15 +94,6 @@ function App() {
 	)
 }
 
-export const styles = {
-    button: {
-        margin: 5,
-        // padding: 20
-    },
-	textBox: {
-		border: 1
-	}
-};
 
 export default App
 
