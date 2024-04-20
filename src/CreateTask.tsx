@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import type { APIGuildMember } from 'discord-api-types/v10'
-import { discordSdk } from "./discord";
+import {useEffect, useState} from "react";
+import type {APIGuildMember} from 'discord-api-types/v10';
+import {discordSdk} from "./discord";
 import Select from 'react-select';
-import { styles } from './styles'
-import { selectStyles } from "./select-styles";
+import {styles} from './styles';
+import {selectStyles} from "./select-styles";
 
 enum TaskStatus {
     ToDo = 4,
@@ -12,14 +12,15 @@ enum TaskStatus {
     Completed = 1
 }
 
-const taskStatuses = [
-    { value: TaskStatus.ToDo, label: 'To Do' },
-    { value: TaskStatus.Backlog, label: 'Backlog' },
-    { value: TaskStatus.InProgress, label: 'In Progress' },
-    { value: TaskStatus.Completed, label: 'Completed' }
-]
 
-enum Priority{
+const taskStatuses = [
+    {value: TaskStatus.ToDo, label: 'To Do'},
+    {value: TaskStatus.Backlog, label: 'Backlog'},
+    {value: TaskStatus.InProgress, label: 'In Progress'},
+    {value: TaskStatus.Completed, label: 'Completed'}
+];
+
+enum Priority {
     Urgent = 5,
     High = 4,
     Normal = 3,
@@ -28,56 +29,100 @@ enum Priority{
 }
 
 const priorities = [
-    { value: Priority.Urgent , label: 'Urgent'},
-    { value: Priority.High , label: 'High'},
-    { value: Priority.Normal , label: 'Normal'},
-    { value: Priority.Low , label: 'Low'},
-    { value: Priority.Others , label: 'Other'}
-]
+    {value: Priority.Urgent, label: 'Urgent'},
+    {value: Priority.High, label: 'High'},
+    {value: Priority.Normal, label: 'Normal'},
+    {value: Priority.Low, label: 'Low'},
+    {value: Priority.Others, label: 'Other'}
+];
 
 export function CreateTask() {
-    const [status, setStatus] = useState<TaskStatus>(TaskStatus.ToDo)
-    const [priority, setPriority] = useState<Priority>(Priority.Normal)
-    const [assignees, setAssignees] = useState<string[]>([])
-    const [users, setUsers] = useState<APIGuildMember[]>([])
+    const [status, setStatus] = useState<TaskStatus>(TaskStatus.ToDo);
+    const [priority, setPriority] = useState<Priority>(Priority.Normal);
+    const [assignees, setAssignees] = useState<string[]>([]);
+    const [users, setUsers] = useState<APIGuildMember[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [taskName, setTaskName] = useState("");
 
     useEffect(() => {
-		fetch(`/api/members/${discordSdk.guildId}`).then(r => r.json()).then(setUsers)
-	}, [])
-    
-    return <div style={{height: 400}}>
+        setLoading(true);
+        fetch(`/api/members/${discordSdk.guildId}`)
+            .then(response => response.json())
+            .then(data => {
+                try {
+                    if (Array.isArray(data)) {
+                        setUsers(data);
+                    } else {
+                        throw new Error("Data is not an array");
+                    }
+                } catch (error) {
+                    console.error("Error processing data:", error);
+                    setError("Failed to process user data.");
+                }
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("Failed to load users:", error);
+                setError('Could not load user data. Continue without selecting assignees.');
+                setLoading(false);
+            });
+
+    }, []);
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const taskData = {
+            name: taskName,
+            status,
+            priority,
+            assignees
+        };
+        console.log(taskData); // Ideally replace with an API call to save the task
+    };
+
+    const isFormValid = () => taskName.trim().length > 0;
+
+    return <div style={{height: 'auto', padding: '20px'}}>
         <h2>Create Task</h2>
-        <form>Task name: <input style={styles.textBox} type="text"></input></form>
-        <br></br>
-        <Select
-            isMulti = {true}
-            name="assignees"
-            options={users.map(u => ({value: u.user!.username, label: u.user!.username}))}
-            placeholder="Select assignees..."
-            onChange={(selected) => setAssignees(selected.map(e => e.value as string))}
-            styles={selectStyles}
-        />
-        <br></br>
-        <Select
-            isMulti = {false}
-            name="task priority"
-            options={priorities}
-            placeholder="Select task priority..."
-            onChange={(selected) => setPriority(selected!.value as Priority)}
-            styles={selectStyles}
-        />
-        <br></br>
-        <Select
-            isMulti = {false}
-            name="task status"
-            options={taskStatuses}
-            placeholder="Select task status..."
-            onChange={(selected) => setStatus(selected!.value as TaskStatus)}
-            styles={selectStyles}
-        />
-        <h3>A A :3</h3>
-    </div>
+        {error && <div style={{color: 'red', marginBottom: '10px'}}>{error}</div>}
+        <form onSubmit={handleSubmit}>
+            <label htmlFor="task-name">Task name:</label>
+            <input
+                id="task-name"
+                style={styles.textBox}
+                type="text"
+                value={taskName}
+                onChange={(e) => setTaskName(e.target.value)}
+                placeholder="Enter task name"
+            />
+            <br/>
+            <Select
+                isMulti={true}
+                name="assignees"
+                options={users.map(u => ({value: u.user!.username, label: u.user!.username}))}
+                placeholder="Select assignees..."
+                onChange={(selected) => setAssignees(selected.map(e => e.value))}
+                styles={selectStyles}
+                isDisabled={!!error}
+            />
+            <br/>
+            <Select
+                name="task priority"
+                options={priorities}
+                placeholder="Select task priority..."
+                onChange={(selected) => setPriority(selected!.value as Priority)}
+                styles={selectStyles}
+            />
+            <br/>
+            <Select
+                name="task status"
+                options={taskStatuses}
+                placeholder="Select task status..."
+                onChange={(selected) => setStatus(selected!.value as TaskStatus)}
+                styles={selectStyles}
+            />
+            <button type="submit" disabled={!isFormValid()}>Create Task</button>
+        </form>
+    </div>;
 }
-
-
-
