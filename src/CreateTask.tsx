@@ -26,18 +26,20 @@ export function CreateTask() {
     const [users, setUsers] = useState<APIGuildMember[]>([])
 
     useEffect(() => {
-		fetch(`/api/users/${discordSdk.guildId}`).then(r => r.json()).then(setUsers)
-        console.log(users)
-	}, [users])
+		fetch(`/api/members/${discordSdk.guildId}`).then(r => r.json()).then(setUsers)
+	}, [])
     
     return <div style={{height: 400}}>
         <h2>Create Task</h2>
         <form>Task name: <input style={styles.textBox} type="text"></input></form>
+        <br></br>
         <Select 
             isMulti
-            // options={}
+            name="roles"
+            options={users.map(u => ({value: u.user!.username, label: u.user!.username}))}
+            placeholder="Select assignees..."
         />
-        <h3>task task task tsak task tsak tsak task</h3>
+        <h3>ahahahah :3</h3>
     </div>
 }
 
