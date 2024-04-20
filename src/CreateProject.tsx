@@ -44,7 +44,7 @@ export function CreateProject() {
 			isMulti
 			options={roles.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
 			styles={selectStyles}
-			onChange={(selected) => setSelectedRoles(selected.map(e => e.value))}
+			onChange={(selected) => setSelectedRoles(selected.map(e => e.value as string))}
 			name="roles"
 		/>
 		<button type="submit">Submit</button>

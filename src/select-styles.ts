@@ -4,7 +4,7 @@ import type { StylesConfig } from 'react-select'
 // Implements dark theme and role colors for react select
 // https://react-select.com/home#custom-styles
 
-export const selectStyles: StylesConfig<{ value: string, label: string, color?: string }> = {
+export const selectStyles: StylesConfig<{ value: unknown, label: string, color?: string }> = {
 	control: (provided) => ({
 		...provided,
 		background: '#202225',
@@ -63,5 +63,9 @@ export const selectStyles: StylesConfig<{ value: string, label: string, color?: 
 			backgroundColor: data.color,
 			color: 'white',
 		},
+	}),
+	singleValue: (styles) => ({
+		...styles,
+		color: 'white',
 	}),
 }
