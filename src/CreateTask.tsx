@@ -4,6 +4,8 @@ import {discordSdk} from "./discord";
 import Select from 'react-select';
 import {styles} from './styles';
 import {selectStyles} from "./select-styles";
+import {db} from "./firebase";
+import {QueryDocumentSnapshot, collection, getDocs, query, where} from 'firebase/firestore';
 
 enum TaskStatus {
     ToDo = 4,
@@ -70,7 +72,7 @@ export function CreateTask() {
 
     }, []);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const taskData = {
             name: taskName,
@@ -78,51 +80,58 @@ export function CreateTask() {
             priority,
             assignees
         };
-        console.log(taskData); // Ideally replace with an API call to save the task
+        try {
+            const docRef = await addDoc(collection(db, "tasks"), taskData);
+            setError("Created task successfully.");
+        } catch (error) {
+            console.error("Error adding document: ", error);
+            setError("Failed to create task.");
+        }
     };
-
     const isFormValid = () => taskName.trim().length > 0;
 
-    return <div style={{height: 'auto', padding: '20px'}}>
-        <h2>Create Task</h2>
-        {error && <div style={{color: 'red', marginBottom: '10px'}}>{error}</div>}
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="task-name">Task name:</label>
-            <input
-                id="task-name"
-                style={styles.textBox}
-                type="text"
-                value={taskName}
-                onChange={(e) => setTaskName(e.target.value)}
-                placeholder="Enter task name"
-            />
-            <br/>
-            <Select
-                isMulti={true}
-                name="assignees"
-                options={users.map(u => ({value: u.user!.username, label: u.user!.username}))}
-                placeholder="Select assignees..."
-                onChange={(selected) => setAssignees(selected.map(e => e.value))}
-                styles={selectStyles}
-                isDisabled={!!error}
-            />
-            <br/>
-            <Select
-                name="task priority"
-                options={priorities}
-                placeholder="Select task priority..."
-                onChange={(selected) => setPriority(selected!.value as Priority)}
-                styles={selectStyles}
-            />
-            <br/>
-            <Select
-                name="task status"
-                options={taskStatuses}
-                placeholder="Select task status..."
-                onChange={(selected) => setStatus(selected!.value as TaskStatus)}
-                styles={selectStyles}
-            />
-            <button type="submit" disabled={!isFormValid()}>Create Task</button>
-        </form>
-    </div>;
+     return (
+        <div style={{height: 'auto', padding: '20px'}}>
+            <h2>Create Task</h2>
+            {error && <div style={{color: 'red', marginBottom: '10px'}}>{error}</div>}
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="task-name">Task name:</label>
+                <input
+                    id="task-name"
+                    style={styles.textBox}
+                    type="text"
+                    value={taskName}
+                    onChange={(e) => setTaskName(e.target.value)}
+                    placeholder="Enter task name"
+                />
+                <br />
+                <Select
+                    isMulti={true}
+                    name="assignees"
+                    options={users.map(u => ({value: u.user!.username, label: u.user!.username}))}
+                    placeholder="Select assignees..."
+                    onChange={(selected) => setAssignees(selected.map(e => e.value))}
+                    styles={selectStyles}
+                    isDisabled={!!error}
+                />
+                <br />
+                <Select
+                    name="task priority"
+                    options={priorities}
+                    placeholder="Select task priority..."
+                    onChange={(selected) => setPriority(selected!.value as Priority)}
+                    styles={selectStyles}
+                />
+                <br />
+                <Select
+                    name="task status"
+                    options={taskStatuses}
+                    placeholder="Select task status..."
+                    onChange={(selected) => setStatus(selected!.value as TaskStatus)}
+                    styles={selectStyles}
+                />
+                <button type="submit" disabled={!isFormValid()}>Create Task</button>
+            </form>
+        </div>
+    );
 }
