@@ -9,23 +9,23 @@ import { useAuth } from './useAuth'
 import { useParticipants } from './useParticipants'
 import { db } from "./firebase"
 import { QueryDocumentSnapshot, collection, getDocs, query, where } from 'firebase/firestore'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import { CreateProject } from './CreateProject'
+import { CreateTask } from './CreateTask'
+
+const swal = withReactContent(Swal)
+
 const sendCount = (count: number) => {
-	console.log('updating count')
 	conn.send(String(count))
 }
-
-
 
 function App() {
 	const [count, setCount] = useState(0)
 	const [channel, setChannel] = useState('')
 	const [projects, setProjects] = useState<QueryDocumentSnapshot[]>([])
-	const [roles, setRoles] = useState<any[]>([])
 
-	const participants = useParticipants()
-
-	const projectsQuery = query(collection(db, "projects"), where("guildId" , "==", discordSdk.guildId))
-	
+	const participants = useParticipants()	
 
 	useEffect(() => {
 		conn.send('')
@@ -34,18 +34,14 @@ function App() {
 		})
 		discordSdk.commands.getChannel({channel_id: discordSdk.channelId! }).then(channel => setChannel(channel.name!))
 
+		const projectsQuery = query(collection(db, "projects"), where("guildId" , "==", discordSdk.guildId))
 		getDocs(projectsQuery).then(p => {
 			console.log(p)
 			setProjects(p.docs)
 		})
-
-		fetch(`/api/roles/${discordSdk.guildId}`).then(r => r.json()).then(setRoles)
-
 	}, [])
 
 	const auth = useAuth()
-	
-	
 
 	return (
 		<>
@@ -59,19 +55,31 @@ function App() {
 			</div> */}
 			<h1>{channel}</h1>
 			<p>Projects: {projects.length}</p>
-			<p>Roles: {roles.map(r => r.name)}</p>
+			<button style={styles.button} onClick={() => swal.fire({
+				html: <CreateProject />,
+				background: '#202225',
+				color: 'white',
+				showConfirmButton: false
+			})}>Create Project</button>
+
+			<button style={styles.button} onClick={() => swal.fire({
+				html: <CreateTask />,
+				background: '#202225',
+				color: 'white',
+				showConfirmButton: false
+			})}>Create Task</button>
 			<div className="card"  style={{display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-				<button style={{margin: 3}} onClick={() => {
+				<button style={styles.button} onClick={() => {
 					setCount((count) => count + 1)
 					sendCount((count || 0) + 1)
 				}}>
-					count is {count}
+					Count is equal to the value of {count}
 				</button>
-				<button style={{margin: 3}} onClick={() => {
+				<button style={styles.button} onClick={() => {
 					setCount(0)
 					sendCount(0)
 				}}>
-					reset count
+					Reset Count
 				</button>
 				<p>
 					Participants: {participants.map(p => p.username).join(', ')}
@@ -85,4 +93,15 @@ function App() {
 	)
 }
 
+export const styles = {
+    button: {
+        margin: 5,
+        // padding: 20
+    },
+	textBox: {
+		border: 1
+	}
+};
+
 export default App
+

@@ -11,12 +11,18 @@
   },
   "dependencies": {
     "@discord/embedded-app-sdk": "^1.1.2",
+    "chroma-js": "^2.4.2",
+    "discord-api-types": "^0.37.79",
     "firebase": "^10.11.0",
     "partysocket": "^1.0.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-select": "^5.8.0",
+    "sweetalert2": "^11.10.8",
+    "sweetalert2-react-content": "^5.0.7"
   },
   "devDependencies": {
+    "@types/chroma-js": "^2.4.4",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",

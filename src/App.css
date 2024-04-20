@@ -40,3 +40,13 @@
 .read-the-docs {
   color: #888;
 }
+
+.BackgroundColour {
+  background-color: rgb(255, 255, 255);
+}
+
+@media (prefers-color-scheme: dark) {
+  .BackgroundColour {
+    background-color: rgb(32, 64, 37); 
+  }
+}
