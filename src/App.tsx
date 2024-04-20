@@ -68,7 +68,7 @@ function App() {
 				color: 'white',
 				showConfirmButton: false
 			})}>Create Task</button>
-			<div className="card"  style={{display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+			<div className="card">
 				<button style={styles.button} onClick={() => {
 					setCount((count) => count + 1)
 					sendCount((count || 0) + 1)
