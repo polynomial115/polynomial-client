@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
 import type { APIGuildMember } from 'discord-api-types/v10'
 import { discordSdk } from "./discord";
 import Select from 'react-select';
@@ -19,20 +19,24 @@ const taskStatuses = [
     { value: TaskStatus.Completed, label: 'Completed' }
 ]
 
-enum Priority{
-    Urgent = 5,
-    High = 4,
-    Normal = 3,
-    Low = 2,
-    Others = 1
+enum Priority {
+    Urgent = 3,
+    High = 2,
+    Normal = 1,
+    Low = 0,
 }
 
+// interface PriorityObj {
+//     value: Priority,
+//     label: string,
+//     color: string,
+// }
+
 const priorities = [
-    { value: Priority.Urgent , label: 'Urgent'},
-    { value: Priority.High , label: 'High'},
-    { value: Priority.Normal , label: 'Normal'},
-    { value: Priority.Low , label: 'Low'},
-    { value: Priority.Others , label: 'Other'}
+    {value: Priority.Low, label: 'Low', color: 'lightgreen'},
+    {value: Priority.Normal, label: 'Normal', color: 'yellow'}, 
+    {value: Priority.High, label: 'High',  color: 'orange'},
+    {value: Priority.Urgent, label: 'Urgent', color: 'crimson'},
 ]
 
 export function CreateTask() {
@@ -40,6 +44,7 @@ export function CreateTask() {
     const [priority, setPriority] = useState<Priority>(Priority.Normal)
     const [assignees, setAssignees] = useState<string[]>([])
     const [users, setUsers] = useState<APIGuildMember[]>([])
+    const [whichButtonClicked, setWhichButtonClicked] = useState<Priority>()
 
     useEffect(() => {
 		fetch(`/api/members/${discordSdk.guildId}`).then(r => r.json()).then(setUsers)
@@ -58,14 +63,26 @@ export function CreateTask() {
             styles={selectStyles}
         />
         <br></br>
-        <Select
+        {/* <Select
             isMulti = {false}
             name="task priority"
             options={priorities}
             placeholder="Select task priority..."
             onChange={(selected) => setPriority(selected!.value as Priority)}
             styles={selectStyles}
-        />
+        /> */}
+        <h3>Set Priority</h3>
+        <div>
+            {priorities.map(p => (
+                <Fragment key={p.value}>
+                    <button onClick={() => {
+                        setPriority(p.value)
+                        setWhichButtonClicked(p.value)
+                    }}
+                    style={{marginTop: 5, marginBottom: 5, marginLeft: 0, marginRight: 0, borderRadius: 0, paddingTop: 12, paddingBottom: 12, paddingLeft: 24, paddingRight: 24, color: (p.value === whichButtonClicked) ?  'black' : p.color, backgroundColor: (p.value === whichButtonClicked) ? p.color : ''}}>{p.label}</button>
+                </Fragment>
+            ))}
+        </div>  
         <br></br>
         <Select
             isMulti = {false}
@@ -75,9 +92,7 @@ export function CreateTask() {
             onChange={(selected) => setStatus(selected!.value as TaskStatus)}
             styles={selectStyles}
         />
-        <h3>A A :3</h3>
+        <h3>{priorities[priority].label}</h3>
+        <button>Create Task</button>
     </div>
 }
-
-
-

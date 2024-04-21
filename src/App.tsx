@@ -56,27 +56,27 @@ function App() {
 			</div> */}
 			<h1>{channel}</h1>
 			<p>Projects: {projects.length}</p>
-			<button style={styles.button} onClick={() => swal.fire({
+			<button onClick={() => swal.fire({
 				html: <CreateProject />,
 				background: '#202225',
 				color: 'white',
 				showConfirmButton: false
 			})}>Create Project</button>
 
-			<button style={styles.button} onClick={() => swal.fire({
+			<button onClick={() => swal.fire({
 				html: <CreateTask />,
 				background: '#202225',
 				color: 'white',
 				showConfirmButton: false
 			})}>Create Task</button>
 			<div className="card">
-				<button style={styles.button} onClick={() => {
+				<button onClick={() => {
 					setCount((count) => count + 1)
 					sendCount((count || 0) + 1)
 				}}>
 					Count is equal to the value of {count}
 				</button>
-				<button style={styles.button} onClick={() => {
+				<button onClick={() => {
 					setCount(0)
 					sendCount(0)
 				}}>
