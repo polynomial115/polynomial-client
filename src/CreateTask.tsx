@@ -5,7 +5,7 @@ import Select from 'react-select';
 import {styles} from './styles';
 import {selectStyles} from "./select-styles";
 import {db} from "./firebase";
-import {QueryDocumentSnapshot, collection, getDocs, query, where} from 'firebase/firestore';
+import {addDoc, collection} from 'firebase/firestore';
 
 enum TaskStatus {
     ToDo = 4,
@@ -90,7 +90,7 @@ export function CreateTask() {
     };
     const isFormValid = () => taskName.trim().length > 0;
 
-     return (
+    return (
         <div style={{height: 'auto', padding: '20px'}}>
             <h2>Create Task</h2>
             {error && <div style={{color: 'red', marginBottom: '10px'}}>{error}</div>}
@@ -102,9 +102,10 @@ export function CreateTask() {
                     type="text"
                     value={taskName}
                     onChange={(e) => setTaskName(e.target.value)}
+                    required={true}
                     placeholder="Enter task name"
                 />
-                <br />
+                <br/>
                 <Select
                     isMulti={true}
                     name="assignees"
@@ -114,23 +115,25 @@ export function CreateTask() {
                     styles={selectStyles}
                     isDisabled={!!error}
                 />
-                <br />
+                <br/>
                 <Select
+                    isMulti={false}
                     name="task priority"
                     options={priorities}
                     placeholder="Select task priority..."
                     onChange={(selected) => setPriority(selected!.value as Priority)}
                     styles={selectStyles}
                 />
-                <br />
+                <br/>
                 <Select
+                    isMulti={false}
                     name="task status"
                     options={taskStatuses}
                     placeholder="Select task status..."
                     onChange={(selected) => setStatus(selected!.value as TaskStatus)}
                     styles={selectStyles}
                 />
-                <button type="submit" disabled={!isFormValid()}>Create Task</button>
+                <button type="submit">Create Task</button>
             </form>
         </div>
     );
