@@ -1,10 +1,11 @@
-import {Fragment, useEffect, useState} from "react";
+import {Component, Fragment, useEffect, useState} from "react";
 import {discordSdk} from "./discord";
 import Select from 'react-select';
 import {styles} from './styles';
 import {selectStyles} from "./select-styles";
 import {db} from "./firebase";
 import {addDoc, collection} from 'firebase/firestore';
+import { GuildMember, User } from "discord.js";
 
 interface ChoiceButtonProperties {
     value: number
@@ -41,14 +42,19 @@ const priorities: Array<ChoiceButtonProperties> = [
     {value: Priority.Urgent, label: 'Urgent', color: 'crimson'},
 ];
 
-function ChoiceButtons({choices, setValueCallback}) {
-    const [whichButtonClicked, setWhichButtonClicked] = useState()
+interface ChoiceButtonProps {
+    choices: Array<ChoiceButtonProperties>
+    setValueCallback: (value: number) => void
+}
+
+const ChoiceButtons: React.FC<ChoiceButtonProps> = (props) => {
+    const [whichButtonClicked, setWhichButtonClicked] = useState<number>()
     return (
         <div>
-            {choices.map((p) => (
+            {props.choices.map((p) => (
                 <Fragment key={p.value}>
                     <button type="button" onClick={() => {
-                        setValueCallback(p.value);
+                        props.setValueCallback(p.value);
                         setWhichButtonClicked(p.value);
                     }}
                             style={{
@@ -73,7 +79,7 @@ export function CreateTask() {
         taskName: "",
     });
     const [users, setUsers] = useState([]);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -91,7 +97,7 @@ export function CreateTask() {
             });
     }, []);
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = async (event: Event) => {
         event.preventDefault();
         if (!formData.taskName.trim()) {
             setError("Please enter a task name.");
@@ -99,7 +105,7 @@ export function CreateTask() {
         }
 
         const taskData = {...formData, assignees: formData.assignees};
-        delete taskData.whichButtonClicked; // Remove UI-only state property
+        // delete taskData.whichButtonClicked; // Remove UI-only state property
 
         try {
             const docRef = await addDoc(collection(db, "tasks"), taskData);
@@ -110,7 +116,7 @@ export function CreateTask() {
         }
     };
 
-    const handleInputChange = (name, value) => setFormData(prev => ({...prev, [name]: value}));
+    const handleInputChange = (name: string, value: TaskStatus | Priority | Array<GuildMember> | string) => setFormData(prev => ({...prev, [name]: value}));
 
     return (
         <div style={{padding: '20px'}}>
@@ -130,7 +136,7 @@ export function CreateTask() {
                 <Select
                     isMulti={true}
                     name="assignees"
-                    options={users.map(u => ({value: u.user!.username, label: u.user!.username}))}
+                    options={users.map((u: GuildMember) => ({value: u.user!.username, label: u.user!.username}))}
                     placeholder="Select assignees..."
                     onChange={(selected) => handleInputChange('assignees', selected.map(e => e.value))}
                     styles={selectStyles}
@@ -138,28 +144,20 @@ export function CreateTask() {
                 <h3 style={{marginBottom: 5}}>Set Priority</h3>
                 <ChoiceButtons
                     choices={priorities}
-                    setValueCallback={(value) => handleInputChange('priority', value)}
+                    setValueCallback={(value: Priority) => handleInputChange('priority', value)}
                 />
                 {/* <br/> */}
 
                 <h3 style={{marginBottom: 5}}>Set Status</h3>
                 <ChoiceButtons
                     choices={taskStatuses}
-                    setValueCallback={(value) => handleInputChange('status', value)}
-                />
-                <Select
-                    isMulti={false}
-                    name="task status"
-                    options={taskStatuses}
-                    placeholder="Select task status..."
-                    onChange={(selected) => handleInputChange('status', selected.value)}
-                    styles={selectStyles}
+                    setValueCallback={(value: TaskStatus) => handleInputChange('status', value)}
                 />
                 <text>Priority: {priorities[formData.priority].label}</text>
                 <br/>
                 <text>Status: {taskStatuses[formData.status].label}</text>
                 <br/>
-                <button type="submit" style={styles.button}>Create Task</button>
+                <button type="submit">Create Task</button>
             </form>
         </div>
     );
