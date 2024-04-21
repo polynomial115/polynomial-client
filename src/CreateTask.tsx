@@ -133,7 +133,7 @@ export function CreateTask() {
                     onChange={(selected) => setStatus(selected!.value as TaskStatus)}
                     styles={selectStyles}
                 />
-                <button type="submit">Create Task</button>
+                <button type="submit">Create Task</button>  {/* disabled={!isFormValid()} */}
             </form>
         </div>
     );
