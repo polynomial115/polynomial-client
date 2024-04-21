@@ -6,19 +6,24 @@ import {selectStyles} from "./select-styles";
 import {db} from "./firebase";
 import {addDoc, collection} from 'firebase/firestore';
 
-enum TaskStatus {
-    ToDo = 4,
-    Backlog = 3,
-    InProgress = 2,
-    Completed = 1
+interface ChoiceButtonProperties {
+    value: number
+    label: string
+    color: string
 }
 
+enum TaskStatus {
+    ToDo = 0,
+    Backlog = 1,
+    InProgress = 2,
+    Completed = 3
+}
 
-const taskStatuses = [
-    {value: TaskStatus.ToDo, label: 'To Do'},
-    {value: TaskStatus.Backlog, label: 'Backlog'},
-    {value: TaskStatus.InProgress, label: 'In Progress'},
-    {value: TaskStatus.Completed, label: 'Completed'}
+const taskStatuses: Array<ChoiceButtonProperties> = [
+    {value: TaskStatus.ToDo, label: 'To Do', color: 'crimson'},
+    {value: TaskStatus.Backlog, label: 'Backlog', color: 'orange'},
+    {value: TaskStatus.InProgress, label: 'In Progress', color: 'lightblue'},
+    {value: TaskStatus.Completed, label: 'Completed', color: 'lightgreen'}
 ];
 
 enum Priority {
@@ -28,24 +33,26 @@ enum Priority {
     Low = 0,
 }
 
-const priorities = [
+
+const priorities: Array<ChoiceButtonProperties> = [
     {value: Priority.Low, label: 'Low', color: 'lightgreen'},
     {value: Priority.Normal, label: 'Normal', color: 'yellow'},
     {value: Priority.High, label: 'High', color: 'orange'},
     {value: Priority.Urgent, label: 'Urgent', color: 'crimson'},
 ];
 
-function PriorityButtons({priorities, setPriority, whichButtonClicked, setWhichButtonClicked}) {
+function ChoiceButtons({choices, setValueCallback}) {
+    const [whichButtonClicked, setWhichButtonClicked] = useState()
     return (
         <div>
-            {priorities.map(p => (
+            {choices.map((p) => (
                 <Fragment key={p.value}>
                     <button type="button" onClick={() => {
-                        setPriority(p.value);
+                        setValueCallback(p.value);
                         setWhichButtonClicked(p.value);
                     }}
                             style={{
-                                marginTop: 5, marginBottom: 5, marginLeft: 0, marginRight: 0,
+                                fontWeight: 'bolder', marginTop: 5, marginBottom: 5, marginLeft: 0, marginRight: 0,
                                 borderRadius: 0, paddingTop: 12, paddingBottom: 12, paddingLeft: 24, paddingRight: 24,
                                 color: (p.value === whichButtonClicked) ? 'black' : p.color,
                                 backgroundColor: (p.value === whichButtonClicked) ? p.color : ''
@@ -64,7 +71,6 @@ export function CreateTask() {
         priority: Priority.Normal,
         assignees: [],
         taskName: "",
-        whichButtonClicked: null
     });
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
@@ -129,14 +135,18 @@ export function CreateTask() {
                     onChange={(selected) => handleInputChange('assignees', selected.map(e => e.value))}
                     styles={selectStyles}
                 />
-                <h3>Set Priority</h3>
-                <PriorityButtons
-                    priorities={priorities}
-                    setPriority={(value) => handleInputChange('priority', value)}
-                    whichButtonClicked={formData.whichButtonClicked}
-                    setWhichButtonClicked={(value) => handleInputChange('whichButtonClicked', value)}
+                <h3 style={{marginBottom: 5}}>Set Priority</h3>
+                <ChoiceButtons
+                    choices={priorities}
+                    setValueCallback={(value) => handleInputChange('priority', value)}
                 />
-                <br/>
+                {/* <br/> */}
+
+                <h3 style={{marginBottom: 5}}>Set Status</h3>
+                <ChoiceButtons
+                    choices={taskStatuses}
+                    setValueCallback={(value) => handleInputChange('status', value)}
+                />
                 <Select
                     isMulti={false}
                     name="task status"
@@ -145,6 +155,10 @@ export function CreateTask() {
                     onChange={(selected) => handleInputChange('status', selected.value)}
                     styles={selectStyles}
                 />
+                <text>Priority: {priorities[formData.priority].label}</text>
+                <br/>
+                <text>Status: {taskStatuses[formData.status].label}</text>
+                <br/>
                 <button type="submit" style={styles.button}>Create Task</button>
             </form>
         </div>
