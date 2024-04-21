@@ -1,4 +1,4 @@
-import {Fragment, ReactElement,useEffect, useState} from "react";
+import {Fragment, useEffect, useState} from "react";
 import type {APIGuildMember} from 'discord-api-types/v10';
 import {discordSdk} from "./discord";
 import Select from 'react-select';
@@ -29,16 +29,10 @@ enum Priority {
     Low = 0,
 }
 
-// interface PriorityObj {
-//     value: Priority,
-//     label: string,
-//     color: string,
-// }
-
 const priorities = [
     {value: Priority.Low, label: 'Low', color: 'lightgreen'},
     {value: Priority.Normal, label: 'Normal', color: 'yellow'},
-    {value: Priority.High, label: 'High',  color: 'orange'},
+    {value: Priority.High, label: 'High', color: 'orange'},
     {value: Priority.Urgent, label: 'Urgent', color: 'crimson'},
 ];
 
@@ -84,9 +78,9 @@ export function CreateTask() {
     };
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div style={{padding: '20px'}}>
             <h2>Create Task</h2>
-            {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+            {error && <div style={{color: 'red', marginBottom: '10px'}}>{error}</div>}
             <form onSubmit={handleSubmit}>
                 <label htmlFor="task-name">Task name:</label>
                 <input
@@ -101,7 +95,7 @@ export function CreateTask() {
                 <Select
                     isMulti={true}
                     name="assignees"
-                    options={users.map(u => ({ value: u.user!.username, label: u.user!.username }))}
+                    options={users.map(u => ({value: u.user!.username, label: u.user!.username}))}
                     placeholder="Select assignees..."
                     onChange={(selected) => setAssignees(selected.map(e => e.value))}
                     styles={selectStyles}
@@ -114,12 +108,19 @@ export function CreateTask() {
                                 setPriority(p.value);
                                 setWhichButtonClicked(p.value);
                             }}
-                            style={{
-                                marginTop: 5, marginBottom: 5, marginLeft: 0, marginRight: 0,
-                                borderRadius: 0, paddingTop: 12, paddingBottom: 12, paddingLeft: 24, paddingRight: 24,
-                                color: (p.value === whichButtonClicked) ? 'black' : p.color,
-                                backgroundColor: (p.value === whichButtonClicked) ? p.color : ''
-                            }}>
+                                    style={{
+                                        marginTop: 5,
+                                        marginBottom: 5,
+                                        marginLeft: 0,
+                                        marginRight: 0,
+                                        borderRadius: 0,
+                                        paddingTop: 12,
+                                        paddingBottom: 12,
+                                        paddingLeft: 24,
+                                        paddingRight: 24,
+                                        color: (p.value === whichButtonClicked) ? 'black' : p.color,
+                                        backgroundColor: (p.value === whichButtonClicked) ? p.color : ''
+                                    }}>
                                 {p.label}
                             </button>
                         </Fragment>
