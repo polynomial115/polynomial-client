@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {Fragment, ReactElement,useEffect, useState} from "react";
 import type {APIGuildMember} from 'discord-api-types/v10';
 import {discordSdk} from "./discord";
 import Select from 'react-select';
@@ -23,19 +23,23 @@ const taskStatuses = [
 ];
 
 enum Priority {
-    Urgent = 5,
-    High = 4,
-    Normal = 3,
-    Low = 2,
-    Others = 1
+    Urgent = 3,
+    High = 2,
+    Normal = 1,
+    Low = 0,
 }
 
+// interface PriorityObj {
+//     value: Priority,
+//     label: string,
+//     color: string,
+// }
+
 const priorities = [
-    {value: Priority.Urgent, label: 'Urgent'},
-    {value: Priority.High, label: 'High'},
-    {value: Priority.Normal, label: 'Normal'},
-    {value: Priority.Low, label: 'Low'},
-    {value: Priority.Others, label: 'Other'}
+    {value: Priority.Low, label: 'Low', color: 'lightgreen'},
+    {value: Priority.Normal, label: 'Normal', color: 'yellow'},
+    {value: Priority.High, label: 'High',  color: 'orange'},
+    {value: Priority.Urgent, label: 'Urgent', color: 'crimson'},
 ];
 
 export function CreateTask() {
@@ -43,43 +47,33 @@ export function CreateTask() {
     const [priority, setPriority] = useState<Priority>(Priority.Normal);
     const [assignees, setAssignees] = useState<string[]>([]);
     const [users, setUsers] = useState<APIGuildMember[]>([]);
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [taskName, setTaskName] = useState("");
+    const [whichButtonClicked, setWhichButtonClicked] = useState<Priority | null>(null);
 
     useEffect(() => {
-        setLoading(true);
         fetch(`/api/members/${discordSdk.guildId}`)
             .then(response => response.json())
-            .then(data => {
-                try {
-                    if (Array.isArray(data)) {
-                        setUsers(data);
-                    } else {
-                        throw new Error("Data is not an array");
-                    }
-                } catch (error) {
-                    console.error("Error processing data:", error);
-                    setError("Failed to process user data.");
-                }
-                setLoading(false);
-            })
+            .then(data => setUsers(data))
             .catch(error => {
                 console.error("Failed to load users:", error);
                 setError('Could not load user data. Continue without selecting assignees.');
-                setLoading(false);
             });
-
     }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        if (!taskName.trim()) {
+            setError("Please enter a task name.");
+            return;
+        }
         const taskData = {
             name: taskName,
             status,
             priority,
             assignees
         };
+
         try {
             const docRef = await addDoc(collection(db, "tasks"), taskData);
             setError("Created task successfully.");
@@ -88,12 +82,11 @@ export function CreateTask() {
             setError("Failed to create task.");
         }
     };
-    const isFormValid = () => taskName.trim().length > 0;
 
     return (
-        <div style={{height: 'auto', padding: '20px'}}>
+        <div style={{ padding: '20px' }}>
             <h2>Create Task</h2>
-            {error && <div style={{color: 'red', marginBottom: '10px'}}>{error}</div>}
+            {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
             <form onSubmit={handleSubmit}>
                 <label htmlFor="task-name">Task name:</label>
                 <input
@@ -102,28 +95,36 @@ export function CreateTask() {
                     type="text"
                     value={taskName}
                     onChange={(e) => setTaskName(e.target.value)}
-                    required={true}
-                    placeholder="Enter task name"
+                    required
                 />
                 <br/>
                 <Select
                     isMulti={true}
                     name="assignees"
-                    options={users.map(u => ({value: u.user!.username, label: u.user!.username}))}
+                    options={users.map(u => ({ value: u.user!.username, label: u.user!.username }))}
                     placeholder="Select assignees..."
                     onChange={(selected) => setAssignees(selected.map(e => e.value))}
                     styles={selectStyles}
-                    isDisabled={!!error}
                 />
-                <br/>
-                <Select
-                    isMulti={false}
-                    name="task priority"
-                    options={priorities}
-                    placeholder="Select task priority..."
-                    onChange={(selected) => setPriority(selected!.value as Priority)}
-                    styles={selectStyles}
-                />
+                <h3>Set Priority</h3>
+                <div>
+                    {priorities.map(p => (
+                        <Fragment key={p.value}>
+                            <button onClick={() => {
+                                setPriority(p.value);
+                                setWhichButtonClicked(p.value);
+                            }}
+                            style={{
+                                marginTop: 5, marginBottom: 5, marginLeft: 0, marginRight: 0,
+                                borderRadius: 0, paddingTop: 12, paddingBottom: 12, paddingLeft: 24, paddingRight: 24,
+                                color: (p.value === whichButtonClicked) ? 'black' : p.color,
+                                backgroundColor: (p.value === whichButtonClicked) ? p.color : ''
+                            }}>
+                                {p.label}
+                            </button>
+                        </Fragment>
+                    ))}
+                </div>
                 <br/>
                 <Select
                     isMulti={false}
@@ -133,7 +134,7 @@ export function CreateTask() {
                     onChange={(selected) => setStatus(selected!.value as TaskStatus)}
                     styles={selectStyles}
                 />
-                <button type="submit">Create Task</button>  {/* disabled={!isFormValid()} */}
+                <button type="submit" style={styles.button}>Create Task</button>
             </form>
         </div>
     );
