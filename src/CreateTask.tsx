@@ -40,7 +40,7 @@ function PriorityButtons({priorities, setPriority, whichButtonClicked, setWhichB
         <div>
             {priorities.map(p => (
                 <Fragment key={p.value}>
-                    <button onClick={() => {
+                    <button type="button" onClick={() => {
                         setPriority(p.value);
                         setWhichButtonClicked(p.value);
                     }}
