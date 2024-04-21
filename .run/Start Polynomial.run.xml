@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Start Polynomial" type="CompoundRunConfigurationType">
+    <toRun name="Start Polynomial Backend" type="js.build_tools.npm" />
+    <toRun name="Start Polynomial Frontend" type="js.build_tools.npm" />
+    <method v="2" />
+  </configuration>
+</component>
