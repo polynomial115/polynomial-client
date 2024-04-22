@@ -6,6 +6,11 @@ import { AuthContext } from './useAuth'
 
 const firebaseAuth = getAuth()
 
+interface LoginResponse {
+	discordToken: string
+	firebaseToken: string
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [auth, setAuth] = useState<IdTokenResult | null>(null)
 	const [loadingState, setLoadingState] = useState('Loading...')
@@ -40,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 					guild: discordSdk.guildId
 				})
 			})
-			const { discordToken, firebaseToken } = await response.json().catch(() => setLoadingState('Failed to log in'))
+			const { discordToken, firebaseToken } = (await response.json().catch(() => setLoadingState('Failed to log in'))) as LoginResponse
 
 			console.log({ discordToken, firebaseToken })
 
