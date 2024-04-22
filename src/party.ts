@@ -7,7 +7,7 @@ console.log(location)
 // It handles reconnection logic, buffering messages while it's offline, and more.
 export const conn = new PartySocket({
 	host: location.origin + '/api',
-	room: discordSdk.instanceId,
+	room: discordSdk.instanceId
 })
 
 console.log('party')

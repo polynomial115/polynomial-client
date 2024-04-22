@@ -19,12 +19,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			setLoadingState('Connecting to Discord...')
 
 			// Pop open the OAuth permission modal and request for access to scopes listed in scope array below
-			const {code} = await discordSdk.commands.authorize({
+			const { code } = await discordSdk.commands.authorize({
 				client_id: import.meta.env.VITE_DISCORD_CLIENT_ID,
 				response_type: 'code',
 				state: '',
 				prompt: 'none',
-				scope: ['identify', 'guilds', 'guilds.members.read'],
+				scope: ['identify', 'guilds', 'guilds.members.read']
 			})
 
 			setLoadingState('Logging in...')
@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			const response = await fetch('/api/login', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json',
+					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
 					code,
