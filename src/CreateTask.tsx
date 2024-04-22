@@ -1,11 +1,11 @@
-import {Component, Fragment, useEffect, useState} from "react";
+import {FormEvent, Fragment, useEffect, useState} from "react";
 import {discordSdk} from "./discord";
 import Select from 'react-select';
 import {styles} from './styles';
 import {selectStyles} from "./select-styles";
 import {db} from "./firebase";
 import {addDoc, collection} from 'firebase/firestore';
-import { GuildMember, User } from "discord.js";
+import { APIGuildMember } from "discord-api-types/v10";
 
 interface ChoiceButtonProperties {
     value: number
@@ -71,8 +71,15 @@ const ChoiceButtons: React.FC<ChoiceButtonProps> = (props) => {
     );
 }
 
+interface FormData {
+    status: TaskStatus
+    priority: Priority
+    assignees: string[]
+    taskName: string
+}
+
 export function CreateTask() {
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         status: TaskStatus.ToDo,
         priority: Priority.Normal,
         assignees: [],
@@ -80,24 +87,24 @@ export function CreateTask() {
     });
     const [users, setUsers] = useState([]);
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    // const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setLoading(true);
+        // setLoading(true);
         fetch(`/api/members/${discordSdk.guildId}`)
             .then(response => response.json())
             .then(data => {
                 setUsers(data);
-                setLoading(false);
+                // setLoading(false);
             })
             .catch(error => {
                 console.error("Failed to load users:", error);
                 setError('Could not load user data.');
-                setLoading(false);
+                // setLoading(false);
             });
     }, []);
 
-    const handleSubmit = async (event: Event) => {
+    const handleSubmit = async (event: FormEvent) => {
         event.preventDefault();
         if (!formData.taskName.trim()) {
             setError("Please enter a task name.");
@@ -108,7 +115,7 @@ export function CreateTask() {
         // delete taskData.whichButtonClicked; // Remove UI-only state property
 
         try {
-            const docRef = await addDoc(collection(db, "tasks"), taskData);
+            await addDoc(collection(db, "tasks"), taskData);
             setError("Created task successfully.");
         } catch (error) {
             console.error("Error adding document:", error);
@@ -116,7 +123,7 @@ export function CreateTask() {
         }
     };
 
-    const handleInputChange = (name: string, value: TaskStatus | Priority | Array<GuildMember> | string) => setFormData(prev => ({...prev, [name]: value}));
+    const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => setFormData(prev => ({...prev, [name]: value}));
 
     return (
         <div style={{padding: '20px'}}>
@@ -136,9 +143,9 @@ export function CreateTask() {
                 <Select
                     isMulti={true}
                     name="assignees"
-                    options={users.map((u: GuildMember) => ({value: u.user!.username, label: u.user!.username}))}
+                    options={users.map((m: APIGuildMember) => ({value: m.user!.username, label: m.user!.username}))}
                     placeholder="Select assignees..."
-                    onChange={(selected) => handleInputChange('assignees', selected.map(e => e.value))}
+                    onChange={(selected) => handleInputChange('assignees', selected.map(e => e.value as string))}
                     styles={selectStyles}
                 />
                 <h3 style={{marginBottom: 5}}>Set Priority</h3>
