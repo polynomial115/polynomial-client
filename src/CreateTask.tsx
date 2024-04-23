@@ -1,5 +1,3 @@
-
-
 import { FormEvent, Fragment, useEffect, useState } from 'react'
 import { discordSdk } from './discord'
 import Select from 'react-select'
