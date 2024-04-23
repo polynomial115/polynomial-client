@@ -167,9 +167,9 @@ export function CreateTask() {
 
 				<h3 style={{ marginBottom: 5 }}>Set Status</h3>
 				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} />
-				<text>Priority: {priorities[formData.priority].label}</text>
+				<p>Priority: {priorities[formData.priority].label}</p>
 				<br />
-				<text>Status: {taskStatuses[formData.status].label}</text>
+				<p>Status: {taskStatuses[formData.status].label}</p>
 				<br />
 				<button type="submit">Create Task</button>
 			</form>

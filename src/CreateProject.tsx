@@ -8,6 +8,23 @@ import { db } from './firebase'
 
 const transformColor = (color: number) => (color ? '#' + color.toString(16).padStart(6, '0') : 'white')
 
+	// export interface DatabaseProject {
+	// 	name: string,
+	// 	id: string,
+	// 	project: Project,
+	// }
+
+	// export interface Project {
+	// 	guildId: string,
+	// 	name: string,
+	// 	managerRoles: Array<string>,
+	// 	memberRoles: Array<string>,
+	// 	managerUsers: Array<string>,
+	// 	memberUsers: Array<string>,
+	// 	tasks: Array<string>, // Temporary, change this into tasks interface later
+	// 	timestamp: string
+	// }
+
 export function CreateProject() {
 	const [roles, setRoles] = useState<APIRole[]>([])
 	const [selectedRoles, setSelectedRoles] = useState<string[]>([])
