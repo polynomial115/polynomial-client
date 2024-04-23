@@ -2,7 +2,6 @@ import { Fragment, useEffect, useState } from "react"
 import { db } from './firebase'
 import { discordSdk } from './discord'
 import { QueryDocumentSnapshot, collection, query, where, getDocs } from "firebase/firestore"
-import { styles } from './styles'
 // import { Project, DatabaseProject } from "./CreateProject"
 
 export function ProjectView() {
