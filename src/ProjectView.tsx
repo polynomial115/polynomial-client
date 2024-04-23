@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { db } from './firebase'
 import { discordSdk } from './discord'
 import { QueryDocumentSnapshot, collection, query, where, getDocs } from 'firebase/firestore'
@@ -17,13 +17,11 @@ export function ProjectView() {
 	return (
 		<div className="flexbox-container">
 			{projects.map(p => (
-				<Fragment key={p.id}>
-					<div style={projectViewStyles.projectCard} className="projectCard">
-						<p>ID: {p.id}</p>
-						<p>{p.data.name}</p>
-						<p>Guild: {p.data.name}</p>
-					</div>
-				</Fragment>
+				<div style={projectViewStyles.projectCard} className="projectCard" key={p.id}>
+					<p>ID: {p.id}</p>
+					<p>{p.data.name}</p>
+					<p>Guild: {p.data.name}</p>
+				</div>
 			))}
 		</div>
 	)

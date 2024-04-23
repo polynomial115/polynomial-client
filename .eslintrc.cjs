@@ -17,7 +17,10 @@ module.exports = {
 		'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 		'@typescript-eslint/no-unused-vars': 'warn',
 		'@typescript-eslint/no-floating-promises': 'off',
-		'@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }]
+		'@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }],
+		'react/jsx-fragments': 'error',
+		'react/jsx-no-useless-fragment': 'error',
+		'react/destructuring-assignment': 'error'
 	},
 	parserOptions: {
 		ecmaVersion: 'latest',
