@@ -78,7 +78,7 @@ export function CreateTask() {
 
 		const taskData = { ...formData, assignees: formData.assignees }
 		// delete taskData.whichButtonClicked; // Remove UI-only state property
-
+		
 		try {
 			await addDoc(collection(db, 'tasks'), taskData)
 			setError('Created task successfully.')

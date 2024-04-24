@@ -15,6 +15,13 @@ import { CreateTask } from './CreateTask'
 import { ProjectView } from './ProjectView'
 // import { ListView } from './ListView'
 
+import { AppBar } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Toolbar } from "@mui/material";
+import { Typography } from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
+
+
 const swal = withReactContent(Swal)
 
 const sendCount = (count: number) => {
@@ -46,64 +53,72 @@ function App() {
 
 	return (
 		<>
-			{/* <div>
-				<a href="https://vitejs.dev" target="_blank">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
-			</div> */}
-			<h1>{channel}</h1>
-			<p>Projects: {projects.length}</p>
-			<button
-				onClick={() =>
-					swal.fire({
-						html: <CreateProject />,
-						background: '#202225',
-						color: 'white',
-						showConfirmButton: false
-					})
-				}
-			>
-				Create Project
-			</button>
-			<ProjectView></ProjectView>
-			<button
-				onClick={() =>
-					swal.fire({
-						html: <CreateTask />,
-						background: '#202225',
-						color: 'white',
-						showConfirmButton: false
-					})
-				}
-			>
-				Create Task
-			</button>
-			<div className="card">
-				<button
-					onClick={() => {
-						setCount(count => count + 1)
-						sendCount((count || 0) + 1)
-					}}
-				>
-					Count is equal to the value of {count}
-				</button>
-				<button
-					onClick={() => {
-						setCount(0)
-						sendCount(0)
-					}}
-				>
-					Reset Count
-				</button>
-				<p>Participants: {participants.map(p => p.username).join(', ')}</p>
+			<div className="AppBarCSS">
+				<AppBar position="static">
+					<Toolbar color="primary">
+						<IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+							<MenuIcon />
+						</IconButton>
+
+						<Typography variant="h6" color="inherit" component="div">Polynomial Dashboard - &nbsp;</Typography>
+						<h3>{channel}</h3>
+					</Toolbar>
+				</AppBar>
 			</div>
 
-			<p className="read-the-docs">
-				Connected to Firebase as user {auth.claims.user_id as string} with roles {JSON.stringify(auth.claims.roles)}
-			</p>
+
+			<div className="RootProject">
+				<h1>{channel}</h1>
+				<p>Projects: {projects.length}</p>
+				<button
+					onClick={() =>
+						swal.fire({
+							html: <CreateProject />,
+							background: '#202225',
+							color: 'white',
+							showConfirmButton: false
+						})
+					}
+				>
+					Create Project
+				</button>
+				<ProjectView></ProjectView>
+				<button
+					onClick={() =>
+						swal.fire({
+							html: <CreateTask />,
+							background: '#202225',
+							color: 'white',
+							showConfirmButton: false
+						})
+					}
+				>
+					Create Task
+				</button>
+				<div className="card">
+					<button
+						onClick={() => {
+							setCount(count => count + 1)
+							sendCount((count || 0) + 1)
+						}}
+					>
+						Count is equal to the value of {count}
+					</button>
+					<button
+						onClick={() => {
+							setCount(0)
+							sendCount(0)
+						}}
+					>
+						Reset Count
+					</button>
+					<p>Participants: {participants.map(p => p.username).join(', ')}</p>
+				</div>
+
+				<p className="read-the-docs">
+					Connected to Firebase as user {auth.claims.user_id as string} with roles {JSON.stringify(auth.claims.roles)}
+				</p>
+			</div>
 		</>
 	)
 }
