@@ -37,7 +37,7 @@ function App() {
 
 		const projectsQuery = query(collection(db, 'projects'), where('guildId', '==', discordSdk.guildId))
 		getDocs(projectsQuery).then(p => {
-			console.log("projects", p)
+			console.log('projects', p)
 			setProjects(p.docs)
 		})
 	}, [])

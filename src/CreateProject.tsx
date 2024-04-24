@@ -8,8 +8,6 @@ import { db } from './firebase'
 
 const transformColor = (color: number) => (color ? '#' + color.toString(16).padStart(6, '0') : 'white')
 
-
-
 export function CreateProject() {
 	const [roles, setRoles] = useState<APIRole[]>([])
 	const [selectedRoles, setSelectedRoles] = useState<string[]>([])
