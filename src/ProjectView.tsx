@@ -4,6 +4,12 @@ import { discordSdk } from './discord'
 import { QueryDocumentSnapshot, collection, query, where, getDocs } from 'firebase/firestore'
 // import { Project, DatabaseProject } from "./CreateProject"
 
+import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2'
+import { EditProject } from './EditProject'
+
+const swal = withReactContent(Swal)
+
 export function ProjectView() {
 	const [projects, setProjects] = useState<QueryDocumentSnapshot[]>([])
 
@@ -15,12 +21,26 @@ export function ProjectView() {
 		})
 	}, [])
 	return (
-		<div className="flexbox-container">
+		<div className="flexbox-container ProjectCardContainer">
 			{projects.map(p => (
-				<div style={projectViewStyles.projectCard} className="projectCard" key={p.id}>
+				<div style={projectViewStyles.projectCard} className="projectCard">
 					<p>ID: {p.id}</p>
 					<p>{p.data.name}</p>
 					<p>Guild: {p.data.name}</p>
+					<button
+						className="EditProjectButton"
+						onClick={ () => {
+							console.log('Edit project button clicked')
+							swal.fire({
+								html: <EditProject />,
+								background: '#202225',
+								color: 'white',
+								showConfirmButton: false
+							})
+						} }
+					 >
+						Edit Project
+					</button>
 				</div>
 			))}
 		</div>

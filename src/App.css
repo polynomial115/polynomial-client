@@ -66,3 +66,13 @@
 		background-color: rgb(32, 64, 37);
 	}
 }
+
+
+.ProjectCardContainer {
+	overflow: scroll;
+}
+
+.EditProjectButton {
+	background-color: #202225;
+}
+
