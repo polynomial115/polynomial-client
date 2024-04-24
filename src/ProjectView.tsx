@@ -1,17 +1,18 @@
 import { Fragment, useEffect, useState } from 'react'
 import { db } from './firebase'
 import { discordSdk } from './discord'
-import { QueryDocumentSnapshot, collection, query, where, getDocs } from 'firebase/firestore'
+import { collection, query, where, getDocs } from 'firebase/firestore'
+import { Project } from './types'
 // import { Project, DatabaseProject } from "./CreateProject"
 
 export function ProjectView() {
-	const [projects, setProjects] = useState<QueryDocumentSnapshot[]>([])
+	const [projects, setProjects] = useState<Project[]>([])
 
 	useEffect(() => {
 		const projectsQuery = query(collection(db, 'projects'), where('guildId', '==', discordSdk.guildId))
 		getDocs(projectsQuery).then(p => {
 			console.log(p)
-			setProjects(p.docs)
+			setProjects(p.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Project))
 		})
 	}, [])
 	return (
@@ -19,9 +20,9 @@ export function ProjectView() {
 			{projects.map(p => (
 				<Fragment key={p.id}>
 					<div style={projectViewStyles.projectCard} className="projectCard">
-						<p>ID: {p.id}</p>
-						<p>{p.data.name}</p>
-						<p>Guild: {p.data.name}</p>
+						<p>ID: |{p.id}|</p>
+						<p>{p.name}</p>
+						<p>Guild: {p.guildId}</p>
 					</div>
 				</Fragment>
 			))}
