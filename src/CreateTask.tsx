@@ -1,4 +1,4 @@
-import { FormEvent, Fragment, useEffect, useState } from 'react'
+import { FormEvent, useEffect, useState } from 'react'
 import { discordSdk } from './discord'
 import Select from 'react-select'
 import { styles } from './styles'
@@ -6,12 +6,7 @@ import { selectStyles } from './select-styles'
 import { db } from './firebase'
 import { addDoc, collection } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
-
-interface ChoiceButtonProperties {
-	value: number
-	label: string
-	color: string
-}
+import { type Choice, ChoiceButtons } from './ChoiceButtons'
 
 enum TaskStatus {
 	ToDo = 0,
@@ -20,7 +15,7 @@ enum TaskStatus {
 	Completed = 3
 }
 
-const taskStatuses: ChoiceButtonProperties[] = [
+const taskStatuses: Choice[] = [
 	{ value: TaskStatus.ToDo, label: 'To Do', color: 'crimson' },
 	{ value: TaskStatus.Backlog, label: 'Backlog', color: 'orange' },
 	{ value: TaskStatus.InProgress, label: 'In Progress', color: 'lightblue' },
@@ -34,52 +29,12 @@ enum Priority {
 	Low = 0
 }
 
-const priorities: ChoiceButtonProperties[] = [
+const priorities: Choice[] = [
 	{ value: Priority.Low, label: 'Low', color: 'lightgreen' },
 	{ value: Priority.Normal, label: 'Normal', color: 'yellow' },
 	{ value: Priority.High, label: 'High', color: 'orange' },
 	{ value: Priority.Urgent, label: 'Urgent', color: 'crimson' }
 ]
-
-interface ChoiceButtonProps {
-	choices: ChoiceButtonProperties[]
-	setValueCallback: (value: number) => void
-}
-
-const ChoiceButtons = (props: ChoiceButtonProps) => {
-	const [whichButtonClicked, setWhichButtonClicked] = useState<number>()
-	return (
-		<div>
-			{props.choices.map(p => (
-				<Fragment key={p.value}>
-					<button
-						type="button"
-						onClick={() => {
-							props.setValueCallback(p.value)
-							setWhichButtonClicked(p.value)
-						}}
-						style={{
-							fontWeight: 'bolder',
-							marginTop: 5,
-							marginBottom: 5,
-							marginLeft: 0,
-							marginRight: 0,
-							borderRadius: 0,
-							paddingTop: 12,
-							paddingBottom: 12,
-							paddingLeft: 24,
-							paddingRight: 24,
-							color: p.value === whichButtonClicked ? 'black' : p.color,
-							backgroundColor: p.value === whichButtonClicked ? p.color : ''
-						}}
-					>
-						{p.label}
-					</button>
-				</Fragment>
-			))}
-		</div>
-	)
-}
 
 interface FormData {
 	status: TaskStatus
@@ -141,7 +96,14 @@ export function CreateTask() {
 			{error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
 			<form onSubmit={handleSubmit}>
 				<label htmlFor="task-name">Task name:</label>
-				<input id="task-name" style={styles.textBox} type="text" value={formData.taskName} onChange={e => handleInputChange('taskName', e.target.value)} required />
+				<input
+					id="task-name"
+					style={styles.textBox}
+					type="text"
+					value={formData.taskName}
+					onChange={e => handleInputChange('taskName', e.target.value)}
+					required
+				/>
 				<br />
 				<Select
 					isMulti={true}
