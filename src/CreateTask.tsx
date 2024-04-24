@@ -96,14 +96,7 @@ export function CreateTask() {
 			{error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
 			<form onSubmit={handleSubmit}>
 				<label htmlFor="task-name">Task name:</label>
-				<input
-					id="task-name"
-					style={styles.textBox}
-					type="text"
-					value={formData.taskName}
-					onChange={e => handleInputChange('taskName', e.target.value)}
-					required
-				/>
+				<input id="task-name" style={styles.textBox} type="text" value={formData.taskName} onChange={e => handleInputChange('taskName', e.target.value)} required />
 				<br />
 				<Select
 					isMulti={true}
