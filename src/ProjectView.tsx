@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { db } from './services/firebase'
 import { discordSdk } from './services/discord'
-import { collection, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore'
+import { collection, onSnapshot, query, QueryDocumentSnapshot, where } from 'firebase/firestore'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { EditProject } from './components/EditProject'
@@ -14,14 +14,19 @@ export function ProjectView() {
 
 	useEffect(() => {
 		const projectsQuery = query(collection(db, 'projects'), where('guildId', '==', discordSdk.guildId))
-		try {
-			getDocs(projectsQuery).then(p => {
-				setProjects(p.docs)
-			})
-		} catch (error) {
-			console.error('Error fetching projects:', error)
-			Error('Error fetching projects:')
-		}
+
+		// Cast the unsubscribe function to the correct type
+		const unsubscribe: () => void = onSnapshot(
+			projectsQuery,
+			snapshot => {
+				setProjects(snapshot.docs)
+			},
+			error => {
+				console.error('Error fetching projects:', error)
+			}
+		)
+
+		return () => unsubscribe()
 	}, [])
 
 	const handleCardClick = (projectId: string) => {
