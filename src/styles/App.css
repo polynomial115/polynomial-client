@@ -28,7 +28,7 @@
 .flexbox-container {
 	display: flex;
 	flex-direction: row;
-	margin: 10;
+	margin:10px;
 }
 
 .projectCard {
@@ -38,7 +38,6 @@
 
 .projectCard:hover {
 	transform: scale(1.025);
-	/* background-color: ; */
 }
 
 @keyframes logo-spin {
@@ -76,7 +75,7 @@
 
 
 .ProjectCardContainer {
-	overflow: scroll;
+  overflow-x: auto;
 }
 
 .EditProjectButton {
@@ -89,4 +88,5 @@
 	padding: 0;
 	margin: 0;
 	min-width: 100vw;
+	overflow-x:hidden;
 }

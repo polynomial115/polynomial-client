@@ -40,7 +40,7 @@ export function ProjectView() {
 		<div className="grid-container">
 			{projects.map(p => (
 				<button key={p.id} className="grid-item" onClick={() => handleCardClick(p.id)} aria-label={`Edit project ${p.data().name}`}>
-					<p>ID: {p.id}</p>
+					<p className="id">ID: {p.id}</p>
 					<p>Name: {p.data().name}</p>
 					<p>Guild: {p.data().guildName}</p>
 				</button>
