@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react'
-import { db } from './services/firebase'
-import { discordSdk } from './services/discord'
+import { useEffect, useState, Fragment } from 'react'
+import { db } from './firebase'
+import { discordSdk } from './discord'
 import { collection, onSnapshot, query, QueryDocumentSnapshot, where } from 'firebase/firestore'
+import { Project } from './types'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { EditProject } from './components/EditProject'
@@ -10,7 +11,7 @@ import './styles/ProjectView.css'
 const swal = withReactContent(Swal)
 
 export function ProjectView() {
-	const [projects, setProjects] = useState<QueryDocumentSnapshot[]>([])
+	const [projects, setProjects] = useState<Project[]>([])
 
 	useEffect(() => {
 		const projectsQuery = query(collection(db, 'projects'), where('guildId', '==', discordSdk.guildId))
@@ -19,7 +20,7 @@ export function ProjectView() {
 		const unsubscribe: () => void = onSnapshot(
 			projectsQuery,
 			snapshot => {
-				setProjects(snapshot.docs)
+				setProjects(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Project))
 			},
 			error => {
 				console.error('Error fetching projects:', error)
@@ -46,8 +47,7 @@ export function ProjectView() {
 			{projects.map(p => (
 				<button key={p.id} className="grid-item" onClick={() => handleCardClick(p.id)} aria-label={`Edit project ${p.data().name}`}>
 					<p className="id">ID: {p.id}</p>
-					<p>Name: {p.data().name}</p>
-					<p>Guild: {p.data().guildName}</p>
+					<p>Name: {p.name}</p>
 				</button>
 			))}
 		</div>
