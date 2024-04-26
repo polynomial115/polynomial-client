@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react'
 import { db } from './firebase'
 import { discordSdk } from './discord'
-import { QueryDocumentSnapshot, collection, query, where, getDocs } from 'firebase/firestore'
-// import { Project, DatabaseProject } from "./CreateProject"
-
+import { collection, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { EditProject } from './EditProject'
@@ -23,25 +21,26 @@ export function ProjectView() {
 	return (
 		<div className="flexbox-container ProjectCardContainer">
 			{projects.map(p => (
-				<div style={projectViewStyles.projectCard} className="projectCard">
-					<p>ID: {p.id}</p>
-					<p>{p.data.name}</p>
-					<p>Guild: {p.data.name}</p>
-					<button
-						className="EditProjectButton"
-						onClick={ () => {
-							console.log('Edit project button clicked')
-							swal.fire({
-								html: <EditProject />,
-								background: '#202225',
-								color: 'white',
-								showConfirmButton: false
-							})
-						} }
-					 >
-						Edit Project
-					</button>
-				</div>
+				<button
+					key={p.id}
+					style={projectViewStyles.projectCard}
+					className="projectCardButton"
+					onClick={() => {
+						console.log('Project card clicked')
+						swal.fire({
+							html: <EditProject />,
+							background: '#202225',
+							color: 'white',
+							showConfirmButton: false
+						})
+					}}
+				>
+					<div>
+						<p>ID: {p.id}</p>
+						<p>Name: {p.data.name}</p>
+						<p>Guild: {p.data.guildName}</p>
+					</div>
+				</button>
 			))}
 		</div>
 	)
