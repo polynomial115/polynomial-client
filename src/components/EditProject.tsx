@@ -1,18 +1,31 @@
 import Select from 'react-select'
 import { APIGuildMember } from 'discord-api-types/v10'
-import { FormEvent, useEffect, useState } from 'react'
+import { useState } from 'react'
 
-export function EditProject() {
-    const [users, setUsers] = useState<APIGuildMember[]>([])
+interface EditProjectProps {
+	projectId: string
+}
 
-    const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => setFormData(prev => ({ ...prev, [name]: value }))
-    
-    return(
-        <div>
-            <h2>Editing project</h2>
+interface FormData {
+	assignees: string[]
+	name: string
+}
 
-            <div>
-                <Select
+export function EditProject({ projectId }: EditProjectProps) {
+	const [users, setUsers] = useState<APIGuildMember[]>([])
+
+	const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) =>
+		setFormData(prev => ({
+			...prev,
+			[name]: value
+		}))
+
+	return (
+		<div>
+			<h2>Editing project</h2>
+
+			<div>
+				<Select
 					isMulti={true}
 					name="assignees"
 					options={users.map((m: APIGuildMember) => ({
@@ -21,17 +34,16 @@ export function EditProject() {
 					}))}
 					placeholder="Select task..."
 					// onChange={selected =>
-						// handleInputChange(
-						// 	'assignees',
-						// 	selected.map(e => e.value as string)
-						// )
+					// handleInputChange(
+					// 	'assignees',
+					// 	selected.map(e => e.value as string)
+					// )
 					// }
 					// styles={selectStyles}
 				/>
-                <input type="text" name="name" required></input>
-                <button>Save</button>
-            </div>
-            
-        </div>
-    )
+				<input type="text" name="name" required></input>
+				<button>Save</button>
+			</div>
+		</div>
+	)
 }
