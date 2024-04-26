@@ -11,16 +11,10 @@ import { QueryDocumentSnapshot, collection, getDocs, query, where } from 'fireba
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { CreateProject } from './components/CreateProject.tsx'
-import { CreateTask } from './components/CreateTask.tsx'
 import { ProjectView } from './ProjectView'
-// import { ListView } from './ListView'
 
-import { AppBar } from "@mui/material";
-import { IconButton } from "@mui/material";
-import { Toolbar } from "@mui/material";
-import { Typography } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
-
+import { AppBar, IconButton, Toolbar, Typography } from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
 
 const swal = withReactContent(Swal)
 
@@ -60,12 +54,13 @@ function App() {
 							<MenuIcon />
 						</IconButton>
 
-						<Typography variant="h6" color="inherit" component="div">Polynomial Dashboard - &nbsp;</Typography>
+						<Typography variant="h6" color="inherit" component="div">
+							Polynomial Dashboard - &nbsp;
+						</Typography>
 						<h3>{channel}</h3>
 					</Toolbar>
 				</AppBar>
 			</div>
-
 
 			<div className="RootProject">
 				<h1>{channel}</h1>
@@ -83,18 +78,6 @@ function App() {
 					Create Project
 				</button>
 				<ProjectView></ProjectView>
-				<button
-					onClick={() =>
-						swal.fire({
-							html: <CreateTask />,
-							background: '#202225',
-							color: 'white',
-							showConfirmButton: false
-						})
-					}
-				>
-					Create Task
-				</button>
 				<div className="card">
 					<button
 						onClick={() => {
