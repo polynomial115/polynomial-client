@@ -1,8 +1,8 @@
 import { IdTokenResult, getAuth, getIdTokenResult, signInWithCustomToken } from 'firebase/auth'
-import { discordSdk } from './discord'
-import './firebase'
+import { discordSdk } from './services/discord.ts'
+import './services/firebase.ts'
 import { useEffect, useRef, useState } from 'react'
-import { AuthContext } from './useAuth'
+import { AuthContext } from './hooks/useAuth.ts'
 
 const firebaseAuth = getAuth()
 

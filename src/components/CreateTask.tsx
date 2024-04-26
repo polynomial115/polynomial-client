@@ -1,12 +1,12 @@
 import { FormEvent, useEffect, useState } from 'react'
-import { discordSdk } from './discord'
+import { discordSdk } from '../services/discord.ts'
 import Select from 'react-select'
-import { styles } from './styles'
-import { selectStyles } from './select-styles'
-import { db } from './firebase'
+import { styles } from '../styles/styles.ts'
+import { selectStyles } from '../styles/select-styles.ts'
+import { db } from '../services/firebase.ts'
 import { addDoc, collection } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
-import { type Choice, ChoiceButtons } from './ChoiceButtons'
+import { type Choice, ChoiceButtons } from './ChoiceButtons.tsx'
 
 enum TaskStatus {
 	ToDo = 0,

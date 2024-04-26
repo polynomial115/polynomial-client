@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { discordSdk } from './discord'
+import { discordSdk } from '../services/discord.ts'
 import { type EventPayloadData, Events } from '@discord/embedded-app-sdk'
 
 type EventData = EventPayloadData<Events.ACTIVITY_INSTANCE_PARTICIPANTS_UPDATE>

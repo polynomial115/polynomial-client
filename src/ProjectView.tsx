@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { db } from './firebase'
-import { discordSdk } from './discord'
+import { db } from './services/firebase.ts'
+import { discordSdk } from './services/discord.ts'
 import { collection, getDocs, query, QueryDocumentSnapshot, where } from 'firebase/firestore'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
-import { EditProject } from './EditProject'
+import { EditProject } from './components/EditProject.tsx'
 
 const swal = withReactContent(Swal)
 

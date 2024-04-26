@@ -1,5 +1,5 @@
 import PartySocket from 'partysocket'
-import { discordSdk } from './discord'
+import { discordSdk } from './services/discord.ts'
 
 console.log(location)
 
