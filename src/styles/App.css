@@ -28,7 +28,7 @@
 .flexbox-container {
 	display: flex;
 	flex-direction: row;
-	margin:10px;
+	margin: 10px;
 }
 
 .projectCard {
@@ -73,9 +73,8 @@
 	}
 }
 
-
 .ProjectCardContainer {
-  overflow-x: auto;
+	overflow-x: auto;
 }
 
 .EditProjectButton {
@@ -88,5 +87,5 @@
 	padding: 0;
 	margin: 0;
 	min-width: 100vw;
-	overflow-x:hidden;
+	overflow-x: hidden;
 }

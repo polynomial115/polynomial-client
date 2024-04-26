@@ -7,13 +7,7 @@ import { db } from '../services/firebase.ts'
 import { addDoc, collection } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { type Choice, ChoiceButtons } from './ChoiceButtons.tsx'
-
-enum TaskStatus {
-	ToDo = 0,
-	Backlog = 1,
-	InProgress = 2,
-	Completed = 3
-}
+import { Priority, TaskStatus } from '../types.ts'
 
 const taskStatuses: Choice[] = [
 	{ value: TaskStatus.ToDo, label: 'To Do', color: 'crimson' },
@@ -21,13 +15,6 @@ const taskStatuses: Choice[] = [
 	{ value: TaskStatus.InProgress, label: 'In Progress', color: 'lightblue' },
 	{ value: TaskStatus.Completed, label: 'Completed', color: 'lightgreen' }
 ]
-
-enum Priority {
-	Urgent = 3,
-	High = 2,
-	Normal = 1,
-	Low = 0
-}
 
 const priorities: Choice[] = [
 	{ value: Priority.Low, label: 'Low', color: 'lightgreen' },
@@ -78,7 +65,7 @@ export function CreateTask() {
 
 		const taskData = { ...formData, assignees: formData.assignees }
 		// delete taskData.whichButtonClicked; // Remove UI-only state property
-		
+
 		try {
 			await addDoc(collection(db, 'tasks'), taskData)
 			setError('Created task successfully.')

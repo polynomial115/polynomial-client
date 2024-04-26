@@ -1,7 +1,7 @@
-import { useEffect, useState, Fragment } from 'react'
-import { db } from './firebase'
-import { discordSdk } from './discord'
-import { collection, onSnapshot, query, QueryDocumentSnapshot, where } from 'firebase/firestore'
+import { useEffect, useState } from 'react'
+import { db } from './services/firebase'
+import { discordSdk } from './services/discord'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import { Project } from './types'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
@@ -16,8 +16,7 @@ export function ProjectView() {
 	useEffect(() => {
 		const projectsQuery = query(collection(db, 'projects'), where('guildId', '==', discordSdk.guildId))
 
-		// Cast the unsubscribe function to the correct type
-		const unsubscribe: () => void = onSnapshot(
+		const unsubscribe = onSnapshot(
 			projectsQuery,
 			snapshot => {
 				setProjects(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Project))
@@ -45,7 +44,7 @@ export function ProjectView() {
 	return (
 		<div className="grid-container">
 			{projects.map(p => (
-				<button key={p.id} className="grid-item" onClick={() => handleCardClick(p.id)} aria-label={`Edit project ${p.data().name}`}>
+				<button key={p.id} className="grid-item" onClick={() => handleCardClick(p.id)} aria-label={`Edit project ${p.name}`}>
 					<p className="id">ID: {p.id}</p>
 					<p>Name: {p.name}</p>
 				</button>

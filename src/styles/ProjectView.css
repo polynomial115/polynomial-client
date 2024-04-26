@@ -1,49 +1,44 @@
-
 .grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 16px;
-  padding: 16px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	grid-gap: 16px;
+	padding: 16px;
 }
 
 .grid-item {
-  font-family: 'Roboto', sans-serif;
-  background: #333;
-  color: white;
-  padding: 20px;
-  text-align: left;
-  border-radius: 0;
-  border: none;
-  transition: background 0.2s;
+	font-family: 'Roboto', sans-serif;
+	background: #333;
+	color: white;
+	padding: 20px;
+	text-align: left;
+	border-radius: 0;
+	border: none;
+	transition: background 0.2s;
 }
 
 .grid-container .grid-item p {
-  margin: 0;
-  overflow-wrap: break-word;
-  word-break: break-all;
+	margin: 0;
+	overflow-wrap: break-word;
+	word-break: break-all;
 }
 
 .grid-container .grid-item p.id {
-  font-size: clamp(0.1rem, 2.5vw, 0.5rem);
-  text-align: center;
+	font-size: clamp(0.1rem, 2.5vw, 0.5rem);
+	text-align: center;
 }
 
-
 .grid-container .grid-item:hover {
-  background: #444;
-  cursor: pointer;
+	background: #444;
+	cursor: pointer;
 }
 
 .fullscreen-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: #282b30;
-  z-index: 1000;
-  overflow: auto;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: #282b30;
+	z-index: 1000;
+	overflow: auto;
 }
-
-
-

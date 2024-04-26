@@ -15,3 +15,25 @@ export interface Project {
 	tasks: string[] // Temporary, change this into tasks interface later
 	timestamp: string
 }
+
+export enum TaskStatus {
+	ToDo = 0,
+	Backlog = 1,
+	InProgress = 2,
+	Completed = 3
+}
+
+export enum Priority {
+	Urgent = 3,
+	High = 2,
+	Normal = 1,
+	Low = 0
+}
+
+export interface Task {
+	id: string
+	assignees: string[]
+	name: string
+	priority: Priority
+	status: TaskStatus
+}

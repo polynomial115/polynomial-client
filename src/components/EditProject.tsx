@@ -4,31 +4,34 @@ import { useEffect, useState } from 'react'
 import '../styles/ProjectView.css'
 import { db } from '../services/firebase'
 import { collection, onSnapshot, query } from 'firebase/firestore'
+import { Task } from '../types'
 
 interface EditProjectProps {
 	projectId: string
 }
 
-interface FormData {
-	assignees: string[]
-	name: string
-}
+// interface FormData {
+// 	assignees: string[]
+// 	name: string
+// }
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 export function EditProject({ projectId }: Readonly<EditProjectProps>) {
-	const [tasks, setTasks] = useState([])
+	const [tasks, setTasks] = useState<Task[]>([])
 
+	void projectId // todo query tasks for the project
 	useEffect(() => {
 		const tasksQuery = query(collection(db, 'tasks'))
 
 		const unsubscribe = onSnapshot(
 			tasksQuery,
 			snapshot => {
-				const tasksData = snapshot.docs.map(doc => ({
-					id: doc.id,
-					...doc.data()
-				}))
+				const tasksData = snapshot.docs.map(
+					doc =>
+						({
+							id: doc.id,
+							...doc.data()
+						}) as Task
+				)
 				setTasks(tasksData)
 			},
 			error => {
@@ -39,12 +42,12 @@ export function EditProject({ projectId }: Readonly<EditProjectProps>) {
 		return () => unsubscribe()
 	}, [])
 
-	const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => {
-		setFormData(prev => ({
-			...prev,
-			[name]: value
-		}))
-	}
+	// const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => {
+	// 	setFormData(prev => ({
+	// 		...prev,
+	// 		[name]: value
+	// 	}))
+	// }
 
 	return (
 		<div className="fullscreen-container">
