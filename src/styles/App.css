@@ -1,7 +1,7 @@
 #root {
-	/* max-width: 1280px; */
-	/* margin: 0 auto; */
-	/* padding: 2rem; */
+	max-width: 1280px;
+	margin: 0 auto;
+	padding: 2rem;
 	text-align: center;
 }
 
@@ -79,13 +79,4 @@
 
 .EditProjectButton {
 	background-color: #202225;
-}
-
-.AppBarCSS {
-	display: flex;
-	align-items: start;
-	padding: 0;
-	margin: 0;
-	min-width: 100vw;
-	overflow-x: hidden;
 }
