@@ -4,10 +4,11 @@ import Select from 'react-select'
 import { styles } from '../styles/styles.ts'
 import { selectStyles } from '../styles/select-styles.ts'
 import { db } from '../services/firebase.ts'
-import { addDoc, collection } from 'firebase/firestore'
+import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { type Choice, ChoiceButtons } from './ChoiceButtons.tsx'
-import { Priority, TaskStatus } from '../types.ts'
+import { Priority, Task, TaskStatus } from '../types.ts'
+import Swal from 'sweetalert2'
 
 const taskStatuses: Choice[] = [
 	{ value: TaskStatus.ToDo, label: 'To Do', color: 'crimson' },
@@ -23,19 +24,18 @@ const priorities: Choice[] = [
 	{ value: Priority.Urgent, label: 'Urgent', color: 'crimson' }
 ]
 
-interface FormData {
-	status: TaskStatus
-	priority: Priority
-	assignees: string[]
-	taskName: string
+type FormData = Omit<Task, 'id'>
+
+interface Props {
+	projectId: string
 }
 
-export function CreateTask() {
+export function CreateTask({ projectId }: Props) {
 	const [formData, setFormData] = useState<FormData>({
 		status: TaskStatus.ToDo,
 		priority: Priority.Normal,
 		assignees: [],
-		taskName: ''
+		name: ''
 	})
 	const [users, setUsers] = useState<APIGuildMember[]>([])
 	const [error, setError] = useState('')
@@ -58,17 +58,21 @@ export function CreateTask() {
 
 	const handleSubmit = async (event: FormEvent) => {
 		event.preventDefault()
-		if (!formData.taskName.trim()) {
+		if (!formData.name.trim()) {
 			setError('Please enter a task name.')
 			return
 		}
 
-		const taskData = { ...formData, assignees: formData.assignees }
-		// delete taskData.whichButtonClicked; // Remove UI-only state property
+		const taskData = { ...formData, id: doc(collection(db, 'tasks')).id } // generate random id
+
+		const projectDoc = doc(db, 'projects', projectId)
 
 		try {
-			await addDoc(collection(db, 'tasks'), taskData)
+			await updateDoc(projectDoc, {
+				tasks: arrayUnion(taskData)
+			})
 			setError('Created task successfully.')
+			Swal.close()
 		} catch (error) {
 			console.error('Error adding document:', error)
 			setError('Failed to create task.')
@@ -87,8 +91,8 @@ export function CreateTask() {
 					id="task-name"
 					style={styles.textBox}
 					type="text"
-					value={formData.taskName}
-					onChange={e => handleInputChange('taskName', e.target.value)}
+					value={formData.name}
+					onChange={e => handleInputChange('name', e.target.value)}
 					required
 				/>
 				<br />

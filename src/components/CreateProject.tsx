@@ -44,7 +44,7 @@ export function CreateProject() {
 					setCreated(true)
 				}}
 			>
-				Project name: <input type="text" name="name" required ref={nameInputRef}></input>
+				Project name: <input type="text" name="name" required ref={nameInputRef} />
 				{/* {roles.map(r => <div key={r.id}>{r.name}</div>)} */}
 				<Select
 					isMulti

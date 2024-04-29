@@ -12,7 +12,7 @@ export interface Project {
 	memberRoles: string[]
 	managerUsers: string[]
 	memberUsers: string[]
-	tasks: string[] // Temporary, change this into tasks interface later
+	tasks: Task[]
 	timestamp: string
 }
 

@@ -20,7 +20,8 @@ module.exports = {
 		'@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }],
 		'react/jsx-fragments': 'error',
 		'react/jsx-no-useless-fragment': 'error',
-		'react/destructuring-assignment': 'error'
+		'react/destructuring-assignment': 'error',
+		'react/self-closing-comp': 'error'
 	},
 	parserOptions: {
 		ecmaVersion: 'latest',

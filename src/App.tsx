@@ -7,11 +7,13 @@ import { discordSdk } from './services/discord.ts'
 import { useAuth } from './hooks/useAuth.ts'
 import { useParticipants } from './hooks/useParticipants.ts'
 import { db } from './services/firebase.ts'
-import { QueryDocumentSnapshot, collection, getDocs, query, where } from 'firebase/firestore'
+import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { CreateProject } from './components/CreateProject.tsx'
-import { ProjectView } from './ProjectView'
+import { ProjectList } from './ProjectList.tsx'
+import { ProjectPage } from './components/ProjectPage.tsx'
+import type { Project } from './types.ts'
 
 const swal = withReactContent(Swal)
 
@@ -22,7 +24,8 @@ const sendCount = (count: number) => {
 function App() {
 	const [count, setCount] = useState(0)
 	const [channel, setChannel] = useState('')
-	const [projects, setProjects] = useState<QueryDocumentSnapshot[]>([])
+	const [projects, setProjects] = useState<Project[]>([])
+	const [activeProject, setActiveProject] = useState('')
 
 	const participants = useParticipants()
 
@@ -34,13 +37,22 @@ function App() {
 		discordSdk.commands.getChannel({ channel_id: discordSdk.channelId! }).then(channel => setChannel(channel.name!))
 
 		const projectsQuery = query(collection(db, 'projects'), where('guildId', '==', discordSdk.guildId))
-		getDocs(projectsQuery).then(p => {
-			console.log('projects', p)
-			setProjects(p.docs)
-		})
+		const unsubscribe = onSnapshot(
+			projectsQuery,
+			snapshot => {
+				setProjects(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Project))
+			},
+			error => {
+				console.error('Error fetching projects:', error)
+			}
+		)
+
+		return () => unsubscribe()
 	}, [])
 
 	const auth = useAuth()
+
+	if (activeProject) return <ProjectPage project={projects.find(p => p.id === activeProject)!} close={() => setActiveProject('')} />
 
 	return (
 		<div className="RootProject">
@@ -58,7 +70,7 @@ function App() {
 			>
 				Create Project
 			</button>
-			<ProjectView></ProjectView>
+			<ProjectList projects={projects} setActiveProject={setActiveProject} />
 			<div className="card">
 				<button
 					onClick={() => {
