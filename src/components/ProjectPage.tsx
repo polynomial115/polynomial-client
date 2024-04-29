@@ -68,8 +68,11 @@ export function ProjectPage({ project, close }: Props) {
 			<ul>
 				{tasks.map(task => (
 					<li key={task.id}>
-						<p>ID: {task.id}</p>
-						<p>Name: {task.name}</p>
+						{/* <p>ID: {task.id}</p> */}
+						<p><b>Task Name</b>: {task.name}</p>
+						<p><b>Status</b>: {task.status}</p>
+						<p><b>Assignees</b>: {task.assignees}</p>
+						<br/>
 					</li>
 				))}
 			</ul>
