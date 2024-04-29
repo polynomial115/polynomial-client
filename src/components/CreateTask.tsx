@@ -100,7 +100,7 @@ export function CreateTask({ projectId }: Props) {
 					isMulti={true}
 					name="assignees"
 					options={users.map((m: APIGuildMember) => ({
-						value: m.user!.username,
+						value: m.user!.id,
 						label: m.user!.username
 					}))}
 					placeholder="Select assignees..."

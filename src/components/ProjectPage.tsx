@@ -16,7 +16,6 @@ interface Props {
 // 	name: string
 // }
 
-
 export function ProjectPage({ project, close }: Props) {
 	const { tasks } = project
 
@@ -65,19 +64,21 @@ export function ProjectPage({ project, close }: Props) {
 			>
 				Create Task
 			</button>
-
-				{tasks.map(task => (
-					<li key={task.id}>
-						{/* <p>ID: {task.id}</p> */}
-						<p>
-							<b>Task Name</b>: {task.name} |
-							<span style={{color:taskStatuses[task.status].color}}> <b>{taskStatuses[task.status].label}</b> </span> | 
-							<b> Assignees</b>: {task.assignees.map(a => a).join(', ')}
-						</p>
-						<button>Edit Task</button>
-						<br/>
-					</li>
-				))}
+			{tasks.map(task => (
+				<li key={task.id}>
+					{/* <p>ID: {task.id}</p> */}
+					<p>
+						<b>Task Name</b>: {task.name} |
+						<span style={{ color: taskStatuses[task.status].color }}>
+							{' '}
+							<b>{taskStatuses[task.status].label}</b>{' '}
+						</span>{' '}
+						|<b> Assignees</b>: {task.assignees.map(a => a).join(', ')}
+					</p>
+					{/* <button>Edit Task</button> */}
+					<br />
+				</li>
+			))}
 		</div>
 	)
 }
