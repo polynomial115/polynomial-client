@@ -2,7 +2,7 @@ import '../styles/ProjectView.css'
 import type { Project } from '../types'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
-import { CreateTask } from './CreateTask'
+import { CreateTask, taskStatuses } from './CreateTask'
 
 const swal = withReactContent(Swal)
 
@@ -15,6 +15,7 @@ interface Props {
 // 	assignees: string[]
 // 	name: string
 // }
+
 
 export function ProjectPage({ project, close }: Props) {
 	const { tasks } = project
@@ -65,17 +66,18 @@ export function ProjectPage({ project, close }: Props) {
 				Create Task
 			</button>
 
-			<ul>
 				{tasks.map(task => (
 					<li key={task.id}>
 						{/* <p>ID: {task.id}</p> */}
-						<p><b>Task Name</b>: {task.name}</p>
-						<p><b>Status</b>: {task.status}</p>
-						<p><b>Assignees</b>: {task.assignees}</p>
+						<p>
+							<b>Task Name</b>: {task.name} |
+							<span style={{color:taskStatuses[task.status].color}}> <b>{taskStatuses[task.status].label}</b> </span> | 
+							<b> Assignees</b>: {task.assignees.map(a => a).join(', ')}
+						</p>
+						<button>Edit Task</button>
 						<br/>
 					</li>
 				))}
-			</ul>
 		</div>
 	)
 }
