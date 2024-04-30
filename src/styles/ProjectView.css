@@ -91,7 +91,9 @@ ul {
 
 .ToolTip {
 	/* display: none; */
-	transition: visibility 0.25s, opacity 0.25s linear;
+	transition:
+		visibility 0.25s,
+		opacity 0.25s linear;
 	opacity: 0;
 	visibility: hidden;
 	position: absolute;
@@ -102,7 +104,7 @@ ul {
 
 	padding-left: 0.5rem;
 	padding-right: 0.5rem;
-	
+
 	margin-bottom: 5rem;
 	margin-left: -0.6rem;
 	z-index: 1000;
@@ -110,8 +112,9 @@ ul {
 
 .Avatar:hover + .ToolTip {
 	/* display: block; */
-	transition: visibility 0.25s, opacity 0.25s linear;
+	transition:
+		visibility 0.25s,
+		opacity 0.25s linear;
 	opacity: 1;
 	visibility: visible;
 }
-
