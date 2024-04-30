@@ -2,7 +2,8 @@ import '../styles/ProjectView.css'
 import type { Project } from '../types'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
-import { CreateTask, taskStatuses } from './CreateTask'
+import { CreateTask } from './CreateTask'
+import { taskStatuses } from './TaskStatuses'
 
 const swal = withReactContent(Swal)
 
