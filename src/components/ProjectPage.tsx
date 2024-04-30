@@ -73,20 +73,31 @@ export function ProjectPage({ project, close }: Props) {
 				<li key={task.id}>
 					{/* <p>ID: {task.id}</p> */}
 					<div className="TaskContainer">
-						<p>
-							<b>Task Name</b>: {task.name} |
-							<span style={{ color: taskStatuses[task.status].color }}>
-								{' '}
-								<b>{taskStatuses[task.status].label}</b>{' '}
-							</span>{' '}
-							|<b> Assignees</b>:{' '}
-							{task.assignees.map(assigneeId => {
-								const member = getMember(assigneeId)
-								if (!member) return 'Unknown'
-								const name = getDisplayName(member)
-								return <img key={assigneeId} src={getAvatar(member)} alt={name} title={name} />
-							})}
-						</p>
+						<b>Task Name</b>: {task.name} |
+						<span style={{ color: taskStatuses[task.status].color }}>
+							{' '}
+							<b>&nbsp;{taskStatuses[task.status].label}&nbsp;</b>{' '}
+						</span>{' '}
+						|<b>&nbsp;Assignees</b>:&nbsp;
+						{task.assignees.map(assigneeId => {
+							const member = getMember(assigneeId)
+							if (!member) return 'Unknown'
+							const name = getDisplayName(member)
+							return (
+								<div key={assigneeId} className="AvatarsView">
+									<img
+										className="Avatar"
+										src={getAvatar(member)}
+										alt={name}
+										title={name}
+										onClick={() => {
+											console.log('clicked')
+										}}
+									/>
+									<div className="ToolTip">{name}</div>
+								</div>
+							)
+						})}
 						{/* <button>Edit Task</button> */}
 						<br />
 					</div>
