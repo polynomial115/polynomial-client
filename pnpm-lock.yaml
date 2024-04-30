@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@coreui/coreui':
+        specifier: ^5.0.0
+        version: 5.0.0(@popperjs/core@2.11.8)
+      '@coreui/react':
+        specifier: ^5.0.0
+        version: 5.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@discord/embedded-app-sdk':
         specifier: ^1.2.0
         version: 1.2.0
@@ -121,6 +127,17 @@ packages:
   '@babel/types@7.24.0':
     resolution: {integrity: sha512-+j7a5c253RfKh8iABBhywc8NSfP5LURe7Uh4qpsh6jc+aLJguvmIUBdjSdEMQv2bENrCR5MfRdjGo7vzS/ob7w==}
     engines: {node: '>=6.9.0'}
+
+  '@coreui/coreui@5.0.0':
+    resolution: {integrity: sha512-okQEoPVOqIQOH9aDN9jfgrjuMTgZ1YX/S81wWP5WuMmx5u0s8K+BXXDja5bbl4eP703+rElew/tHqGEAn+89Gw==}
+    peerDependencies:
+      '@popperjs/core': ^2.11.8
+
+  '@coreui/react@5.0.0':
+    resolution: {integrity: sha512-LnYloIOq3T1mgZNEEoni1yScsg3ad2r/q1tUQt0+HabyiYXV4OVHWXv0Y7sneUWNzv5yx+3BlJldGHVXDRuImQ==}
+    peerDependencies:
+      react: '>=17'
+      react-dom: '>=17'
 
   '@discord/embedded-app-sdk@1.2.0':
     resolution: {integrity: sha512-aXSapM0ZCvckn/1m80noEeGlVoMatmKETnGT8VtRlwEPrW7gdSUeQ7LhcUUKin+DKdU22Mna3yNZfaXtocdmcg==}
@@ -610,6 +627,9 @@ packages:
   '@pkgr/core@0.1.1':
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
+
+  '@popperjs/core@2.11.8':
+    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
   '@protobufjs/aspromise@1.1.2':
     resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
@@ -2140,6 +2160,18 @@ snapshots:
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
 
+  '@coreui/coreui@5.0.0(@popperjs/core@2.11.8)':
+    dependencies:
+      '@popperjs/core': 2.11.8
+
+  '@coreui/react@5.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@coreui/coreui': 5.0.0(@popperjs/core@2.11.8)
+      '@popperjs/core': 2.11.8
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   '@discord/embedded-app-sdk@1.2.0':
     dependencies:
       '@types/lodash.transform': 4.6.9
@@ -2725,6 +2757,8 @@ snapshots:
       '@octokit/openapi-types': 22.1.0
 
   '@pkgr/core@0.1.1': {}
+
+  '@popperjs/core@2.11.8': {}
 
   '@protobufjs/aspromise@1.1.2': {}
 

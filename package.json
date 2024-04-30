@@ -12,6 +12,8 @@
 		"check-format": "prettier . --check"
 	},
 	"dependencies": {
+		"@coreui/coreui": "^5.0.0",
+		"@coreui/react": "^5.0.0",
 		"@discord/embedded-app-sdk": "^1.2.0",
 		"chroma-js": "^2.4.2",
 		"discord-api-types": "^0.37.83",
