@@ -4,6 +4,7 @@ import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { CreateTask } from './CreateTask'
 import { taskStatuses } from './TaskStatuses'
+import { useGuildMembers } from '../hooks/useGuildMembers'
 
 const swal = withReactContent(Swal)
 
@@ -19,6 +20,8 @@ interface Props {
 
 export function ProjectPage({ project, close }: Props) {
 	const { tasks } = project
+
+	const { members } = useGuildMembers() // can't access context inside modal so getting here
 
 	// const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => {
 	// 	setFormData(prev => ({
@@ -56,7 +59,7 @@ export function ProjectPage({ project, close }: Props) {
 			<button
 				onClick={() =>
 					swal.fire({
-						html: <CreateTask projectId={project.id} />,
+						html: <CreateTask projectId={project.id} members={members} />,
 						background: '#202225',
 						color: 'white',
 						showConfirmButton: false

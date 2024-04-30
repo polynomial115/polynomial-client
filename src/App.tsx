@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import './styles/App.css'
-import './auth'
+import './providers/auth.tsx'
 import { conn } from './party'
 import { discordSdk } from './services/discord.ts'
 import { useAuth } from './hooks/useAuth.ts'

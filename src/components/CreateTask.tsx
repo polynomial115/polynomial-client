@@ -1,5 +1,4 @@
-import { FormEvent, useEffect, useState } from 'react'
-import { discordSdk } from '../services/discord.ts'
+import { FormEvent, useState } from 'react'
 import Select from 'react-select'
 import { styles } from '../styles/styles.ts'
 import { selectStyles } from '../styles/select-styles.ts'
@@ -28,33 +27,17 @@ type FormData = Omit<Task, 'id'>
 
 interface Props {
 	projectId: string
+	members: APIGuildMember[]
 }
 
-export function CreateTask({ projectId }: Props) {
+export function CreateTask({ projectId, members }: Props) {
 	const [formData, setFormData] = useState<FormData>({
 		status: TaskStatus.ToDo,
 		priority: Priority.Normal,
 		assignees: [],
 		name: ''
 	})
-	const [users, setUsers] = useState<APIGuildMember[]>([])
 	const [error, setError] = useState('')
-	// const [loading, setLoading] = useState(false);
-
-	useEffect(() => {
-		// setLoading(true);
-		fetch(`/api/members/${discordSdk.guildId}`)
-			.then(response => response.json() as Promise<APIGuildMember[]>)
-			.then(data => {
-				setUsers(data)
-				// setLoading(false);
-			})
-			.catch(error => {
-				console.error('Failed to load users:', error)
-				setError('Could not load user data.')
-				// setLoading(false);
-			})
-	}, [])
 
 	const handleSubmit = async (event: FormEvent) => {
 		event.preventDefault()
@@ -99,7 +82,7 @@ export function CreateTask({ projectId }: Props) {
 				<Select
 					isMulti={true}
 					name="assignees"
-					options={users.map((m: APIGuildMember) => ({
+					options={members.map((m: APIGuildMember) => ({
 						value: m.user!.id,
 						label: m.user!.username
 					}))}

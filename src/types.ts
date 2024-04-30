@@ -37,3 +37,9 @@ export interface Task {
 	priority: Priority
 	status: TaskStatus
 }
+
+export enum FetchStatus {
+	Loading,
+	Failed,
+	Succeeded
+}
