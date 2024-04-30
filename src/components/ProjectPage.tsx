@@ -67,16 +67,18 @@ export function ProjectPage({ project, close }: Props) {
 			{tasks.map(task => (
 				<li key={task.id}>
 					{/* <p>ID: {task.id}</p> */}
-					<p>
-						<b>Task Name</b>: {task.name} |
-						<span style={{ color: taskStatuses[task.status].color }}>
-							{' '}
-							<b>{taskStatuses[task.status].label}</b>{' '}
-						</span>{' '}
-						|<b> Assignees</b>: {task.assignees.map(a => a).join(', ')}
-					</p>
-					{/* <button>Edit Task</button> */}
-					<br />
+					<div className="TaskContainer">
+						<p>
+							<b>Task Name</b>: {task.name} |
+							<span style={{ color: taskStatuses[task.status].color }}>
+								{' '}
+								<b>{taskStatuses[task.status].label}</b>{' '}
+							</span>{' '}
+							|<b> Assignees</b>: {task.assignees.map(a => a).join(', ')}
+						</p>
+						{/* <button>Edit Task</button> */}
+						<br />
+					</div>
 				</li>
 			))}
 		</div>
