@@ -22,7 +22,7 @@ interface Props {
 export function ProjectPage({ project, close }: Props) {
 	const { tasks } = project
 
-	const { members } = useGuildMembers() // can't access context inside modal so getting here
+	const { members, getMember } = useGuildMembers() // can't access context inside modal so getting here
 
 	// const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => {
 	// 	setFormData(prev => ({
@@ -80,10 +80,11 @@ export function ProjectPage({ project, close }: Props) {
 								<b>{taskStatuses[task.status].label}</b>{' '}
 							</span>{' '}
 							|<b> Assignees</b>:{' '}
-							{task.assignees.map(a => {
-								const member = members.find(m => m.user?.id === a)
+							{task.assignees.map(assigneeId => {
+								const member = getMember(assigneeId)
 								if (!member) return 'Unknown'
-								return <img key={a} src={getAvatar(member)} alt={getDisplayName(member)} title={getDisplayName(member)} />
+								const name = getDisplayName(member)
+								return <img key={assigneeId} src={getAvatar(member)} alt={name} title={name} />
 							})}
 						</p>
 						{/* <button>Edit Task</button> */}
