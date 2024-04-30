@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'
 import { CreateTask } from './CreateTask'
 import { taskStatuses } from './TaskStatuses'
 import { useGuildMembers } from '../hooks/useGuildMembers'
+import { getAvatar, getDisplayName } from '../util'
 
 const swal = withReactContent(Swal)
 
@@ -78,7 +79,12 @@ export function ProjectPage({ project, close }: Props) {
 								{' '}
 								<b>{taskStatuses[task.status].label}</b>{' '}
 							</span>{' '}
-							|<b> Assignees</b>: {task.assignees.map(a => a).join(', ')}
+							|<b> Assignees</b>:{' '}
+							{task.assignees.map(a => {
+								const member = members.find(m => m.user?.id === a)
+								if (!member) return 'Unknown'
+								return <img key={a} src={getAvatar(member)} alt={getDisplayName(member)} title={getDisplayName(member)} />
+							})}
 						</p>
 						{/* <button>Edit Task</button> */}
 						<br />
