@@ -8,10 +8,11 @@ import { useGuildMembers } from '../hooks/useGuildMembers'
 import { getAvatar, getDisplayName } from '../util'
 
 import TableComponent from './TableComponent.tsx'
+import { TaskList } from './TaskList'
 
 const swal = withReactContent(Swal)
 
-interface Props {
+interface ProjectProps {
 	project: Project
 	close: () => void
 }
@@ -21,7 +22,8 @@ interface Props {
 // 	name: string
 // }
 
-export function ProjectPage({ project, close }: Props) {
+
+export function ProjectPage({ project, close }: ProjectProps) {
 	const { tasks } = project
 
 	const { members, getMember } = useGuildMembers() // can't access context inside modal so getting here
@@ -106,6 +108,7 @@ export function ProjectPage({ project, close }: Props) {
 					</div>
 				</li>
 			))}
+			<TaskList tasks={tasks}></TaskList>
 		</div>
 	)
 }

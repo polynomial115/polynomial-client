@@ -9,14 +9,14 @@ import { type Choice, ChoiceButtons } from './ChoiceButtons.tsx'
 import { Priority, Task, TaskStatus } from '../types.ts'
 import Swal from 'sweetalert2'
 
-const taskStatuses: Choice[] = [
+export const taskStatuses: Choice[] = [
 	{ value: TaskStatus.ToDo, label: 'To Do', color: 'crimson' },
 	{ value: TaskStatus.Backlog, label: 'Backlog', color: 'orange' },
 	{ value: TaskStatus.InProgress, label: 'In Progress', color: 'lightblue' },
 	{ value: TaskStatus.Completed, label: 'Completed', color: 'lightgreen' }
 ]
 
-const priorities: Choice[] = [
+export const priorities: Choice[] = [
 	{ value: Priority.Low, label: 'Low', color: 'lightgreen' },
 	{ value: Priority.Normal, label: 'Normal', color: 'yellow' },
 	{ value: Priority.High, label: 'High', color: 'orange' },
