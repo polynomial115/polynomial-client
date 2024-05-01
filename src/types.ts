@@ -1,9 +1,3 @@
-// export interface DatabaseProject {
-// 	name: string,
-// 	id: string,
-// 	project: Project,
-// }
-
 export interface Project {
 	id: string
 	guildId: string
@@ -29,6 +23,26 @@ export enum Priority {
 	Normal = 1,
 	Low = 0
 }
+
+export interface Choice {
+	value: number
+	label: string
+	color: string
+}
+
+export const taskStatuses: Choice[] = [
+	{ value: TaskStatus.ToDo, label: 'To Do', color: 'crimson' },
+	{ value: TaskStatus.Backlog, label: 'Backlog', color: 'orange' },
+	{ value: TaskStatus.InProgress, label: 'In Progress', color: 'lightblue' },
+	{ value: TaskStatus.Completed, label: 'Completed', color: 'lightgreen' }
+]
+
+export const priorities: Choice[] = [
+	{ value: Priority.Low, label: 'Low', color: 'lightgreen' },
+	{ value: Priority.Normal, label: 'Normal', color: 'yellow' },
+	{ value: Priority.High, label: 'High', color: 'orange' },
+	{ value: Priority.Urgent, label: 'Urgent', color: 'crimson' }
+]
 
 export interface Task {
 	id: string

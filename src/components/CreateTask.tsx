@@ -5,23 +5,9 @@ import { selectStyles } from '../styles/select-styles.ts'
 import { db } from '../services/firebase.ts'
 import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
-import { type Choice, ChoiceButtons } from './ChoiceButtons.tsx'
-import { Priority, Task, TaskStatus } from '../types.ts'
+import { ChoiceButtons } from './ChoiceButtons.tsx'
+import { Priority, Task, TaskStatus, priorities, taskStatuses } from '../types.ts'
 import Swal from 'sweetalert2'
-
-export const taskStatuses: Choice[] = [
-	{ value: TaskStatus.ToDo, label: 'To Do', color: 'crimson' },
-	{ value: TaskStatus.Backlog, label: 'Backlog', color: 'orange' },
-	{ value: TaskStatus.InProgress, label: 'In Progress', color: 'lightblue' },
-	{ value: TaskStatus.Completed, label: 'Completed', color: 'lightgreen' }
-]
-
-export const priorities: Choice[] = [
-	{ value: Priority.Low, label: 'Low', color: 'lightgreen' },
-	{ value: Priority.Normal, label: 'Normal', color: 'yellow' },
-	{ value: Priority.High, label: 'High', color: 'orange' },
-	{ value: Priority.Urgent, label: 'Urgent', color: 'crimson' }
-]
 
 type FormData = Omit<Task, 'id'>
 

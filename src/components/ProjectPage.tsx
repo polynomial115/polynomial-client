@@ -17,12 +17,6 @@ interface ProjectProps {
 	close: () => void
 }
 
-// interface FormData {
-// 	assignees: string[]
-// 	name: string
-// }
-
-
 export function ProjectPage({ project, close }: ProjectProps) {
 	const { tasks } = project
 
@@ -108,7 +102,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 					</div>
 				</li>
 			))}
-			<TaskList tasks={tasks}></TaskList>
+			<TaskList tasks={tasks} />
 		</div>
 	)
 }

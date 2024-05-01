@@ -1,5 +1,4 @@
-import { TaskStatus } from '../types'
-import { type Choice } from './ChoiceButtons.tsx'
+import { TaskStatus, Choice } from '../types'
 
 export const taskStatuses: Choice[] = [
 	{ value: TaskStatus.ToDo, label: 'To Do', color: 'crimson' },

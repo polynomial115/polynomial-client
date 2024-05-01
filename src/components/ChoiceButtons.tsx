@@ -1,10 +1,5 @@
 import { useState } from 'react'
-
-export interface Choice {
-	value: number
-	label: string
-	color: string
-}
+import { Choice } from '../types'
 
 interface ChoiceButtonProps {
 	choices: Choice[]
