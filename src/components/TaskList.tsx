@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Task, taskStatuses } from '../types'
+import { Task } from '../types'
 import { CDataTable } from '@coreui/react'
 
 interface TaskListProps {
