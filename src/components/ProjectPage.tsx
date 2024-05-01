@@ -7,7 +7,7 @@ import { taskStatuses } from './TaskStatuses'
 import { useGuildMembers } from '../hooks/useGuildMembers'
 import { getAvatar, getDisplayName } from '../util'
 
-import TableComponent from './TableComponent.tsx'
+import { TableComponent } from './TableComponent.tsx'
 import { TaskList } from './TaskList'
 
 const swal = withReactContent(Swal)
@@ -67,7 +67,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			>
 				Create Task
 			</button>
-			<TableComponent />
+			<TableComponent project={project} />
 			{tasks.map(task => (
 				<li key={task.id}>
 					{/* <p>ID: {task.id}</p> */}

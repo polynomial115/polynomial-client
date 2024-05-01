@@ -1,50 +1,57 @@
 import { CDataTable } from '@coreui/react'
+import { taskStatuses } from './TaskStatuses'
+// import { useGuildMembers } from '../hooks/useGuildMembers'
+// import { getAvatar, getDisplayName } from '../util'
+import { Project } from '../types'
 
-const TableComponent = () => {
-	const usersData = [
-		{ id: 0, name: 'John Doe', registered: '2018/01/01', role: 'Guest', status: 'Pending' },
-		{ id: 1, name: 'Samppa Nori', registered: '2018/01/01', role: 'Member', status: 'Active' },
-		{ id: 2, name: 'Estavan Lykos', registered: '2018/02/01', role: 'Staff', status: 'Banned' },
-		{ id: 3, name: 'Chetan Mohamed', registered: '2018/02/01', role: 'Admin', status: 'Inactive' },
-		{ id: 4, name: 'Derick Maximinus', registered: '2018/03/01', role: 'Member', status: 'Pending' },
-		{ id: 5, name: 'Friderik Dávid', registered: '2018/01/21', role: 'Staff', status: 'Active' },
-		{ id: 6, name: 'Yiorgos Avraamu', registered: '2018/01/01', role: 'Member', status: 'Active' },
-		{ id: 7, name: 'Avram Tarasios', registered: '2018/02/01', role: 'Staff', status: 'Banned' },
-		{ id: 8, name: 'Quintin Ed', registered: '2018/02/01', role: 'Admin', status: 'Inactive' },
-		{ id: 9, name: 'Enéas Kwadwo', registered: '2018/03/01', role: 'Member', status: 'Pending' },
-		{ id: 10, name: 'Agapetus Tadeáš', registered: '2018/01/21', role: 'Staff', status: 'Active' },
-		{ id: 11, name: 'Carwyn Fachtna', registered: '2018/01/01', role: 'Member', status: 'Active' },
-		{ id: 12, name: 'Nehemiah Tatius', registered: '2018/02/01', role: 'Staff', status: 'Banned' },
-		{ id: 13, name: 'Ebbe Gemariah', registered: '2018/02/01', role: 'Admin', status: 'Inactive' },
-		{ id: 14, name: 'Eustorgios Amulius', registered: '2018/03/01', role: 'Member', status: 'Pending' },
-		{ id: 15, name: 'Leopold Gáspár', registered: '2018/01/21', role: 'Staff', status: 'Active' },
-		{ id: 16, name: 'Pompeius René', registered: '2018/01/01', role: 'Member', status: 'Active' },
-		{ id: 17, name: 'Paĉjo Jadon', registered: '2018/02/01', role: 'Staff', status: 'Banned' },
-		{ id: 18, name: 'Micheal Mercurius', registered: '2018/02/01', role: 'Admin', status: 'Inactive' },
-		{ id: 19, name: 'Ganesha Dubhghall', registered: '2018/03/01', role: 'Member', status: 'Pending' },
-		{ id: 20, name: 'Hiroto Šimun', registered: '2018/01/21', role: 'Staff', status: 'Active' },
-		{ id: 21, name: 'Vishnu Serghei', registered: '2018/01/01', role: 'Member', status: 'Active' },
-		{ id: 22, name: 'Zbyněk Phoibos', registered: '2018/02/01', role: 'Staff', status: 'Banned' },
-		{ id: 23, name: 'Aulus Agmundr', registered: '2018/01/01', role: 'Member', status: 'Pending' },
-		{ id: 42, name: 'Ford Prefect', registered: '2001/05/25', role: 'Alien', status: "Don't panic!" }
-	]
+interface Props {
+	project: Project
+}
+
+export function TableComponent({ project }: Props) {
+	const { tasks } = project
+	// const { getMember } = useGuildMembers()
+
+	const taskData = tasks.map(task => ({
+		id: task.id,
+		name: task.name,
+		status: taskStatuses[task.status].label,
+		// assignees: task.assignees.map(assigneeID => {
+		// 	const member = getMember(assigneeID)
+		// 	if (!member) return 'Unknown'
+		// 	const name = getDisplayName(member)
+		// 	return (
+		// 		<div key={assigneeID} className="AvatarsView">
+		// 			<img
+		// 				className="Avatar"
+		// 				src={getAvatar(member)}
+		// 				alt={name}
+		// 				title={name}
+		// 				onClick={() => {
+		// 					console.log('clicked')
+		// 				}}
+		// 			/>
+		// 			<div className="ToolTip">{name}</div>
+		// 		</div>
+		// 	)
+		// })
+		assignees: task.assignees
+	}))
 
 	return (
 		<CDataTable
-			items={usersData}
+			items={taskData}
 			fields={[
-				{ key: 'name', _style: { width: '40%' } },
-				{ key: 'registered', _style: { width: '20%' } },
-				{ key: 'role', _style: { width: '20%' } },
-				{ key: 'status', _style: { width: '20%' } }
+				{ key: 'name', _style: { width: '20%' } },
+				{ key: 'status', _style: { width: '40%' } },
+				{ key: 'assignees', _style: { width: '50%' } }
 			]}
 			hover
 			striped
-			itemsPerPage={5}
+			itemsPerPage={8}
 			activePage={1}
 			clickableRows
 			// onRowClick={item => history.push(`/users/${item.id}`)}
 		/>
 	)
 }
-export default TableComponent
