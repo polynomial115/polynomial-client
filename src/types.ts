@@ -57,3 +57,8 @@ export enum FetchStatus {
 	Failed,
 	Succeeded
 }
+
+export interface SelectOptionType {
+	label: string
+	value: string
+}
