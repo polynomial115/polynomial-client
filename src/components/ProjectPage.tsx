@@ -8,6 +8,7 @@ import { useGuildMembers } from '../hooks/useGuildMembers'
 import { getAvatar, getDisplayName } from '../util'
 
 import { TableComponent } from './TableComponent.tsx'
+import { EditProject } from './EditProject.tsx'
 
 const swal = withReactContent(Swal)
 

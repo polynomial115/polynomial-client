@@ -5,7 +5,6 @@ import Select from 'react-select'
 import { selectStyles } from '../styles/select-styles.ts'
 import { Timestamp, addDoc, collection } from 'firebase/firestore'
 import { db } from '../services/firebase.ts'
-import { SelectOptionType } from '../types.ts'
 
 const transformColor = (color: number) => (color ? '#' + color.toString(16).padStart(6, '0') : 'white')
 
@@ -51,7 +50,7 @@ export function CreateProject() {
 					isMulti
 					options={roles.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
 					styles={selectStyles}
-					onChange={(selected: SelectOptionType[]) => setSelectedRoles(selected.map((e: { value: string }) => e.value))}
+					onChange={selected => setSelectedRoles(selected.map(e => e.value as string))}
 					name="roles"
 				/>
 				<button type="submit">Submit</button>
