@@ -53,7 +53,18 @@ export function ProjectPage({ project, close }: ProjectProps) {
 				<input type="text" name="name" required />
 				<button>Save</button>
 			</div> */}
-
+			<button
+				onClick={() =>
+					swal.fire({
+						html: <EditProject name={project.name} managerRoles={project.managerRoles} tasks={project.tasks} projectId={project.id} />,
+						background: '#202225',
+						color: 'white',
+						showConfirmButton: false
+					})
+				}
+			>
+				Edit Project
+			</button>
 			<button
 				onClick={() =>
 					swal.fire({
