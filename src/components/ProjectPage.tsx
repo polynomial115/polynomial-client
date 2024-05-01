@@ -71,7 +71,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			{tasks.map(task => (
 				<li key={task.id}>
 					{/* <p>ID: {task.id}</p> */}
-					<div className="TaskContainer">
+					<button style={{ width: '75vw', height: '12vh', margin: 10 }} className="TaskContainer">
 						<b>Task Name</b>: {task.name} |
 						<span style={{ color: taskStatuses[task.status].color }}>
 							{' '}
@@ -83,7 +83,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 							if (!member) return 'Unknown'
 							const name = getDisplayName(member)
 							return (
-								<div key={assigneeId} className="AvatarsView">
+								<div key={assigneeId} style={{ margin: 2 }} className="AvatarsView">
 									<img
 										className="Avatar"
 										src={getAvatar(member)}
@@ -97,12 +97,12 @@ export function ProjectPage({ project, close }: ProjectProps) {
 								</div>
 							)
 						})}
-						{/* <button>Edit Task</button> */}
+						{<button>Edit Task</button>}
 						<br />
-					</div>
+					</button>
 				</li>
 			))}
-			<TaskList tasks={tasks} />
+			{/* <TaskList tasks={tasks} /> */}
 		</div>
 	)
 }
