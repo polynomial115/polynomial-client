@@ -1,5 +1,5 @@
 export interface Project {
-	id: string
+	id: string // Should be unique for every project
 	guildId: string
 	name: string
 	managerRoles: string[]

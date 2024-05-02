@@ -11,7 +11,7 @@ import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { CreateProject } from './components/CreateProject.tsx'
-import { ProjectList } from './ProjectList.tsx'
+import { ProjectList } from './components/ProjectList.tsx'
 import { ProjectPage } from './components/ProjectPage.tsx'
 import type { Project } from './types.ts'
 

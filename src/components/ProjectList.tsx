@@ -1,5 +1,5 @@
-import type { Project } from './types'
-import './styles/ProjectView.css'
+import type { Project } from '../types'
+import '../styles/ProjectView.css'
 
 interface Props {
 	projects: Project[]
