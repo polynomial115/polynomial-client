@@ -71,26 +71,6 @@ function App() {
 				Create Project
 			</button>
 			<ProjectList projects={projects} setActiveProject={setActiveProject} />
-			<div className="card">
-				<button
-					onClick={() => {
-						setCount(count => count + 1)
-						sendCount((count || 0) + 1)
-					}}
-				>
-					Count is equal to the value of {count}
-				</button>
-				<button
-					onClick={() => {
-						setCount(0)
-						sendCount(0)
-					}}
-				>
-					Reset Count
-				</button>
-				<p>Participants: {participants.map(p => p.username).join(', ')}</p>
-			</div>
-
 			<p className="read-the-docs">
 				Connected to Firebase as user {auth.claims.user_id as string} with roles {JSON.stringify(auth.claims.roles)}
 			</p>
