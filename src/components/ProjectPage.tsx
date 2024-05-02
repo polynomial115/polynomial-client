@@ -5,10 +5,9 @@ import Swal from 'sweetalert2'
 import { CreateTask } from './CreateTask'
 import { taskStatuses } from './TaskStatuses'
 import { useGuildMembers } from '../hooks/useGuildMembers'
-import { getAvatar, getDisplayName } from '../util'
-
 import { TableComponent } from './TableComponent.tsx'
 import { EditProject } from './EditProject.tsx'
+import { DiscordAvatar } from './User.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -88,28 +87,13 @@ export function ProjectPage({ project, close }: ProjectProps) {
 							{' '}
 							<b>&nbsp;{taskStatuses[task.status].label}&nbsp;</b>{' '}
 						</span>{' '}
-						|<b>&nbsp;Assignees</b>:&nbsp;
-						{task.assignees.map(assigneeId => {
-							const member = getMember(assigneeId)
-							if (!member) return 'Unknown'
-							const name = getDisplayName(member)
-							return (
-								<div key={assigneeId} style={{ margin: 2 }} className="AvatarsView">
-									<img
-										className="Avatar"
-										src={getAvatar(member)}
-										alt={name}
-										title={name}
-										onClick={() => {
-											console.log('clicked')
-										}}
-									/>
-									<div className="ToolTip">{name}</div>
-								</div>
-							)
-						})}
-						{<button>Edit Task</button>}
-						<br />
+						|<b>&nbsp;Assignees:&nbsp</b>
+						<div style={{ margin: 12 }}>
+							{task.assignees.map(assigneeId => {
+								return <DiscordAvatar key={assigneeId} memberId={assigneeId} getMember={getMember} />
+							})}
+						</div>
+						<button>Edit Task</button>
 					</button>
 				</li>
 			))}

@@ -21,7 +21,7 @@ ul {
 	text-align: left;
 	border-radius: 0;
 	border: none;
-	transition: background 0.2s;
+	transition: ease-in-out 0.2s;
 
 	&:hover {
 		padding: 17px;

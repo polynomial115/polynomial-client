@@ -14,26 +14,21 @@ import { CreateProject } from './components/CreateProject.tsx'
 import { ProjectList } from './components/ProjectList.tsx'
 import { ProjectPage } from './components/ProjectPage.tsx'
 import type { Project } from './types.ts'
+import { DiscordAvatar } from './components/User.tsx'
+import { useGuildMembers } from './hooks/useGuildMembers.ts'
 
 const swal = withReactContent(Swal)
 
-const sendCount = (count: number) => {
-	conn.send(String(count))
-}
-
 function App() {
-	const [count, setCount] = useState(0)
 	const [channel, setChannel] = useState('')
 	const [projects, setProjects] = useState<Project[]>([])
 	const [activeProject, setActiveProject] = useState('')
-
+	const { getMember } = useGuildMembers() // can't access context inside modal so getting here
 	const participants = useParticipants()
 
 	useEffect(() => {
 		conn.send('')
-		conn.addEventListener('message', event => {
-			setCount(+event.data)
-		})
+
 		discordSdk.commands.getChannel({ channel_id: discordSdk.channelId! }).then(channel => setChannel(channel.name!))
 
 		const projectsQuery = query(collection(db, 'projects'), where('guildId', '==', discordSdk.guildId))
@@ -56,6 +51,10 @@ function App() {
 
 	return (
 		<div className="RootProject">
+			<h3>Participants: </h3>
+			{participants.map(p => {
+				return <DiscordAvatar size={50} key={p.id} memberId={p.id} getMember={getMember} />
+			})}
 			<h1>{channel}</h1>
 			<p>Projects: {projects.length}</p>
 			<button
