@@ -18,9 +18,11 @@
 	will-change: filter;
 	transition: filter 300ms;
 }
+
 .logo:hover {
 	filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
 	filter: drop-shadow(0 0 2em #61dafbaa);
 }
@@ -44,6 +46,7 @@
 	from {
 		transform: rotate(0deg);
 	}
+
 	to {
 		transform: rotate(360deg);
 	}
@@ -79,4 +82,29 @@
 
 .EditProjectButton {
 	background-color: #202225;
+}
+
+.textbox {
+	box-sizing: border-box;
+	border: 1px;
+	border-radius: 4px;
+	padding: 10px;
+	margin: 4px 0px;
+	width: 100%;
+	font-size: 16px;
+}
+
+.choice-button {
+	font-weight: bolder;
+	margin: 5px 0px;
+	padding: 12px 24px;
+	border-radius: 0;
+
+	&:first-child {
+		border-radius: 4px 0 0 4px;
+	}
+
+	&:last-child {
+		border-radius: 0 4px 4px 0;
+	}
 }

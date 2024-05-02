@@ -1,6 +1,5 @@
 import { FormEvent, useState } from 'react'
 import Select from 'react-select'
-import { styles } from '../styles/styles.ts'
 import { selectStyles } from '../styles/select-styles.ts'
 import { db } from '../services/firebase.ts'
 import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore'
@@ -55,15 +54,16 @@ export function CreateTask({ projectId, members }: Props) {
 			<h2>Create Task</h2>
 			{error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
 			<form onSubmit={handleSubmit}>
-				<label htmlFor="task-name">Task name:</label>
 				<input
 					id="task-name"
-					style={styles.textBox}
+					className="textbox"
 					type="text"
 					value={formData.name}
 					onChange={e => handleInputChange('name', e.target.value)}
+					placeholder="Enter task name..."
 					required
 				/>
+				<br />
 				<br />
 				<Select
 					isMulti={true}
@@ -83,13 +83,9 @@ export function CreateTask({ projectId, members }: Props) {
 				/>
 				<h3 style={{ marginBottom: 5 }}>Set Priority</h3>
 				<ChoiceButtons choices={priorities} setValueCallback={value => handleInputChange('priority', value)} />
-				{/* <br/> */}
 
 				<h3 style={{ marginBottom: 5 }}>Set Status</h3>
 				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} />
-				<p>Priority: {priorities[formData.priority].label}</p>
-				<br />
-				<p>Status: {taskStatuses[formData.status].label}</p>
 				<br />
 				<button type="submit">Create Task</button>
 			</form>

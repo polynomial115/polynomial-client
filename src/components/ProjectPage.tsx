@@ -71,7 +71,8 @@ export function ProjectPage({ project, close }: ProjectProps) {
 						html: <CreateTask projectId={project.id} members={members} />,
 						background: '#202225',
 						color: 'white',
-						showConfirmButton: false
+						showConfirmButton: false,
+						width: '625px'
 					})
 				}
 			>
