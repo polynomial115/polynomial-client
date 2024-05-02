@@ -15,7 +15,6 @@ import { ProjectList } from './components/ProjectList.tsx'
 import { ProjectPage } from './components/ProjectPage.tsx'
 import type { Project } from './types.ts'
 import { DiscordAvatar } from './components/User.tsx'
-import { useGuildMembers } from './hooks/useGuildMembers.ts'
 
 const swal = withReactContent(Swal)
 
@@ -23,7 +22,6 @@ function App() {
 	const [channel, setChannel] = useState('')
 	const [projects, setProjects] = useState<Project[]>([])
 	const [activeProject, setActiveProject] = useState('')
-	const { getMember } = useGuildMembers() // can't access context inside modal so getting here
 	const participants = useParticipants()
 
 	useEffect(() => {
@@ -53,7 +51,7 @@ function App() {
 		<div className="RootProject">
 			<h3>Participants: </h3>
 			{participants.map(p => {
-				return <DiscordAvatar size={50} key={p.id} memberId={p.id} getMember={getMember} />
+				return <DiscordAvatar size={50} key={p.id} memberId={p.id} />
 			})}
 			<h1>{channel}</h1>
 			<p>Projects: {projects.length}</p>

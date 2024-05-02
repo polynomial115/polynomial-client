@@ -1,30 +1,22 @@
+import { useGuildMembers } from '../hooks/useGuildMembers'
 import { getAvatar, getDisplayName } from '../util'
 import { APIGuildMember } from 'discord-api-types/v10'
 
 interface DiscordAvatarProps {
 	memberId: string
-	getMember: (id: string) => APIGuildMember | undefined
 	size?: number
 }
 
-export function DiscordAvatar({ memberId, getMember, size }: DiscordAvatarProps) {
+export function DiscordAvatar({ memberId, size }: DiscordAvatarProps) {
+	const { getMember } = useGuildMembers()
 	const member: APIGuildMember | undefined = getMember(memberId)
 	if (!member) return null
 	if (!size) size = 35 // Default avatar size
 	const name = getDisplayName(member)
 	return (
-		<>
-			<img
-				className="Avatar"
-				src={getAvatar(member)}
-				style={{ margin: 3.5, width: size, height: size }}
-				alt={name}
-				title={name}
-				onClick={() => {
-					console.log('clicked')
-				}}
-			/>
+		<div style={{ display: 'inline-block' }}>
+			<img className="Avatar" src={getAvatar(member, 128)} style={{ margin: 3.5, width: size, height: size }} alt={name} />
 			<div className="ToolTip">{name}</div>
-		</>
+		</div>
 	)
 }

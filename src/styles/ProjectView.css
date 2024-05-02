@@ -61,11 +61,10 @@ ul {
 	transition: 0.2s;
 	margin-left: 0.1rem;
 	margin-right: 0.1rem;
-}
 
-.Avatar:hover {
-	cursor: pointer;
-	transform: scale(1.15);
+	&:hover {
+		transform: scale(1.15);
+	}
 }
 
 .AvatarsView {
