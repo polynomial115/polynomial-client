@@ -70,11 +70,6 @@ export function EditProject({ name, managerRoles, tasks, projectId, currUserRole
 				Project name: <input type="text" name="name" required ref={nameInputRef} defaultValue={name} />
 				<Select
 					isMulti
-					onChange={selected => {
-						setSelectedRoles(selected.map(e => ({ name: e.label, id: e.value, color: e.color }) as mockAPIRole))
-						setMgmt(selected.map(e => e.value as string))
-					}}
-					value={selectedRoles.map(r => ({ value: r.id, label: r.name, color: r.color }))}
 					options={roles.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
 					styles={selectStyles}
 					name="roles"
