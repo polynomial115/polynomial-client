@@ -8,6 +8,8 @@ import { TableComponent } from './TableComponent.tsx'
 import { EditProject } from './EditProject.tsx'
 import { DiscordAvatar } from './User.tsx'
 import { PieChart } from './PieChart.tsx'
+import { useAuth } from '../hooks/useAuth.ts'
+
 const swal = withReactContent(Swal)
 
 interface ProjectProps {
@@ -26,7 +28,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 	// 		[name]: value
 	// 	}))
 	// }
-
+	const currUserRoles = useAuth().claims.roles as string[]
 	return (
 		<div>
 			<button onClick={close}>Close</button>
@@ -34,7 +36,15 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			<button
 				onClick={() =>
 					swal.fire({
-						html: <EditProject name={project.name} managerRoles={project.managerRoles} tasks={project.tasks} projectId={project.id} />,
+						html: (
+							<EditProject
+								name={project.name}
+								managerRoles={project.managerRoles}
+								tasks={project.tasks}
+								projectId={project.id}
+								currUserRoles={currUserRoles}
+							/>
+						),
 						background: '#202225',
 						color: 'white',
 						showConfirmButton: false

@@ -13,24 +13,38 @@ interface Props {
 	managerRoles: string[]
 	tasks: Task[]
 	projectId: string
+	currUserRoles: string[]
 }
 
-export function EditProject({ name, managerRoles, tasks, projectId }: Props) {
+interface mockAPIRole {
+	name: string
+	id: string
+	color: string
+}
+
+export function EditProject({ name, managerRoles, tasks, projectId, currUserRoles }: Props) {
 	const [roles, setRoles] = useState<APIRole[]>([])
-	const [selectedRoles, setSelectedRoles] = useState<string[]>([])
+	const [selectedRoles, setSelectedRoles] = useState<mockAPIRole[]>([])
 	const nameInputRef = createRef<HTMLInputElement>()
 	const [edited, setEdited] = useState(false)
-	// const [users, setUsers] = useState<APIGuildMember[]>([])
+	const [mgmt, setMgmt] = useState<string[]>(managerRoles)
 
 	useEffect(() => {
 		fetch(`/api/roles/${discordSdk.guildId}`)
 			.then(r => r.json())
 			.then(roles => {
 				setRoles((roles as APIRole[]).sort((a, b) => b.position - a.position))
+				setSelectedRoles(
+					(roles as APIRole[])
+						.filter(r => mgmt.includes(r.id))
+						.map(r => ({ name: r.name, id: r.id, color: transformColor(r.color) }) as mockAPIRole)
+				)
 			})
-		// fetch(`/api/users/${discordSdk.guildId}`).then(u => u.json()).then(setUsers)
-	}, [managerRoles])
+	}, [mgmt])
 
+	// checks if currnet user has manager role or @everyone has manager role
+	if (managerRoles.length && !currUserRoles.filter(r => managerRoles.includes(r)).length && !managerRoles.includes(discordSdk.guildId!))
+		return <div>You do not have permissions to edit this project!</div>
 	if (edited) return <div>Project edited!</div>
 	const projectDoc = doc(db, 'projects', projectId)
 	return (
@@ -43,7 +57,7 @@ export function EditProject({ name, managerRoles, tasks, projectId }: Props) {
 					await updateDoc(projectDoc, {
 						guildId: discordSdk.guildId,
 						name: nameInputRef.current?.value,
-						managerRoles: selectedRoles,
+						managerRoles: selectedRoles.map(r => r.id),
 						memberRoles: [],
 						managerUsers: [],
 						memberUsers: [],
@@ -54,21 +68,18 @@ export function EditProject({ name, managerRoles, tasks, projectId }: Props) {
 				}}
 			>
 				Project name: <input type="text" name="name" required ref={nameInputRef} defaultValue={name} />
-				{/* {roles.map(r => <div key={r.id}>{r.name}</div>)} */}
 				<Select
 					isMulti
-					// value={selectedRoles
-					// 	.filter(role => managerRoles.includes(role.id))
-					// 	.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
+					onChange={selected => {
+						setSelectedRoles(selected.map(e => ({ name: e.label, id: e.value, color: e.color }) as mockAPIRole))
+						setMgmt(selected.map(e => e.value as string))
+					}}
+					value={selectedRoles.map(r => ({ value: r.id, label: r.name, color: r.color }))}
 					options={roles.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
 					styles={selectStyles}
-					onChange={selected => setSelectedRoles(selected.map(e => e.value as string))}
 					name="roles"
 				/>
 				<button type="submit">Submit</button>
-				{/* <Select 
-				isMulti
-				optinos = {users.map(u)}></Select> */}
 			</form>
 		</div>
 	)
