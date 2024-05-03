@@ -13,7 +13,7 @@ import withReactContent from 'sweetalert2-react-content'
 import { CreateProject } from './components/CreateProject.tsx'
 import { ProjectList } from './components/ProjectList.tsx'
 import { ProjectPage } from './components/ProjectPage.tsx'
-import type { Project } from './types.ts'
+import { type Project } from './types.ts'
 import { DiscordAvatar } from './components/User.tsx'
 
 const swal = withReactContent(Swal)
