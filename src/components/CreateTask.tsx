@@ -94,15 +94,9 @@ export function CreateTask({ projectId, members }: Props) {
 					name="deadline"
 					options={deadlines}
 					placeholder="Select deadline..."
-					onChange={selected =>
-						handleInputChange(
-							'deadline',
-							selected!.value as Deadline
-						)
-					}
+					onChange={selected => handleInputChange('deadline', selected!.value as Deadline)}
 					styles={selectStyles}
 				/>
-
 
 				<button type="submit">Create Task</button>
 			</form>

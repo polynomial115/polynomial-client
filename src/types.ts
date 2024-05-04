@@ -61,7 +61,7 @@ export const deadlines: Choice[] = [
 	{ value: Deadline.FourDays, label: 'in four days', color: 'white' },
 	{ value: Deadline.OneWeek, label: 'in one week', color: 'white' },
 	{ value: Deadline.TwoWeeks, label: 'in two weeks', color: 'white' },
-	{ value: Deadline.OneMonth, label: 'in one month', color: 'white' },
+	{ value: Deadline.OneMonth, label: 'in one month', color: 'white' }
 ]
 
 export interface Task {
