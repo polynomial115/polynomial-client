@@ -14,7 +14,7 @@ export function DiscordAvatar({ memberId, size }: DiscordAvatarProps) {
 	if (!size) size = 35 // Default avatar size
 	const name = getDisplayName(member)
 	return (
-		<div style={{ display: 'inline-block' }}>
+		<div className="AvatarContainer">
 			<img className="Avatar" src={getAvatar(member, 128)} style={{ margin: 3.5, width: size, height: size }} alt={name} />
 			<div className="ToolTip">{name}</div>
 		</div>
