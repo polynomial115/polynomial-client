@@ -5,7 +5,7 @@ import { db } from '../services/firebase.ts'
 import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { ChoiceButtons } from './ChoiceButtons.tsx'
-import { Priority, Task, TaskStatus, priorities, taskStatuses } from '../types.ts'
+import { Priority, Task, TaskStatus, priorities, taskStatuses, deadlines, Deadline } from '../types.ts'
 import Swal from 'sweetalert2'
 
 type FormData = Omit<Task, 'id'>
@@ -20,6 +20,7 @@ export function CreateTask({ projectId, members }: Props) {
 		status: TaskStatus.ToDo,
 		priority: Priority.Normal,
 		assignees: [],
+		deadline: Deadline.Never,
 		name: ''
 	})
 	const [error, setError] = useState('')
@@ -87,6 +88,22 @@ export function CreateTask({ projectId, members }: Props) {
 				<h3 style={{ marginBottom: 5 }}>Set Status</h3>
 				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} />
 				<br />
+				<h3 style={{ marginBottom: 5 }}>When will this task be due?</h3>
+				<Select
+					isMulti={false}
+					name="deadline"
+					options={deadlines}
+					placeholder="Select deadline..."
+					onChange={selected =>
+						handleInputChange(
+							'deadline',
+							selected!.value as Deadline
+						)
+					}
+					styles={selectStyles}
+				/>
+
+
 				<button type="submit">Create Task</button>
 			</form>
 		</div>
