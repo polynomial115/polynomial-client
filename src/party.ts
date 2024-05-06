@@ -11,3 +11,19 @@ export const conn = new PartySocket({
 })
 
 console.log('party')
+
+export enum PayloadType {
+	PageUpdate,
+	GetPage
+}
+
+export interface PayloadData {
+	[PayloadType.PageUpdate]: {
+		project: string
+	}
+	[PayloadType.GetPage]: null
+}
+
+export function sendPayload<T extends PayloadType>(type: T, ...args: PayloadData[T] extends null ? [] : [PayloadData[T]]) {
+	conn.send(JSON.stringify({ type, data: args[0] }))
+}
