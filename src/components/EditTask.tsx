@@ -2,10 +2,10 @@ import { FormEvent, useState } from 'react'
 import Select from 'react-select'
 import { selectStyles } from '../styles/select-styles.ts'
 import { db } from '../services/firebase.ts'
-import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore'
+import { doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { ChoiceButtons } from './ChoiceButtons.tsx'
-import { Priority, Task, TaskStatus, priorities, taskStatuses, deadlines, Deadline } from '../types.ts'
+import { Task, priorities, taskStatuses, deadlines, Deadline } from '../types.ts'
 import Swal from 'sweetalert2'
 
 type FormData = Omit<Task, 'id'>
@@ -13,15 +13,17 @@ type FormData = Omit<Task, 'id'>
 interface Props {
 	projectId: string
 	members: APIGuildMember[]
+	currTask: Task
+	allTasks: Task[]
 }
 
-export function CreateTask({ projectId, members }: Props) {
+export function UpdateTask({ projectId, members, currTask, allTasks }: Props) {
 	const [formData, setFormData] = useState<FormData>({
-		status: TaskStatus.ToDo,
-		priority: Priority.Normal,
-		assignees: [],
-		deadline: Deadline.Never,
-		name: ''
+		status: currTask.status,
+		priority: currTask.priority,
+		assignees: currTask.assignees,
+		deadline: currTask.deadline,
+		name: currTask.name
 	})
 	const [error, setError] = useState('')
 
@@ -32,19 +34,19 @@ export function CreateTask({ projectId, members }: Props) {
 			return
 		}
 
-		const taskData = { ...formData, id: doc(collection(db, 'tasks')).id } // generate random id
+		const taskData = { ...formData, id: currTask.id }
 
 		const projectDoc = doc(db, 'projects', projectId)
 
 		try {
 			await updateDoc(projectDoc, {
-				tasks: arrayUnion(taskData)
+				tasks: allTasks.map(t => (t.id == currTask.id ? taskData : t))
 			})
-			setError('Created task successfully.')
+			setError('Edited task successfully.')
 			Swal.close()
 		} catch (error) {
 			console.error('Error adding document:', error)
-			setError('Failed to create task.')
+			setError('Failed to edit task.')
 		}
 	}
 
@@ -52,7 +54,7 @@ export function CreateTask({ projectId, members }: Props) {
 
 	return (
 		<div style={{ padding: '20px' }}>
-			<h2>Create Task</h2>
+			<h2>Edit Task: {currTask.name}</h2>
 			{error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
 			<form onSubmit={handleSubmit}>
 				<input
@@ -73,6 +75,9 @@ export function CreateTask({ projectId, members }: Props) {
 						value: m.user!.id,
 						label: m.user!.username
 					}))}
+					value={members
+						.filter((m: APIGuildMember) => formData.assignees.includes(m.user!.id))
+						.map(m => ({ value: m.user!.id, label: m.user!.username }))}
 					placeholder="Select assignees..."
 					onChange={selected =>
 						handleInputChange(
@@ -83,22 +88,27 @@ export function CreateTask({ projectId, members }: Props) {
 					styles={selectStyles}
 				/>
 				<h3 style={{ marginBottom: 5 }}>Set Priority</h3>
-				<ChoiceButtons choices={priorities} setValueCallback={value => handleInputChange('priority', value)} defaultValue={NaN} />
+				<ChoiceButtons
+					choices={priorities}
+					setValueCallback={value => handleInputChange('priority', value)}
+					defaultValue={currTask.priority}
+				/>
 
 				<h3 style={{ marginBottom: 5 }}>Set Status</h3>
-				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} defaultValue={NaN} />
+				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} defaultValue={currTask.status} />
 				<br />
 				<h3 style={{ marginBottom: 5 }}>When will this task be due?</h3>
 				<Select
 					isMulti={false}
 					name="deadline"
+					value={deadlines.filter(d => d.value == formData.deadline.valueOf())}
 					options={deadlines}
 					placeholder="Select deadline..."
 					onChange={selected => handleInputChange('deadline', selected!.value as Deadline)}
 					styles={selectStyles}
 				/>
 
-				<button type="submit">Create Task</button>
+				<button type="submit">Edit Task</button>
 			</form>
 		</div>
 	)

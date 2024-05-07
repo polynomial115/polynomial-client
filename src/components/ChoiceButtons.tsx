@@ -4,10 +4,12 @@ import { Choice } from '../types'
 interface ChoiceButtonProps {
 	choices: Choice[]
 	setValueCallback: (value: number) => void
+	defaultValue: number
 }
 
-export const ChoiceButtons = ({ choices, setValueCallback }: ChoiceButtonProps) => {
-	const [whichButtonClicked, setWhichButtonClicked] = useState<number>()
+export const ChoiceButtons = ({ choices, setValueCallback, defaultValue = NaN }: ChoiceButtonProps) => {
+	const [whichButtonClicked, setWhichButtonClicked] = useState<number>(defaultValue)
+	console.log(whichButtonClicked)
 	return (
 		<div>
 			{choices.map(p => (
