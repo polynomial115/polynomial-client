@@ -8,11 +8,12 @@ export const selectStyles: StylesConfig<{ value: unknown; label: string; color?:
 	control: provided => ({
 		...provided,
 		background: '#202225',
+		padding: 4,
 		color: 'white'
 	}),
 	menu: provided => ({
 		...provided,
-		background: '#111111',
+		background: '#1a1a1a',
 		color: 'white'
 	}),
 	option: (styles, { data, isDisabled, isFocused, isSelected }) => {
@@ -33,6 +34,9 @@ export const selectStyles: StylesConfig<{ value: unknown; label: string; color?:
 		const color = chroma(data.color ?? 'black')
 		return {
 			...styles,
+			margin: 4,
+			padding: 6,
+			fontSize: 18,
 			backgroundColor: color.alpha(0.1).css()
 		}
 	},

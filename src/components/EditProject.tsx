@@ -67,7 +67,7 @@ export function EditProject({ name, managerRoles, tasks, projectId, currUserRole
 					setEdited(true)
 				}}
 			>
-				Project name: <input type="text" name="name" required ref={nameInputRef} defaultValue={name} />
+				Project name: <input type="text" name="name" className="textbox" required ref={nameInputRef} defaultValue={name} />
 				<Select
 					isMulti
 					onChange={selected => {

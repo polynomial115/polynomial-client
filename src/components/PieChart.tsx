@@ -26,25 +26,35 @@ export function PieChart({ label, property, tasks, data }: PieChartProps) {
 	})
 	// console.log('Chart Data', chartData)
 	return (
-		// <div style={{ width: '50%', height: '50%', justifyContent: 'center', alignItems: 'center', display: 'flex' }}>
-		<div style={{ justifyContent: 'center', alignItems: 'center', width: '50%', height: '50%', margin: 'auto' }}>
-			<Doughnut
-				data={{
-					labels: data.map((d: Choice) => d.label),
-					datasets: [
-						{
-							label: label,
-							data: data.map((data: Choice) => {
-								return tasks.map((task: Task) => task[property as keyof Task] as number).filter((x: number) => x === data.value)
-									.length
-							}),
-							backgroundColor: data.map((d: Choice) => d.color),
-							borderWidth: 0
-						}
-					]
-				}}
-				options={{ cutout: '45%' }}
-			/>
+		<div>
+			{!tasks || tasks.length === 0 ? (
+				<div style={{ margin: '10px 5px', padding: '40px 25px', backgroundColor: 'black' }}>
+					<p>Add some Tasks to see Pie Chart Visualization!</p>
+				</div>
+			) : (
+				<div style={{ justifyContent: 'center', alignItems: 'center', width: '50%', height: '50%', margin: 'auto' }}>
+					<Doughnut
+						data={{
+							labels: data.map((d: Choice) => d.label),
+							datasets: [
+								{
+									label: label,
+									data: data.map((data: Choice) => {
+										return tasks
+											.map((task: Task) => task[property as keyof Task] as number)
+											.filter((x: number) => x === data.value).length
+									}),
+									backgroundColor: data.map((d: Choice) => d.color),
+									borderWidth: 0
+								}
+							]
+						}}
+						options={{
+							cutout: '45%'
+						}}
+					/>
+				</div>
+			)}
 		</div>
 	)
 }
