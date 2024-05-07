@@ -1,16 +1,10 @@
 import PartySocket from 'partysocket'
 import { discordSdk } from './services/discord.ts'
 
-console.log(location)
-
-// A PartySocket is like a WebSocket, except it's a bit more magical.
-// It handles reconnection logic, buffering messages while it's offline, and more.
 export const conn = new PartySocket({
 	host: location.origin + '/api',
 	room: discordSdk.instanceId
 })
-
-console.log('party')
 
 export enum PayloadType {
 	PageUpdate,
@@ -21,9 +15,18 @@ export interface PayloadData {
 	[PayloadType.PageUpdate]: {
 		project: string
 	}
-	[PayloadType.GetPage]: null
+	[PayloadType.GetPage]: undefined
 }
 
-export function sendPayload<T extends PayloadType>(type: T, ...args: PayloadData[T] extends null ? [] : [PayloadData[T]]) {
-	conn.send(JSON.stringify({ type, data: args[0] }))
+export interface Payload<T extends PayloadType = PayloadType> {
+	type: T
+	data: PayloadData[T]
+}
+
+export function payloadIsType<T extends PayloadType>(payload: Payload, type: T): payload is Payload<T> {
+	return payload.type === type
+}
+
+export function sendPayload<T extends PayloadType>(type: T, ...args: PayloadData[T] extends undefined ? [] : [PayloadData[T]]) {
+	conn.send(JSON.stringify({ type, data: args[0] } satisfies Payload))
 }

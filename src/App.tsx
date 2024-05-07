@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import './styles/App.css'
 import './providers/auth.tsx'
-import { conn } from './party'
+import { PayloadType, sendPayload } from './party'
 import { discordSdk } from './services/discord.ts'
 import { useAuth } from './hooks/useAuth.ts'
 import { useParticipants } from './hooks/useParticipants.ts'
@@ -15,6 +15,7 @@ import { ProjectList } from './components/ProjectList.tsx'
 import { ProjectPage } from './components/ProjectPage.tsx'
 import { type Project } from './types.ts'
 import { DiscordAvatar } from './components/User.tsx'
+import { useEvent } from './hooks/useEvent.ts'
 
 const swal = withReactContent(Swal)
 
@@ -25,8 +26,6 @@ function App() {
 	const participants = useParticipants()
 
 	useEffect(() => {
-		conn.send('')
-
 		discordSdk.commands.getChannel({ channel_id: discordSdk.channelId! }).then(channel => setChannel(channel.name!))
 
 		const projectsQuery = query(collection(db, 'projects'), where('guildId', '==', discordSdk.guildId))
@@ -34,6 +33,7 @@ function App() {
 			projectsQuery,
 			snapshot => {
 				setProjects(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Project))
+				sendPayload(PayloadType.GetPage)
 			},
 			error => {
 				console.error('Error fetching projects:', error)
@@ -43,9 +43,16 @@ function App() {
 		return () => unsubscribe()
 	}, [])
 
+	useEvent(PayloadType.PageUpdate, data => setActiveProject(data.project))
+
 	const auth = useAuth()
 
-	if (activeProject) return <ProjectPage project={projects.find(p => p.id === activeProject)!} close={() => setActiveProject('')} />
+	function updateProject(projectId: string) {
+		setActiveProject(projectId)
+		sendPayload(PayloadType.PageUpdate, { project: projectId })
+	}
+
+	if (activeProject) return <ProjectPage project={projects.find(p => p.id === activeProject)!} close={() => updateProject('')} />
 
 	return (
 		<div className="RootProject">
@@ -67,7 +74,7 @@ function App() {
 			>
 				Create Project
 			</button>
-			<ProjectList projects={projects} setActiveProject={setActiveProject} />
+			<ProjectList projects={projects} setActiveProject={updateProject} />
 			<p className="read-the-docs">
 				Connected to Firebase as user {auth.claims.user_id as string} with roles {JSON.stringify(auth.claims.roles)}
 			</p>
