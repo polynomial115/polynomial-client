@@ -101,7 +101,7 @@ export function UpdateTask({ projectId, members, currTask, allTasks }: Props) {
 				<Select
 					isMulti={false}
 					name="deadline"
-					value={deadlines.filter(d => d.value == formData.deadline.valueOf())}
+					value={deadlines.filter(d => d.value == formData.deadline?.valueOf())}
 					options={deadlines}
 					placeholder="Select deadline..."
 					onChange={selected => handleInputChange('deadline', selected!.value as Deadline)}
