@@ -6,7 +6,6 @@ import { selectStyles } from '../styles/select-styles.ts'
 import { Timestamp, doc, updateDoc } from 'firebase/firestore'
 import { db } from '../services/firebase.ts'
 import { Task } from '../types.ts'
-import { useAuth } from '../hooks/useAuth.ts'
 
 const transformColor = (color: number) => (color ? '#' + color.toString(16).padStart(6, '0') : 'white')
 interface Props {
@@ -15,6 +14,7 @@ interface Props {
 	tasks: Task[]
 	projectId: string
 	currUserRoles: string[]
+	token: string
 }
 
 interface mockAPIRole {
@@ -23,16 +23,15 @@ interface mockAPIRole {
 	color: string
 }
 
-export function EditProject({ name, managerRoles, tasks, projectId, currUserRoles }: Props) {
+export function EditProject({ name, managerRoles, tasks, projectId, currUserRoles, token }: Props) {
 	const [roles, setRoles] = useState<APIRole[]>([])
 	const [selectedRoles, setSelectedRoles] = useState<mockAPIRole[]>([])
 	const nameInputRef = createRef<HTMLInputElement>()
 	const [edited, setEdited] = useState(false)
 	const [mgmt, setMgmt] = useState<string[]>(managerRoles)
-	const auth = useAuth()
 
 	useEffect(() => {
-		fetch(`/api/roles/${discordSdk.guildId}`, { headers: { Authorization: auth.serverToken } })
+		fetch(`/api/roles/${discordSdk.guildId}`, { headers: { Authorization: token } })
 			.then(r => r.json())
 			.then(roles => {
 				setRoles((roles as APIRole[]).sort((a, b) => b.position - a.position))
@@ -42,7 +41,7 @@ export function EditProject({ name, managerRoles, tasks, projectId, currUserRole
 						.map(r => ({ name: r.name, id: r.id, color: transformColor(r.color) }) as mockAPIRole)
 				)
 			})
-	}, [mgmt, auth.serverToken])
+	}, [mgmt, token])
 
 	// checks if currnet user has manager role or @everyone has manager role
 	if (managerRoles.length && !currUserRoles.filter(r => managerRoles.includes(r)).length && !managerRoles.includes(discordSdk.guildId!))

@@ -5,25 +5,27 @@ import Select from 'react-select'
 import { selectStyles } from '../styles/select-styles.ts'
 import { Timestamp, addDoc, collection } from 'firebase/firestore'
 import { db } from '../services/firebase.ts'
-import { useAuth } from '../hooks/useAuth.ts'
 
 const transformColor = (color: number) => (color ? '#' + color.toString(16).padStart(6, '0') : 'white')
 
-export function CreateProject() {
+interface Props {
+	token: string
+}
+
+export function CreateProject({ token }: Props) {
 	const [roles, setRoles] = useState<APIRole[]>([])
 	const [selectedRoles, setSelectedRoles] = useState<string[]>([])
 	const nameInputRef = createRef<HTMLInputElement>()
 	const [created, setCreated] = useState(false)
-	const auth = useAuth()
 
 	// const [users, setUsers] = useState<APIGuildMember[]>([])
 
 	useEffect(() => {
-		fetch(`/api/roles/${discordSdk.guildId}`, { headers: { Authorization: auth.serverToken } })
+		fetch(`/api/roles/${discordSdk.guildId}`, { headers: { Authorization: token } })
 			.then(r => r.json())
 			.then(roles => setRoles((roles as APIRole[]).sort((a, b) => b.position - a.position)))
 		// fetch(`/api/users/${discordSdk.guildId}`).then(u => u.json()).then(setUsers)
-	}, [auth.serverToken])
+	}, [token])
 
 	if (created) return <div>Project created!</div>
 

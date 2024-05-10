@@ -22,6 +22,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 	const { tasks } = project
 
 	const { members } = useGuildMembers() // can't access context inside modal so getting here
+	const auth = useAuth()
 
 	// const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => {
 	// 	setFormData(prev => ({
@@ -44,6 +45,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 								tasks={project.tasks}
 								projectId={project.id}
 								currUserRoles={currUserRoles}
+								token={auth.serverToken}
 							/>
 						),
 						background: '#202225',
