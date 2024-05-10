@@ -9,10 +9,15 @@ const firebaseAuth = getAuth()
 interface LoginResponse {
 	discordToken: string
 	firebaseToken: string
+	serverToken: string
+}
+
+export interface AuthData extends IdTokenResult {
+	serverToken: string
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-	const [auth, setAuth] = useState<IdTokenResult | null>(null)
+	const [auth, setAuth] = useState<AuthData | null>(null)
 	const [loadingState, setLoadingState] = useState('Loading...')
 	const settingUp = useRef(false)
 
@@ -45,7 +50,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 					guild: discordSdk.guildId
 				})
 			})
-			const { discordToken, firebaseToken } = (await response.json().catch(() => setLoadingState('Failed to log in'))) as LoginResponse
+			const { discordToken, firebaseToken, serverToken } = (await response
+				.json()
+				.catch(() => setLoadingState('Failed to log in'))) as LoginResponse
 
 			console.log({ discordToken, firebaseToken })
 
@@ -60,8 +67,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 			const user = await signInWithCustomToken(firebaseAuth, firebaseToken)
 			const data = await getIdTokenResult(user.user)
-			setAuth(data)
+
+			setAuth({ serverToken, ...data })
 		}
+
 		console.log(settingUp.current)
 		if (!settingUp.current) {
 			settingUp.current = true

@@ -3,15 +3,17 @@ import { useEffect, useRef, useState } from 'react'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { FetchStatus } from '../types.ts'
 import { GuildMembersContext } from '../hooks/useGuildMembers.ts'
+import { useAuth } from '../hooks/useAuth.ts'
 
 export function GuildMembersProvider({ children }: { children: React.ReactNode }) {
 	const [members, setMembers] = useState<APIGuildMember[]>([])
 	const [status, setStatus] = useState(FetchStatus.Loading)
 	const settingUp = useRef(false)
+	const auth = useAuth()
 
 	useEffect(() => {
 		function setup() {
-			fetch(`/api/members/${discordSdk.guildId}`)
+			fetch(`/api/members/${discordSdk.guildId}`, { headers: { Authorization: auth.serverToken } })
 				.then(response => response.json() as Promise<APIGuildMember[] | { error: string }>)
 				.then(data => {
 					if (Array.isArray(data)) {
@@ -31,7 +33,7 @@ export function GuildMembersProvider({ children }: { children: React.ReactNode }
 			settingUp.current = true
 			setup()
 		}
-	}, [])
+	}, [auth.serverToken])
 
 	const getMember = (id: string) => members.find(m => m.user?.id === id)
 
