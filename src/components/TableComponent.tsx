@@ -35,7 +35,8 @@ export function TableComponent({ project }: Props) {
 		// 		</div>
 		// 	)
 		// })
-		assignees: task.assignees
+		assignees: task.assignees,
+		deadline: new Date(task.deadline).toUTCString()
 	}))
 
 	return (
@@ -43,8 +44,9 @@ export function TableComponent({ project }: Props) {
 			items={taskData}
 			fields={[
 				{ key: 'name', _style: { width: '20%' } },
-				{ key: 'status', _style: { width: '40%' } },
-				{ key: 'assignees', _style: { width: '50%' } }
+				{ key: 'status', _style: { width: '20%' } },
+				{ key: 'assignees', _style: { width: '30%' } },
+				{ key: 'deadline', _style: { width: '30%' } }
 			]}
 			hover
 			striped
