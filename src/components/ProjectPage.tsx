@@ -52,7 +52,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 								tasks={project.tasks}
 								projectId={project.id}
 								currUserRoles={currUserRoles}
-								token={auth.serverToken as string}
+								token={auth.serverToken}
 							/>
 						),
 						background: '#202225',
