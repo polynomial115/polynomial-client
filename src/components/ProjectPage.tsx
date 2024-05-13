@@ -10,7 +10,6 @@ import { UpdateTask } from './EditTask.tsx'
 import { DiscordAvatar } from './User.tsx'
 import { PieChart } from './PieChart.tsx'
 import { useAuth } from '../hooks/useAuth.ts'
-import { styles } from '../styles/styles.ts'
 import { ChoiceButtons } from './ChoiceButtons.tsx'
 
 const swal = withReactContent(Swal)
@@ -38,7 +37,6 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			<button onClick={close}>{'< Back to Projects'}</button>
 			<h2>{project.name}</h2>
 			<ChoiceButtons
-				selected={0}
 				choices={[
 					{ value: 0, label: 'Overview', color: 'green' },
 					{ value: 1, label: 'Tasks', color: 'yellow' }
@@ -54,7 +52,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 								tasks={project.tasks}
 								projectId={project.id}
 								currUserRoles={currUserRoles}
-								token={auth.serverToken}
+								token={auth.serverToken as string}
 							/>
 						),
 						background: '#202225',
