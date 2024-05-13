@@ -6,11 +6,12 @@ import { CreateTask } from './CreateTask'
 import { useGuildMembers } from '../hooks/useGuildMembers'
 import { TableComponent } from './TableComponent.tsx'
 import { EditProject } from './EditProject.tsx'
-import { UpdateTask } from './EditTask.tsx'
+import { EditTask } from './EditTask.tsx'
 import { DiscordAvatar } from './User.tsx'
 import { PieChart } from './PieChart.tsx'
 import { useAuth } from '../hooks/useAuth.ts'
 import { ChoiceButtons } from './ChoiceButtons.tsx'
+import { DeleteTask } from './DeleteTask.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -96,7 +97,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 						<button
 							onClick={() =>
 								swal.fire({
-									html: <UpdateTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
+									html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
 									background: '#202225',
 									color: 'white',
 									showConfirmButton: false,
@@ -105,6 +106,19 @@ export function ProjectPage({ project, close }: ProjectProps) {
 							}
 						>
 							Edit Task
+						</button>
+						<button
+							onClick={() =>
+								swal.fire({
+									html: <DeleteTask projectId={project.id} tasks={project.tasks} delTask={task} />,
+									background: '#202225',
+									color: 'white',
+									showConfirmButton: false,
+									width: '625px'
+								})
+							}
+						>
+							Delete Task
 						</button>
 					</button>
 				</li>
