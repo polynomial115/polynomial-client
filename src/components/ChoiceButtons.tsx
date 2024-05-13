@@ -1,24 +1,28 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Choice } from '../types'
 
 interface ChoiceButtonProps {
 	choices: Choice[]
-	setValueCallback: (value: number) => void
+	selected?: number
+	setValueCallback?: (value: number) => void
 	defaultValue: number
 }
 
-export const ChoiceButtons = ({ choices, setValueCallback, defaultValue = NaN }: ChoiceButtonProps) => {
-	const [whichButtonClicked, setWhichButtonClicked] = useState<number>(defaultValue)
-	console.log(whichButtonClicked)
+export const ChoiceButtons = ({ choices, selected, setValueCallback }: ChoiceButtonProps) => {
+	const [whichButtonClicked, setWhichButtonClicked] = useState<number>()
+
+	useEffect(() => {
+		if (selected) setWhichButtonClicked(selected)
+	}, [selected])
 	return (
 		<div>
 			{choices.map(p => (
 				<button
 					key={p.value}
 					type="button"
-					className="choice-button"
+					className="choice-buttons"
 					onClick={() => {
-						setValueCallback(p.value)
+						setValueCallback?.(p.value)
 						setWhichButtonClicked(p.value)
 					}}
 					style={{
