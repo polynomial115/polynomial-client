@@ -6,13 +6,24 @@ import { CreateTask } from './CreateTask'
 import { useGuildMembers } from '../hooks/useGuildMembers'
 import { TableComponent } from './TableComponent.tsx'
 import { EditProject } from './EditProject.tsx'
-import { UpdateTask } from './EditTask.tsx'
-import { DiscordAvatar } from './User.tsx'
-import { PieChart } from './PieChart.tsx'
 import { useAuth } from '../hooks/useAuth.ts'
+import { DiscordAvatar } from './User.tsx'
 import { ChoiceButtons } from './ChoiceButtons.tsx'
+import { useState } from 'react'
+import { TaskList } from './TaskList.tsx'
+import { Dashboard } from './Dashboard.tsx'
+// import { UpdateTask } from './EditTask.tsx'
+// import { Task } from '../types'
+import { CardView } from './CardView.tsx'
+import { EditTask } from './EditTask.tsx'
 
 const swal = withReactContent(Swal)
+
+enum ProjectView {
+	Dashboard = 0,
+	CardView = 1,
+	Tasks = 2
+}
 
 interface ProjectProps {
 	project: Project
@@ -25,6 +36,17 @@ export function ProjectPage({ project, close }: ProjectProps) {
 	const { members } = useGuildMembers() // can't access context inside modal so getting here
 	const auth = useAuth()
 
+	const [activeView, setActiveView] = useState<ProjectView>(ProjectView.Dashboard) // Default to dashboard
+	const ActiveView = () => {
+		switch (activeView) {
+			case ProjectView.Dashboard:
+				return <Dashboard tasks={tasks} />
+			case ProjectView.CardView:
+				return <CardView tasks={tasks} cards={taskStatuses} property={'status'} />
+			case ProjectView.Tasks:
+				return <TaskList tasks={tasks} />
+		}
+	}
 	// const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => {
 	// 	setFormData(prev => ({
 	// 		...prev,
@@ -34,14 +56,33 @@ export function ProjectPage({ project, close }: ProjectProps) {
 	const currUserRoles = useAuth().claims.roles as string[]
 	return (
 		<div>
-			<button onClick={close}>{'< Back to Projects'}</button>
-			<h2>{project.name}</h2>
+			<button
+				className="projectBackButton"
+				style={{
+					position: 'fixed',
+					top: '4vh',
+					left: '3.5vw',
+					color: 'white',
+					backgroundColor: 'crimson',
+					borderRadius: 50,
+					alignSelf: 'end'
+				}}
+				onClick={close}
+			>
+				{'< Projects'}
+			</button>
 			<ChoiceButtons
+				// style={{ position: 'sticky', top: '4vh' }}
+				defaultValue={0}
+				setValueCallback={(value: number) => setActiveView(value)}
 				choices={[
-					{ value: 0, label: 'Overview', color: 'green' },
-					{ value: 1, label: 'Tasks', color: 'yellow' }
+					{ value: 0, label: 'Dashboard', color: 'limegreen' },
+					{ value: 1, label: 'Card View', color: 'orange' },
+					{ value: 2, label: 'All Tasks', color: 'aqua' }
 				]}
 			/>
+			<h2>{project.name}</h2>
+			{ActiveView()}
 			<button
 				onClick={() =>
 					swal.fire({
@@ -76,7 +117,6 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			>
 				Create Task
 			</button>
-			<PieChart label={'Tasks'} property={'status'} tasks={tasks} data={taskStatuses} />
 			<TableComponent project={project} />
 			{tasks.map(task => (
 				<li key={task.id}>
@@ -96,7 +136,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 						<button
 							onClick={() =>
 								swal.fire({
-									html: <UpdateTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
+									html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
 									background: '#202225',
 									color: 'white',
 									showConfirmButton: false,
