@@ -1,14 +1,18 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Choice } from '../types'
 
 interface ChoiceButtonProps {
 	choices: Choice[]
+	defaultValue?: number
 	setValueCallback?: (value: number) => void
 }
 
-export const ChoiceButtons = ({ choices, setValueCallback }: ChoiceButtonProps) => {
+export const ChoiceButtons = ({ choices, defaultValue, setValueCallback }: ChoiceButtonProps) => {
 	const [whichButtonClicked, setWhichButtonClicked] = useState<number>()
 
+	useEffect(() => {
+		if (defaultValue) setWhichButtonClicked?.(defaultValue)
+	}, [defaultValue])
 	return (
 		<div>
 			{choices.map(p => (
