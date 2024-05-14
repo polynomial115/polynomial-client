@@ -1,11 +1,22 @@
 import { Task } from '../types'
 import { PieChart } from './PieChart'
+import { TaskList } from './TaskList'
 import { taskStatuses } from '../types'
+import '../styles/dashboardStyle.css'
 
 interface DashboardProps {
 	tasks: Task[]
 }
 
 export const Dashboard = ({ tasks }: DashboardProps) => {
-	return <PieChart label={'Tasks'} property={'status'} tasks={tasks} data={taskStatuses} />
+	return (
+		<div className="dashboard-container">
+			<div className="PieChart">
+				<PieChart label={'Tasks'} property={'status'} tasks={tasks} data={taskStatuses} />
+			</div>
+			<div className="task-list-container">
+				<TaskList tasks={tasks} displayCount={2} />
+			</div>
+		</div>
+	)
 }

@@ -1,0 +1,24 @@
+.dashboard-container {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 20px;
+    padding: 20px;
+    align-items: start;
+
+    .PieChart{
+        width:100%;
+    }
+}
+
+
+
+.task-list-container {
+    overflow: auto;
+    max-height: 90vh; /* You can adjust this as needed */
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        grid-template-columns: 1fr; /* Stacks items vertically on smaller screens */
+    }
+}
