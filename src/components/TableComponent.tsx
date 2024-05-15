@@ -1,8 +1,11 @@
 import { CDataTable } from '@coreui/react'
+import { CBadge } from '@coreui/react'
 import { taskStatuses } from './TaskStatuses'
 // import { useGuildMembers } from '../hooks/useGuildMembers'
 // import { getAvatar, getDisplayName } from '../util'
 import { Project } from '../types'
+import { useParticipants } from '../hooks/useParticipants'
+import { DiscordAvatar } from './User'
 
 interface Props {
 	project: Project
@@ -10,6 +13,8 @@ interface Props {
 
 export function TableComponent({ project }: Props) {
 	const { tasks } = project
+	const participants = useParticipants()
+
 	// const { getMember } = useGuildMembers()
 
 	const taskData = tasks.map(task => ({
@@ -35,9 +40,27 @@ export function TableComponent({ project }: Props) {
 		// 		</div>
 		// 	)
 		// })
-		assignees: task.assignees,
+		// assignees: participants.map(p => {
+		// 	<DiscordAvatar size={50} key={p.id} memberId={p.id} />
+		// }),
+		assignees: task.assignees.join(', '),
 		deadline: new Date(task.deadline).toUTCString()
 	}))
+
+	const GetColour = status => {
+		switch (status) {
+			case 'Completed':
+				return 'success'
+			case 'Inactive':
+				return 'secondary'
+			case 'In Progress':
+				return 'warning'
+			case 'To Do':
+				return 'danger'
+			default:
+				return 'primary'
+		}
+	}
 
 	return (
 		<CDataTable
@@ -49,11 +72,28 @@ export function TableComponent({ project }: Props) {
 				{ key: 'deadline', _style: { width: '30%' } }
 			]}
 			hover
+			sorter
+			columnFilter
+			tableFilter
+			pagination
 			striped
-			itemsPerPage={8}
+			itemsPerPage={5}
 			activePage={1}
 			clickableRows
 			// onRowClick={item => history.push(`/users/${item.id}`)}
+			scopedSlots={{
+				assignees: item => (
+					<td>
+						{tasks.map(p => {
+							return (
+								<CBadge key={p.id}>
+									<DiscordAvatar size={50} key={p.id} memberId={p.id} />
+								</CBadge>
+							)
+						})}
+					</td>
+				)
+			}}
 		/>
 	)
 }
