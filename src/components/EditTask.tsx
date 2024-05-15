@@ -18,7 +18,7 @@ interface Props {
 	allTasks: Task[]
 }
 
-export function UpdateTask({ projectId, members, currTask, allTasks }: Props) {
+export function EditTask({ projectId, members, currTask, allTasks }: Props) {
 	const [formData, setFormData] = useState<FormData>({
 		status: currTask.status,
 		priority: currTask.priority,
