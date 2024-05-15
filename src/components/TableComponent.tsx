@@ -2,6 +2,7 @@ import { CDataTable } from '@coreui/react'
 import { taskStatuses } from './TaskStatuses'
 // import { useGuildMembers } from '../hooks/useGuildMembers'
 // import { getAvatar, getDisplayName } from '../util'
+import { DeadlineToString } from '../scripts/CalculateDeadline'
 import { Project } from '../types'
 
 interface Props {
@@ -36,7 +37,7 @@ export function TableComponent({ project }: Props) {
 		// 	)
 		// })
 		assignees: task.assignees,
-		deadline: new Date(task.deadline).toUTCString()
+		deadline: DeadlineToString(task.deadline)
 	}))
 
 	return (

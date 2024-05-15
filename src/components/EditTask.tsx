@@ -24,7 +24,8 @@ export function UpdateTask({ projectId, members, currTask, allTasks }: Props) {
 		priority: currTask.priority,
 		assignees: currTask.assignees,
 		deadline: currTask.deadline,
-		name: currTask.name
+		name: currTask.name,
+		description: currTask.description
 	})
 	const [error, setError] = useState('')
 
@@ -67,6 +68,13 @@ export function UpdateTask({ projectId, members, currTask, allTasks }: Props) {
 					placeholder="Enter task name..."
 					required
 				/>
+				<textarea
+					id="task-description"
+					className="textbox"
+					value={formData.description}
+					onChange={e => handleInputChange('description', e.target.value)}
+					placeholder="Enter task description..."
+				/>
 				<br />
 				<br />
 				<Select
@@ -108,6 +116,7 @@ export function UpdateTask({ projectId, members, currTask, allTasks }: Props) {
 						const dl = CalculateDeadline({ deadlineType: selected!.value as Deadline })
 						handleInputChange('deadline', dl)
 					}}
+					value={deadlines.filter(d => (d.value as Deadline) == formData.deadline).map(d => ({ value: d.value, label: d.label }))}
 					styles={selectStyles}
 				/>
 

@@ -28,10 +28,10 @@ export enum Deadline {
 	Never = 0,
 	OneDay = 1,
 	TwoDays = 2,
-	FourDays = 3,
-	OneWeek = 4,
-	TwoWeeks = 5,
-	OneMonth = 6
+	FourDays = 4,
+	OneWeek = 7,
+	TwoWeeks = 14,
+	OneMonth = 28
 }
 
 export interface Choice {
@@ -56,18 +56,19 @@ export const priorities: Choice[] = [
 
 export const deadlines: Choice[] = [
 	{ value: Deadline.Never, label: 'Never', color: 'white' },
-	{ value: Deadline.OneDay, label: 'in one day', color: 'white' },
-	{ value: Deadline.TwoDays, label: 'in two days', color: 'white' },
-	{ value: Deadline.FourDays, label: 'in four days', color: 'white' },
-	{ value: Deadline.OneWeek, label: 'in one week', color: 'white' },
-	{ value: Deadline.TwoWeeks, label: 'in two weeks', color: 'white' },
-	{ value: Deadline.OneMonth, label: 'in one month', color: 'white' }
+	{ value: Deadline.OneDay, label: 'In one day', color: 'white' },
+	{ value: Deadline.TwoDays, label: 'In two days', color: 'white' },
+	{ value: Deadline.FourDays, label: 'In four days', color: 'white' },
+	{ value: Deadline.OneWeek, label: 'In one week', color: 'white' },
+	{ value: Deadline.TwoWeeks, label: 'In two weeks', color: 'white' },
+	{ value: Deadline.OneMonth, label: 'In one month', color: 'white' }
 ]
 
 export interface Task {
 	id: string
 	assignees: string[]
 	name: string
+	description: string
 	priority: Priority
 	status: TaskStatus
 	deadline: Deadline
