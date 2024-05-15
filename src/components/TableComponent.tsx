@@ -38,6 +38,7 @@ export function TableComponent({ project }: Props) {
 		assignees: task.assignees,
 		deadline: new Date(task.deadline).toUTCString()
 	}))
+	
 
 	return (
 		<CDataTable
