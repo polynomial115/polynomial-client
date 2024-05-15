@@ -46,6 +46,7 @@ export function TableComponent({ project }: Props) {
 		assignees: task.assignees.join(', '),
 		deadline: new Date(task.deadline).toUTCString()
 	}))
+	
 
 	const GetColour = status => {
 		switch (status) {
