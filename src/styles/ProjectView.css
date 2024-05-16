@@ -72,6 +72,9 @@ ul {
 	justify-content: center;
 	align-items: center;
 	text-align: center;
+	/* grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); */
+	position: fixed;
+	z-index: 1;
 
 	/* &:before {
 		content: '';
@@ -95,6 +98,7 @@ ul {
 
 .ToolTip {
 	position: absolute;
+	/* display: none; */
 	font-size: large;
 	transition:
 		visibility 0.25s,
@@ -132,6 +136,5 @@ ul {
 	box-shadow: 10px 5px 5px black;
 }
 
-.custom-td {
-	
-}
+
+
