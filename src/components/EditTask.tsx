@@ -5,8 +5,7 @@ import { db } from '../services/firebase.ts'
 import { doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { ChoiceButtons } from './ChoiceButtons.tsx'
-import { Task, priorities, taskStatuses, deadlines, Deadline } from '../types.ts'
-import CalculateDeadline from '../scripts/CalculateDeadline.ts'
+import { Task, priorities, taskStatuses, Choice, deadlines, Deadline } from '../types.ts'
 import Swal from 'sweetalert2'
 
 type FormData = Omit<Task, 'id'>
@@ -113,10 +112,11 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 					options={deadlines}
 					placeholder="Select deadline..."
 					onChange={selected => {
-						const dl = CalculateDeadline({ deadlineType: selected!.value as Deadline })
-						handleInputChange('deadline', dl)
+						handleInputChange('deadline', selected!.value as Deadline)
 					}}
-					value={deadlines.filter(d => (d.value as Deadline) == formData.deadline).map(d => ({ value: d.value, label: d.label }))}
+					value={deadlines
+						.filter((d: Choice) => (d.value as Deadline) === formData.deadline)
+						.map((d: Choice) => ({ value: d.value, label: d.label }))}
 					styles={selectStyles}
 				/>
 

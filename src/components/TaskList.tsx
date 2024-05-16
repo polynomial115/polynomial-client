@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
-import { Task } from '../types'
+import { Task, taskStatuses } from '../types'
 import { CDataTable } from '@coreui/react'
+import { DeadlineToString } from '../scripts/CalculateDeadline'
 
 interface TaskListProps {
 	tasks: Task[]
@@ -10,6 +11,13 @@ export function TaskList({ tasks }: TaskListProps) {
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [])
+	const taskData = tasks.map(task => ({
+		id: task.id,
+		name: task.name,
+		status: taskStatuses[task.status].label,
+		assignees: task.assignees,
+		deadline: DeadlineToString(task.deadline)
+	}))
 	return (
 		<div>
 			{!tasks || tasks.length === 0 ? (
@@ -19,7 +27,7 @@ export function TaskList({ tasks }: TaskListProps) {
 			) : (
 				<CDataTable
 					addTableClasses={'table-row'}
-					items={tasks}
+					items={taskData}
 					// fields={[
 					// 	{ key: 'name' },
 					// 	{ key: 'priority' },

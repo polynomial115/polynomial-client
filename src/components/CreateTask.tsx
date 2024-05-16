@@ -6,7 +6,6 @@ import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { ChoiceButtons } from './ChoiceButtons.tsx'
 import { Priority, Task, TaskStatus, priorities, taskStatuses, deadlines, Deadline } from '../types.ts'
-import CalculateDeadline from '../scripts/CalculateDeadline.ts'
 import Swal from 'sweetalert2'
 
 type FormData = Omit<Task, 'id'>
@@ -104,8 +103,7 @@ export function CreateTask({ projectId, members }: Props) {
 					options={deadlines}
 					placeholder="Select deadline..."
 					onChange={selected => {
-						const dl = CalculateDeadline({ deadlineType: selected!.value as Deadline })
-						handleInputChange('deadline', dl)
+						handleInputChange('deadline', selected!.value as Deadline)
 					}}
 					styles={selectStyles}
 				/>
