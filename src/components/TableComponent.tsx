@@ -1,10 +1,8 @@
 import React, { useState } from 'react'
-import { CDataTable, CBadge, CButton, CCard } from '@coreui/react'
-import { CCardBody } from '@coreui/react'
-import { DiscordAvatar } from './User'
-import { Project } from '../types'
-import { taskStatuses } from './TaskStatuses'
+import { CBadge } from '@coreui/react'
 import { useParticipants } from '../hooks/useParticipants'
+import DataTable from 'react-data-table-component'
+import { Project, taskStatuses } from '../types'
 
 interface Props {
 	project: Project
@@ -13,7 +11,7 @@ interface Props {
 export function TableComponent({ project }: Props) {
 	const { tasks } = project
 	const participants = useParticipants()
-	const [details, setDetails] = useState<number[]>([])
+	const [selectedRows, setSelectedRows] = useState([])
 
 	const taskData = tasks.map(task => ({
 		id: task.id,
@@ -23,15 +21,33 @@ export function TableComponent({ project }: Props) {
 		deadline: new Date(task.deadline).toUTCString()
 	}))
 
-	const toggleDetails = (index: number) => {
-		const position = details.indexOf(index)
-		let newDetails = details.slice()
-		if (position !== -1) {
-			newDetails.splice(position, 1)
-		} else {
-			newDetails = [...details, index]
+	const columns = [
+		{
+			name: 'Name',
+			selector: row => row.name,
+			sortable: true
+		},
+		{
+			name: 'Status',
+			selector: row => row.status,
+			sortable: true,
+			cell: row => <CBadge color={GetColour(row.status)}>{row.status}</CBadge>
+		},
+		{
+			name: 'Assignees',
+			selector: row => row.assignees,
+			sortable: true
+		},
+		{
+			name: 'Deadline',
+			selector: row => row.deadline,
+			sortable: true,
+			right: true
 		}
-		setDetails(newDetails)
+	]
+
+	const handleChange = state => {
+		setSelectedRows(state.selectedRows)
 	}
 
 	const GetColour = (status: string) => {
@@ -49,90 +65,17 @@ export function TableComponent({ project }: Props) {
 		}
 	}
 
-	const fields = [
-		{ key: 'name', _style: { width: '20%' } },
-		{ key: 'status', _style: { width: '20%' } },
-		{ key: 'assignees', _style: { width: '30%' } },
-		{ key: 'deadline', _style: { width: '30%' } },
-		{
-			key: 'show_details',
-			label: '',
-			_style: { width: '1%' },
-			sorter: false,
-			filter: false
-		}
-	]
-
 	return (
 		<div className="TableDiv">
-			<CCardBody>
-				<h2>Tasks</h2>
-				<CDataTable
-					items={taskData}
-					fields={fields}
-					columnFilter
-					cleaner
-					// clickableRows
-					responsive
-					tableFilter
-					itemsPerPageSelect
-					itemsPerPage={5}
-					hover
-					outlined
-					header
-					border={true}
-					sorter
-					pagination
-					scopedSlots={{
-						assignees: item => (
-							<td className="custom-td">
-								{item.assignees.split(', ').map(id => (
-									<DiscordAvatar size={50} key={id} memberId={id} />
-								))}
-							</td>
-						),
-						status: item => (
-							<td className="custom-td">
-								<CBadge color={GetColour(item.status)} className="custom-badge">
-									{item.status}
-								</CBadge>
-							</td>
-						),
-						show_details: (item, index) => (
-							<td className="py-2 custom-td">
-								<CButton
-									color="primary"
-									variant="outline"
-									shape="square"
-									size="sm"
-									onClick={() => toggleDetails(index)}
-									className="custom-button"
-								>
-									{details.includes(index) ? 'Hide' : 'Show'}
-								</CButton>
-							</td>
-						),
-						details: (item, index) => {
-							if (!details.includes(index)) return null
-							return (
-								<tr>
-									<td colSpan={4}>
-										<div>
-											{/* <p className="text-muted">Deadline: {item.deadline}</p> */}
-											<CButton size="sm" color="info">
-												Edit
-											</CButton>
-											<CButton size="sm" color="danger" className="ml-1">
-												Delete
-											</CButton>
-										</div>
-									</td>
-								</tr>
-							)
-						}
-					}}
-				/>
-			</CCardBody>
+			<DataTable
+				className="ActualTable"
+				pagination
+				columns={columns}
+				data={taskData}
+				selectableRows
+				onSelectedRowsChange={handleChange}
+				theme="dark"
+			/>
 		</div>
 	)
 }
