@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { CDataTable, CBadge, CButton } from '@coreui/react'
 import { DiscordAvatar } from './User'
 import { Project } from '../types'
+import { taskStatuses } from './TaskStatuses'
 import { useParticipants } from '../hooks/useParticipants'
 
 interface Props {
@@ -16,7 +17,7 @@ export function TableComponent({ project }: Props) {
 	const taskData = tasks.map(task => ({
 		id: task.id,
 		name: task.name,
-		status: task.status,
+		status: taskStatuses[task.status].label,
 		assignees: task.assignees.join(', '),
 		deadline: new Date(task.deadline).toUTCString()
 	}))
@@ -62,55 +63,57 @@ export function TableComponent({ project }: Props) {
 	]
 
 	return (
-		<CDataTable
-			items={taskData}
-			fields={fields}
-			columnFilter
-			tableFilter
-			itemsPerPageSelect
-			itemsPerPage={5}
-			hover
-			sorter
-			pagination
-			scopedSlots={{
-				assignees: item => (
-					<td>
-						{item.assignees.split(', ').map(id => (
-							<DiscordAvatar size={50} key={id} memberId={id} />
-						))}
-					</td>
-				),
-				status: item => (
-					<td>
-						<CBadge color={GetColour(item.status)}>{item.status}</CBadge>
-					</td>
-				),
-				show_details: (item, index) => (
-					<td className="py-2">
-						<CButton color="primary" variant="outline" shape="square" size="sm" onClick={() => toggleDetails(index)}>
-							{details.includes(index) ? 'Hide' : 'Show'}
-						</CButton>
-					</td>
-				),
-				details: (item, index) => {
-					if (!details.includes(index)) return null
-					return (
-						<tr>
-							<td colSpan={4}>
-								<div>
-									<p className="text-muted">Deadline: {item.deadline}</p>
-									<CButton size="sm" color="info">
-										Edit
-									</CButton>
-									<CButton size="sm" color="danger" className="ml-1">
-										Delete
-									</CButton>
-								</div>
-							</td>
-						</tr>
-					)
-				}
-			}}
-		/>
+		<div className="TableDiv">
+			<CDataTable
+				items={taskData}
+				fields={fields}
+				columnFilter
+				tableFilter
+				itemsPerPageSelect
+				itemsPerPage={5}
+				hover
+				sorter
+				pagination
+				scopedSlots={{
+					assignees: item => (
+						<td>
+							{item.assignees.split(', ').map(id => (
+								<DiscordAvatar size={50} key={id} memberId={id} />
+							))}
+						</td>
+					),
+					status: item => (
+						<td>
+							<CBadge color={GetColour(item.status)}>{item.status}</CBadge>
+						</td>
+					),
+					show_details: (item, index) => (
+						<td className="py-2">
+							<CButton color="primary" variant="outline" shape="square" size="sm" onClick={() => toggleDetails(index)}>
+								{details.includes(index) ? 'Hide' : 'Show'}
+							</CButton>
+						</td>
+					),
+					details: (item, index) => {
+						if (!details.includes(index)) return null
+						return (
+							<tr>
+								<td colSpan={4}>
+									<div>
+										{/* <p className="text-muted">Deadline: {item.deadline}</p> */}
+										<CButton size="sm" color="info">
+											Edit
+										</CButton>
+										<CButton size="sm" color="danger" className="ml-1">
+											Delete
+										</CButton>
+									</div>
+								</td>
+							</tr>
+						)
+					}
+				}}
+			/>
+		</div>
 	)
 }
