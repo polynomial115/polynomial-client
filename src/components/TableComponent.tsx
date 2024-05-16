@@ -3,6 +3,7 @@ import { CBadge } from '@coreui/react'
 import { useParticipants } from '../hooks/useParticipants'
 import DataTable from 'react-data-table-component'
 import { Project, taskStatuses } from '../types'
+import { DiscordAvatar } from './User'
 
 interface Props {
 	project: Project
@@ -36,7 +37,14 @@ export function TableComponent({ project }: Props) {
 		{
 			name: 'Assignees',
 			selector: row => row.assignees,
-			sortable: true
+			sortable: true,
+			cell: row => (
+				<div style={{ display: 'flex', flexWrap: 'wrap' }}>
+					{row.assignees.split(', ').map(id => (
+						<DiscordAvatar size={35} key={id} memberId={id} />
+					))}
+				</div>
+			)
 		},
 		{
 			name: 'Deadline',
@@ -65,6 +73,8 @@ export function TableComponent({ project }: Props) {
 		}
 	}
 
+	const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>
+
 	return (
 		<div className="TableDiv">
 			<DataTable
@@ -73,6 +83,8 @@ export function TableComponent({ project }: Props) {
 				columns={columns}
 				data={taskData}
 				selectableRows
+				expandableRows
+				expandableRowsComponent={ExpandedComponent}
 				onSelectedRowsChange={handleChange}
 				theme="dark"
 			/>
