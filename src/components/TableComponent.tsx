@@ -39,24 +39,23 @@ export function TableComponent({ project }: Props) {
 		// 			<div className="ToolTip">{name}</div>
 		// 		</div>
 		// 	)
-		// })
+		// }),
 		// assignees: participants.map(p => {
-		// 	<DiscordAvatar size={50} key={p.id} memberId={p.id} />
+		// <DiscordAvatar size={50} key={p.id} memberId={p.id} />
 		// }),
 		assignees: task.assignees.join(', '),
 		deadline: new Date(task.deadline).toUTCString()
 	}))
-	
 
 	const GetColour = status => {
 		switch (status) {
-			case 'Completed':
+			case 'Completed': // green
 				return 'success'
-			case 'Inactive':
+			case 'In Progress': // grey
 				return 'secondary'
-			case 'In Progress':
+			case 'Backlog': // yellow
 				return 'warning'
-			case 'To Do':
+			case 'To Do': // red
 				return 'danger'
 			default:
 				return 'primary'
@@ -72,13 +71,14 @@ export function TableComponent({ project }: Props) {
 				{ key: 'assignees', _style: { width: '30%' } },
 				{ key: 'deadline', _style: { width: '30%' } }
 			]}
-			hover
-			sorter
 			columnFilter
 			tableFilter
+			itemsPerPageSelect
+			itemsPerPage={5}
+			hover
+			sorter
 			pagination
 			striped
-			itemsPerPage={5}
 			activePage={1}
 			clickableRows
 			// onRowClick={item => history.push(`/users/${item.id}`)}
@@ -92,6 +92,11 @@ export function TableComponent({ project }: Props) {
 								</CBadge>
 							)
 						})}
+					</td>
+				),
+				status: item => (
+					<td>
+						<CBadge color={GetColour(item.status)}>{item.status}</CBadge>
 					</td>
 				)
 			}}
