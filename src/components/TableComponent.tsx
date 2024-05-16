@@ -5,6 +5,11 @@ import DataTable from 'react-data-table-component'
 import { Project, taskStatuses } from '../types'
 import { DiscordAvatar } from './User'
 
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+
+const swal = withReactContent(Swal)
+
 interface Props {
 	project: Project
 }
@@ -73,7 +78,22 @@ export function TableComponent({ project }: Props) {
 		}
 	}
 
-	const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>
+	const ExpandedComponent = ({ data }) => (
+		<div>
+			<button
+				onClick={() =>
+					swal.fire({
+						html: <pre>{JSON.stringify(data, null, 2)}</pre>,
+						background: '#202225',
+						color: 'white',
+						showConfirmButton: false
+					})
+				}
+			>
+				Row Detalis
+			</button>
+		</div>
+	)
 
 	return (
 		<div className="TableDiv">
