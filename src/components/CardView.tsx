@@ -1,5 +1,5 @@
 import { Choice, Task } from '../types'
-
+import { useEffect } from 'react'
 interface CardViewProps {
 	tasks: Task[]
 	cards: Choice[]
@@ -18,6 +18,9 @@ export const CardView = ({ tasks, cards, property }: CardViewProps) => {
 	// 		return
 	// 	}
 	// })
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [])
 	return (
 		<div style={{ display: 'flex', fontWeight: 100, flexDirection: 'row', height: '50vh' }}>
 			{cards.map((card: Choice) => (
@@ -29,7 +32,7 @@ export const CardView = ({ tasks, cards, property }: CardViewProps) => {
 						borderWidth: 10,
 						borderColor: 'black',
 						width: `${100 / cards.length}%`,
-						margin: 15
+						margin: 10
 					}}
 				>
 					<h2 style={{ margin: 12 }}>{card.label}</h2>
