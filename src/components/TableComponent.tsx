@@ -34,11 +34,28 @@ export function TableComponent({ project }: Props) {
 		// 			<div className="ToolTip">{name}</div>
 		// 		</div>
 		// 	)
-		// })
-		assignees: task.assignees,
+		// }),
+		// assignees: participants.map(p => {
+		// <DiscordAvatar size={50} key={p.id} memberId={p.id} />
+		// }),
+		assignees: task.assignees.join(', '),
 		deadline: new Date(task.deadline).toUTCString()
 	}))
-	
+
+	const GetColour = status => {
+		switch (status) {
+			case 'Completed': // green
+				return 'success'
+			case 'In Progress': // grey
+				return 'secondary'
+			case 'Backlog': // yellow
+				return 'warning'
+			case 'To Do': // red
+				return 'danger'
+			default:
+				return 'primary'
+		}
+	}
 
 	return (
 		<CDataTable
@@ -49,12 +66,35 @@ export function TableComponent({ project }: Props) {
 				{ key: 'assignees', _style: { width: '30%' } },
 				{ key: 'deadline', _style: { width: '30%' } }
 			]}
+			columnFilter
+			tableFilter
+			itemsPerPageSelect
+			itemsPerPage={5}
 			hover
+			sorter
+			pagination
 			striped
-			itemsPerPage={8}
 			activePage={1}
 			clickableRows
 			// onRowClick={item => history.push(`/users/${item.id}`)}
+			scopedSlots={{
+				assignees: item => (
+					<td>
+						{tasks.map(p => {
+							return (
+								<CBadge key={p.id}>
+									<DiscordAvatar size={50} key={p.id} memberId={p.id} />
+								</CBadge>
+							)
+						})}
+					</td>
+				),
+				status: item => (
+					<td>
+						<CBadge color={GetColour(item.status)}>{item.status}</CBadge>
+					</td>
+				)
+			}}
 		/>
 	)
 }
