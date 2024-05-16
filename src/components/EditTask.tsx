@@ -24,7 +24,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 		assignees: currTask.assignees,
 		deadline: currTask.deadline,
 		name: currTask.name,
-		description: currTask.description
+		description: currTask.description ? currTask.description : ''
 	})
 	const [error, setError] = useState('')
 
