@@ -8,23 +8,31 @@ interface TaskListProps {
 
 export function TaskList({ tasks }: TaskListProps) {
 	useEffect(() => {
-		console.log('tasks: ', tasks[0].assignees[0])
-	})
+		window.scrollTo(0, 0)
+	}, [])
 	return (
-		<CDataTable
-			addTableClasses={'table-row'}
-			items={tasks}
-			// fields={[
-			// 	{ key: 'name' },
-			// 	{ key: 'priority' },
-			// 	{ key: 'status' },
-			// 	{ key: 'assignees' },
-			// ]}
-			hover
-			striped
-			itemsPerPage={10}
-			activePage={1}
-			clickableRows
-		/>
+		<div>
+			{!tasks || tasks.length === 0 ? (
+				<div style={{ margin: '10px 5px', padding: '40px 25px', backgroundColor: 'black' }}>
+					<p>Add some Tasks to see task list!</p>
+				</div>
+			) : (
+				<CDataTable
+					addTableClasses={'table-row'}
+					items={tasks}
+					// fields={[
+					// 	{ key: 'name' },
+					// 	{ key: 'priority' },
+					// 	{ key: 'status' },
+					// 	{ key: 'assignees' },
+					// ]}
+					hover
+					striped
+					itemsPerPage={10}
+					activePage={1}
+					clickableRows
+				/>
+			)}
+		</div>
 	)
 }
