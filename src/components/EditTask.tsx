@@ -11,14 +11,14 @@ import Swal from 'sweetalert2'
 
 type FormData = Omit<Task, 'id'>
 
-interface Props {
+interface EditTaskProps {
 	projectId: string
 	members: APIGuildMember[]
 	currTask: Task
 	allTasks: Task[]
 }
 
-export function EditTask({ projectId, members, currTask, allTasks }: Props) {
+export function EditTask({ projectId, members, currTask, allTasks }: EditTaskProps) {
 	const [formData, setFormData] = useState<FormData>({
 		status: currTask.status,
 		priority: currTask.priority,

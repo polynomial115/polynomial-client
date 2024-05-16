@@ -1,20 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Choice } from '../types'
 
 interface ChoiceButtonProps {
 	choices: Choice[]
 	defaultValue?: number
+	style?: React.CSSProperties
 	setValueCallback?: (value: number) => void
 }
 
-export const ChoiceButtons = ({ choices, defaultValue, setValueCallback }: ChoiceButtonProps) => {
-	const [whichButtonClicked, setWhichButtonClicked] = useState<number>()
+export const ChoiceButtons = ({ choices, defaultValue, style, setValueCallback }: ChoiceButtonProps) => {
+	const [whichButtonClicked, setWhichButtonClicked] = useState<number | undefined>(defaultValue ?? undefined)
 
-	useEffect(() => {
-		if (defaultValue) setWhichButtonClicked?.(defaultValue)
-	}, [defaultValue])
 	return (
-		<div>
+		<div style={style ?? undefined}>
 			{choices.map(p => (
 				<button
 					key={p.value}
@@ -25,6 +23,7 @@ export const ChoiceButtons = ({ choices, defaultValue, setValueCallback }: Choic
 						setWhichButtonClicked(p.value)
 					}}
 					style={{
+						display: 'inline-block',
 						color: p.value === whichButtonClicked ? 'black' : p.color,
 						backgroundColor: p.value === whichButtonClicked ? p.color : ''
 					}}
