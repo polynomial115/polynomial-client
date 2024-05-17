@@ -1,24 +1,54 @@
-.dashboard-container {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 20px;
-    padding: 20px;
-    align-items: start;
-
-    .PieChart{
-        width:100%;
-    }
+#root {
+    padding: 0 !important;
+    overflow: hidden;
 }
 
+.dashboard-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    color: #fff;
+    height: 100vh;
+    width: 100vw;
+    background-color: #222;
+    left:0 !important;
+}
 
+.pie-chart-container {
+    flex: 1;
+    max-width: 50%;
+    background-color: #333;
+}
+
+.doughnut-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 50vw;
+    min-height: 70vh;
+}
 
 .task-list-container {
-    overflow: auto;
-    max-height: 90vh; /* You can adjust this as needed */
+    flex: 1;
+    max-width: 50%;
+    padding: 20px;
+    background-color: #333;
+    border-radius: 10px;
+    overflow-x: hidden;
 }
 
-@media (max-width: 768px) {
-    .dashboard-container {
-        grid-template-columns: 1fr; /* Stacks items vertically on smaller screens */
-    }
+.c-data-table {
+    max-width: 100%;
+    border-collapse: collapse;
+}
+
+.c-data-table th, .c-data-table td {
+    border: 1px solid #555;
+    padding: 8px;
+    text-align: left;
+}
+
+.c-data-table th {
+    background-color: #444;
 }

@@ -11,7 +11,7 @@ interface DashboardProps {
 export const Dashboard = ({ tasks }: DashboardProps) => {
 	return (
 		<div className="dashboard-container">
-			<div className="PieChart">
+			<div className="pie-chart-container">
 				<PieChart label={'Tasks'} property={'status'} tasks={tasks} data={taskStatuses} />
 			</div>
 			<div className="task-list-container">

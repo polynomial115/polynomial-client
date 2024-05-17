@@ -7,44 +7,42 @@ ChartJS.register(ArcElement, Tooltip, Legend)
 
 interface PieChartProps {
 	label: string
-	property: string // The object key to base chart off (e.g., 'priority')
+	property: keyof Task
 	tasks: Task[]
 	data: Choice[]
 }
 
 export function PieChart({ label, property, tasks, data }: PieChartProps) {
 	console.log(label, property, tasks, data)
+
 	useEffect(() => {
 		console.log('tasks:', tasks)
 		if (!tasks || tasks.length === 0) {
 			console.log('Tasks array is empty or undefined')
 			return
 		}
-		if (!((property as keyof Task) in tasks[0])) {
+		if (!(property in tasks[0])) {
 			console.error(`Key ${property} not found in Task interface`)
 			return
 		}
-	})
+	}, [tasks, property])
 
 	return (
-		<div style={{ width: '100%' }}>
-			{' '}
+		<div className="pie-chart-container">
 			{/* Parent container takes full width */}
 			{!tasks || tasks.length === 0 ? (
-				<div style={{ margin: '10px 5px', padding: '40px 25px', backgroundColor: 'black' }}>
+				<div className="empty-tasks-message">
 					<p>Add some Tasks to see Pie Chart Visualization!</p>
 				</div>
 			) : (
-				<div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+				<div className="doughnut-wrapper">
 					<Doughnut
 						data={{
 							labels: data.map((d: Choice) => d.label),
 							datasets: [
 								{
 									label: label,
-									data: data.map(
-										(data: Choice) => tasks.filter((task: Task) => task[property as keyof Task] === data.value).length
-									),
+									data: data.map((d: Choice) => tasks.filter((task: Task) => (task[property] as unknown) === d.value).length),
 									backgroundColor: data.map((d: Choice) => d.color),
 									borderWidth: 0
 								}
@@ -53,7 +51,17 @@ export function PieChart({ label, property, tasks, data }: PieChartProps) {
 						options={{
 							responsive: true,
 							maintainAspectRatio: false,
-							cutout: '45%'
+							cutout: '45%',
+							plugins: {
+								legend: {
+									display: true,
+									position: 'left',
+									align: 'center',
+									labels: {
+										usePointStyle: true
+									}
+								}
+							}
 						}}
 					/>
 				</div>

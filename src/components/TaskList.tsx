@@ -13,7 +13,7 @@ export function TaskList({ tasks, displayCount = tasks.length }: TaskListProps) 
 		if (tasks.length > 0 && tasks[0].assignees && tasks[0].assignees.length > 0) {
 			console.log('tasks: ', tasks[0].assignees[0])
 		}
-	})
+	}, [tasks])
 
 	const tasksWithDueDates = tasks.map(task => ({
 		...task,
@@ -31,7 +31,7 @@ export function TaskList({ tasks, displayCount = tasks.length }: TaskListProps) 
 
 	return (
 		<CDataTable
-			addTableClasses={'table-row'}
+			addTableClasses={'c-data-table'}
 			items={sortedTasks}
 			fields={[
 				{ key: 'name', label: 'Name' },
