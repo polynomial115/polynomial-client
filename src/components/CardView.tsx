@@ -1,5 +1,6 @@
 import { Choice, Task } from '../types'
 import { useEffect } from 'react'
+import { DiscordAvatar } from './User'
 interface CardViewProps {
 	tasks: Task[]
 	cards: Choice[]
@@ -22,15 +23,16 @@ export const CardView = ({ tasks, cards, property }: CardViewProps) => {
 		window.scrollTo(0, 0)
 	}, [])
 	return (
-		<div style={{ display: 'flex', fontWeight: 100, flexDirection: 'row', height: '50vh' }}>
+		<div style={{ display: 'flex', fontWeight: 100, flexDirection: 'row', minHeight: '50vh' }}>
 			{cards.map((card: Choice) => (
 				<div
 					key={card.label}
 					style={{
-						backgroundColor: card.color,
+						borderColor: card.color,
 						borderRadius: 10,
-						borderWidth: 10,
-						borderColor: 'black',
+						borderWidth: 3,
+						borderStyle: 'solid',
+						backgroundColor: '#1a1a1a',
 						width: `${100 / cards.length}%`,
 						margin: 10
 					}}
@@ -42,15 +44,22 @@ export const CardView = ({ tasks, cards, property }: CardViewProps) => {
 							<div
 								style={{
 									fontWeight: 500,
-									margin: 0
+									margin: 10,
+									borderRadius: 10,
 									// opacity: 0.5,
 									// maxWidth: '75%',
 									// display: 'flex',
 									// justifyContent: 'center'
+									background: '#121212'
 								}}
 								key={task.id}
 							>
 								<p style={{ margin: 3, padding: 3 }}>{task.name}</p>
+								<div style={{ margin: 12 }}>
+									{task.assignees.map(assigneeId => (
+										<DiscordAvatar key={assigneeId} memberId={assigneeId} size={25} />
+									))}
+								</div>
 							</div>
 						))}
 				</div>
