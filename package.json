@@ -12,8 +12,6 @@
 		"check-format": "prettier . --check"
 	},
 	"dependencies": {
-		"@coreui/coreui": "3.3",
-		"@coreui/react": "3.3",
 		"@discord/embedded-app-sdk": "^1.2.0",
 		"@dnd-kit/core": "^6.1.0",
 		"chart.js": "^4.4.2",

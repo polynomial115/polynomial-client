@@ -67,6 +67,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			<button
 				className="projectBackButton"
 				style={{
+					boxShadow: '0 0 20px 0 red',
 					position: 'fixed',
 					top: '4vh',
 					left: '3.5vw',
