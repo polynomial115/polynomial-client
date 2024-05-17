@@ -1,10 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { CBadge } from '@coreui/react'
-import { useParticipants } from '../hooks/useParticipants'
 import DataTable from 'react-data-table-component'
-import { Project, taskStatuses, Task } from '../types'
+import { Project, taskStatuses } from '../types'
 import { DiscordAvatar } from './User'
-import { APIGuildMember } from 'discord-api-types/v10'
 import { useGuildMembers } from '../hooks/useGuildMembers'
 
 import { EditTask } from './EditTask'
@@ -19,11 +17,21 @@ interface Props {
 	project: Project
 }
 
+interface TaskRow {
+	id: string
+	name: string
+	status: string
+	assignees: string
+	deadline: string
+}
+
+interface ExpandedComponentProps {
+	data: TaskRow // Assuming `TaskRow` has the properties you need like `id`
+}
+
 export function TableComponent({ project }: Props) {
 	const { tasks } = project
 	const { members } = useGuildMembers()
-	const participants = useParticipants()
-	const [selectedRows, setSelectedRows] = useState([])
 
 	const taskData = tasks.map(task => ({
 		id: task.id,
@@ -36,20 +44,20 @@ export function TableComponent({ project }: Props) {
 	const columns = [
 		{
 			name: 'Name',
-			selector: row => row.name,
+			selector: (row: TaskRow) => row.name,
 			sortable: true
 		},
 		{
 			name: 'Status',
-			selector: row => row.status,
+			selector: (row: TaskRow) => row.status,
 			sortable: true,
-			cell: row => <CBadge color={GetColour(row.status)}>{row.status}</CBadge>
+			cell: (row: TaskRow) => <CBadge color={GetColour(row.status)}>{row.status}</CBadge>
 		},
 		{
 			name: 'Assignees',
-			selector: row => row.assignees,
+			selector: (row: TaskRow) => row.assignees,
 			sortable: true,
-			cell: row => (
+			cell: (row: TaskRow) => (
 				<div style={{ display: 'flex', flexWrap: 'wrap' }}>
 					{row.assignees.split(', ').map(id => (
 						<DiscordAvatar size={35} key={id} memberId={id} />
@@ -59,15 +67,15 @@ export function TableComponent({ project }: Props) {
 		},
 		{
 			name: 'Deadline',
-			selector: row => row.deadline,
+			selector: (row: TaskRow) => row.deadline,
 			sortable: true,
 			right: true
 		}
 	]
 
-	const handleChange = state => {
-		setSelectedRows(state.selectedRows)
-	}
+	// const handleChange = state => {
+	// 	setSelectedRows(state.selectedRows)
+	// }
 
 	const GetColour = (status: string) => {
 		switch (status) {
@@ -84,80 +92,50 @@ export function TableComponent({ project }: Props) {
 		}
 	}
 
-	const ExpandedComponent = ({ data }) => (
-		<div>
-			{/* <button
-				onClick={() =>
-					swal.fire({
-						html: <pre>{JSON.stringify(data, null, 2)}</pre>,
-						background: '#202225',
-						color: 'white',
-						showConfirmButton: false
-					})
-				}
-			>
-				Row Detalis
-			</button> */}
+	const ExpandedComponent: React.FC<ExpandedComponentProps> = ({ data }) => {
+		const task = project.tasks.find(task => task.id === data.id)
 
-			<button
-				onClick={() => {
-					// const a = JSON.stringify(data, null, 2)
-					// const ID_Object = JSON.parse(a)
-					// console.log('ID ========================================== ' + ID_Object.id)
+		return (
+			<div>
+				<button
+					onClick={() => {
+						// const task = project.tasks.find(task => task.id === data.id)
 
-					// swal.fire({
-					// 	html: <EditTask projectId={project.id} members={members} currTask={ID_Object.id} allTasks={project.tasks} />,
-					// 	// html: <pre>{JSON.stringify(data, null, 2)}</pre>,
-					// 	background: '#202225',
-					// 	color: 'white',
-					// 	showConfirmButton: false,
-					// 	width: '625px'
-					// })
+						if (task) {
+							swal.fire({
+								html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
+								background: '#202225',
+								color: 'white',
+								showConfirmButton: false,
+								width: '625px'
+							})
+						} else {
+							console.error('Task not found')
+						}
+					}}
+				>
+					Edit Task
+				</button>
 
-					const task = project.tasks.find(task => task.id === data.id)
-
-					if (task) {
-						swal.fire({
-							html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
-							background: '#202225',
-							color: 'white',
-							showConfirmButton: false,
-							width: '625px'
-						})
-					} else {
-						console.error('Task not found')
-					}
-				}}
-			>
-				Edit Task
-			</button>
-
-			<button
-				onClick={() =>
-					swal.fire({
-						html: <DeleteTask projectId={project.id} tasks={project.tasks} delTask={data} />,
-						background: '#202225',
-						color: 'white',
-						showConfirmButton: false
-					})
-				}
-			>
-				Delete Task
-			</button>
-
-			{/* <button onClick={() => console.log(data)}>Log data to Console</button>
-
-			<button
-				onClick={() => {
-					let a = JSON.stringify(data, null, 2)
-					let ID_Object = JSON.parse(a)
-					console.log('ID ========================================== ' + ID_Object.id)
-				}}
-			>
-				Log TaskID to console
-			</button> */}
-		</div>
-	)
+				<button
+					onClick={() => {
+						if (task) {
+							swal.fire({
+								html: <DeleteTask projectId={project.id} tasks={project.tasks} delTask={task} />,
+								background: '#202225',
+								color: 'white',
+								showConfirmButton: false
+							})
+						} else {
+							console.error('Task not found for deletion')
+						}
+					}}
+				>
+					Delete Task
+				</button>
+			</div>
+		)
+	}
 
 	return (
 		<div className="TableDiv">
@@ -169,7 +147,6 @@ export function TableComponent({ project }: Props) {
 				selectableRows
 				expandableRows
 				expandableRowsComponent={ExpandedComponent}
-				onSelectedRowsChange={handleChange}
 				theme="dark"
 			/>
 		</div>
