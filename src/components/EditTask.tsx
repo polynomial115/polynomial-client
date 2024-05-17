@@ -24,7 +24,8 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 		priority: currTask.priority,
 		assignees: currTask.assignees,
 		deadline: currTask.deadline,
-		name: currTask.name
+		name: currTask.name,
+		description: currTask.description ?? ''
 	})
 	const [error, setError] = useState('')
 
@@ -66,6 +67,14 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 					onChange={e => handleInputChange('name', e.target.value)}
 					placeholder="Enter task name..."
 					required
+				/>
+				<textarea
+					id="task-description"
+					className="textbox"
+					value={formData.description}
+					onChange={e => handleInputChange('description', e.target.value)}
+					placeholder="Enter task description..."
+					maxLength={1000}
 				/>
 				<br />
 				<br />
