@@ -54,7 +54,7 @@ export function CreateProject({ token }: Props) {
 					isMulti
 					options={roles.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
 					styles={selectStyles}
-					placeholder={'Roles with management power for this project'}
+					placeholder="Roles with management power for this project"
 					onChange={selected => setSelectedRoles(selected.map(e => e.value as string))}
 					name="roles"
 				/>

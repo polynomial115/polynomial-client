@@ -18,7 +18,7 @@ export function TaskList({ tasks }: TaskListProps) {
 				</div>
 			) : (
 				<CDataTable
-					addTableClasses={'table-row'}
+					addTableClasses="table-row"
 					items={tasks}
 					// fields={[
 					// 	{ key: 'name' },
