@@ -18,14 +18,14 @@ interface Props {
 	allTasks: Task[]
 }
 
-export function UpdateTask({ projectId, members, currTask, allTasks }: Props) {
+export function EditTask({ projectId, members, currTask, allTasks }: Props) {
 	const [formData, setFormData] = useState<FormData>({
 		status: currTask.status,
 		priority: currTask.priority,
 		assignees: currTask.assignees,
 		deadline: currTask.deadline,
 		name: currTask.name,
-		description: currTask.description
+		description: currTask.description ?? ''
 	})
 	const [error, setError] = useState('')
 
@@ -116,7 +116,6 @@ export function UpdateTask({ projectId, members, currTask, allTasks }: Props) {
 						const dl = CalculateDeadline({ deadlineType: selected!.value as Deadline })
 						handleInputChange('deadline', dl)
 					}}
-					value={deadlines.filter(d => (d.value as Deadline) == formData.deadline).map(d => ({ value: d.value, label: d.label }))}
 					styles={selectStyles}
 				/>
 

@@ -36,8 +36,8 @@ export function TableComponent({ project }: Props) {
 		// 		</div>
 		// 	)
 		// })
-		assignees: task.assignees,
-		deadline: DeadlineToString(task.deadline)
+		assignees: task.assignees
+		// deadline: DeadlineToString(task.deadline)
 	}))
 
 	return (
