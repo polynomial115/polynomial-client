@@ -4,6 +4,10 @@ import { useParticipants } from '../hooks/useParticipants'
 import DataTable from 'react-data-table-component'
 import { Project, taskStatuses, Task } from '../types'
 import { DiscordAvatar } from './User'
+import { APIGuildMember } from 'discord-api-types/v10'
+import { useGuildMembers } from '../hooks/useGuildMembers'
+
+import { EditTask } from './EditTask'
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -16,6 +20,7 @@ interface Props {
 
 export function TableComponent({ project }: Props) {
 	const { tasks } = project
+	const { members } = useGuildMembers()
 	const participants = useParticipants()
 	const [selectedRows, setSelectedRows] = useState([])
 
@@ -94,16 +99,48 @@ export function TableComponent({ project }: Props) {
 			</button>
 
 			<button
-				onClick={() =>
-					swal.fire({
-						html: <pre>{JSON.stringify(data, null, 2)}</pre>,
-						background: '#202225',
-						color: 'white',
-						showConfirmButton: false
-					})
-				}
+				onClick={() => {
+					// const a = JSON.stringify(data, null, 2)
+					// const ID_Object = JSON.parse(a)
+					// console.log('ID ========================================== ' + ID_Object.id)
+
+					// swal.fire({
+					// 	html: <EditTask projectId={project.id} members={members} currTask={ID_Object.id} allTasks={project.tasks} />,
+					// 	// html: <pre>{JSON.stringify(data, null, 2)}</pre>,
+					// 	background: '#202225',
+					// 	color: 'white',
+					// 	showConfirmButton: false,
+					// 	width: '625px'
+					// })
+
+					const task = project.tasks.find(task => task.id === data.id)
+
+					if (task) {
+						swal.fire({
+							html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
+							background: '#202225',
+							color: 'white',
+							showConfirmButton: false,
+							width: '625px'
+						})
+					} else {
+						console.error('Task not found')
+					}
+				}}
 			>
 				Edit Task
+			</button>
+
+			<button onClick={() => console.log(data)}>Log data to Console</button>
+
+			<button
+				onClick={() => {
+					let a = JSON.stringify(data, null, 2)
+					let ID_Object = JSON.parse(a)
+					console.log('ID ========================================== ' + ID_Object.id)
+				}}
+			>
+				Log TaskID to console
 			</button>
 		</div>
 	)
