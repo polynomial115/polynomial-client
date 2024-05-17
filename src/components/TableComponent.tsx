@@ -8,6 +8,7 @@ import { APIGuildMember } from 'discord-api-types/v10'
 import { useGuildMembers } from '../hooks/useGuildMembers'
 
 import { EditTask } from './EditTask'
+import { DeleteTask } from './DeleteTask'
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -85,7 +86,7 @@ export function TableComponent({ project }: Props) {
 
 	const ExpandedComponent = ({ data }) => (
 		<div>
-			<button
+			{/* <button
 				onClick={() =>
 					swal.fire({
 						html: <pre>{JSON.stringify(data, null, 2)}</pre>,
@@ -96,7 +97,7 @@ export function TableComponent({ project }: Props) {
 				}
 			>
 				Row Detalis
-			</button>
+			</button> */}
 
 			<button
 				onClick={() => {
@@ -131,7 +132,20 @@ export function TableComponent({ project }: Props) {
 				Edit Task
 			</button>
 
-			<button onClick={() => console.log(data)}>Log data to Console</button>
+			<button
+				onClick={() =>
+					swal.fire({
+						html: <DeleteTask projectId={project.id} tasks={project.tasks} delTask={data} />,
+						background: '#202225',
+						color: 'white',
+						showConfirmButton: false
+					})
+				}
+			>
+				Delete Task
+			</button>
+
+			{/* <button onClick={() => console.log(data)}>Log data to Console</button>
 
 			<button
 				onClick={() => {
@@ -141,7 +155,7 @@ export function TableComponent({ project }: Props) {
 				}}
 			>
 				Log TaskID to console
-			</button>
+			</button> */}
 		</div>
 	)
 
