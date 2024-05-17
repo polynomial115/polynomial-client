@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { CBadge } from '@coreui/react'
 import { useParticipants } from '../hooks/useParticipants'
 import DataTable from 'react-data-table-component'
-import { Project, taskStatuses } from '../types'
+import { Project, taskStatuses, Task } from '../types'
 import { DiscordAvatar } from './User'
 
 import Swal from 'sweetalert2'
@@ -91,6 +91,19 @@ export function TableComponent({ project }: Props) {
 				}
 			>
 				Row Detalis
+			</button>
+
+			<button
+				onClick={() =>
+					swal.fire({
+						html: <pre>{JSON.stringify(data, null, 2)}</pre>,
+						background: '#202225',
+						color: 'white',
+						showConfirmButton: false
+					})
+				}
+			>
+				Edit Task
 			</button>
 		</div>
 	)
