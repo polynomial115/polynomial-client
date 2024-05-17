@@ -1,7 +1,6 @@
 import React from 'react'
-import { CBadge } from '@coreui/react'
 import DataTable from 'react-data-table-component'
-import { Project, taskStatuses } from '../types'
+import { Project, taskStatuses, priorities } from '../types'
 import { DiscordAvatar } from './User'
 import { useGuildMembers } from '../hooks/useGuildMembers'
 
@@ -40,7 +39,7 @@ export function TableComponent({ project }: Props) {
 		status: taskStatuses[task.status].label,
 		assignees: task.assignees.join(', '),
 		deadline: new Date(task.deadline).toUTCString(),
-		priority: task.priority
+		priority: priorities[task.priority].label
 	}))
 
 	const columns = [
@@ -51,6 +50,7 @@ export function TableComponent({ project }: Props) {
 		},
 		{
 			name: 'Status',
+			width: '125px',
 			selector: (row: TaskRow) => row.status,
 			sortable: true,
 			cell: (row: TaskRow) => {
@@ -72,8 +72,13 @@ export function TableComponent({ project }: Props) {
 		},
 		{
 			name: 'Priority',
+			width: '115px',
 			selector: (row: TaskRow) => row.priority,
-			sortable: true
+			sortable: true,
+			cell: (row: TaskRow) => {
+				const priorityChoice = priorities.find(s => s.label === row.priority)
+				return <span color={priorityChoice ? priorityChoice.color : 'default'}>{row.priority}</span>
+			}
 		},
 		{
 			name: 'Deadline',
@@ -87,20 +92,20 @@ export function TableComponent({ project }: Props) {
 	// 	setSelectedRows(state.selectedRows)
 	// }
 
-	const GetColour = (status: string) => {
-		switch (status) {
-			case 'Completed':
-				return 'success'
-			case 'In Progress':
-				return 'secondary'
-			case 'Backlog':
-				return 'warning'
-			case 'To Do':
-				return 'danger'
-			default:
-				return 'primary'
-		}
-	}
+	// const GetColour = (status: string) => {
+	// 	switch (status) {
+	// 		case 'Completed':
+	// 			return 'success'
+	// 		case 'In Progress':
+	// 			return 'secondary'
+	// 		case 'Backlog':
+	// 			return 'warning'
+	// 		case 'To Do':
+	// 			return 'danger'
+	// 		default:
+	// 			return 'primary'
+	// 	}
+	// }
 
 	const ExpandedComponent: React.FC<ExpandedComponentProps> = ({ data }) => {
 		const task = project.tasks.find(task => task.id === data.id)
