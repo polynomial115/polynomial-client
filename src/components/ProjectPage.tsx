@@ -40,7 +40,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			case ProjectView.Dashboard:
 				return <Dashboard tasks={tasks} />
 			case ProjectView.CardView:
-				return <CardView tasks={tasks} cards={taskStatuses} property={'status'} />
+				return <CardView projectId={project.id} tasks={tasks} columns={taskStatuses} property="status" />
 			case ProjectView.Tasks:
 				return <TableComponent project={project} />
 		}
@@ -55,7 +55,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 	return (
 		<div>
 			<ChoiceButtons
-				style={{ position: 'fixed', left: 0, right: 0, top: '4vh' }}
+				style={{ position: 'fixed', left: 0, right: 0, top: '4vh', zIndex: 2 }}
 				defaultValue={0}
 				setValueCallback={(value: number) => setActiveView(value)}
 				choices={[
@@ -73,7 +73,8 @@ export function ProjectPage({ project, close }: ProjectProps) {
 					color: 'white',
 					backgroundColor: 'crimson',
 					borderRadius: 50,
-					alignSelf: 'end'
+					alignSelf: 'end',
+					zIndex: 2
 				}}
 				onClick={close}
 			>

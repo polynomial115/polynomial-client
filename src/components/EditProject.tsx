@@ -75,7 +75,7 @@ export function EditProject({ name, managerRoles, tasks, projectId, currUserRole
 						setSelectedRoles(selected.map(e => ({ name: e.label, id: e.value, color: e.color }) as mockAPIRole))
 						setMgmt(selected.map(e => e.value as string))
 					}}
-					placeholder={'Select the roles with manager permissions'}
+					placeholder="Select the roles with manager permissions"
 					value={selectedRoles.map(r => ({ value: r.id, label: r.name, color: r.color }))}
 					options={roles.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
 					styles={selectStyles}

@@ -12,7 +12,7 @@ module.exports = {
 	],
 	ignorePatterns: ['dist', '.eslintrc.cjs'],
 	parser: '@typescript-eslint/parser',
-	plugins: ['react-refresh'],
+	plugins: ['react-refresh', 'react-compiler'],
 	rules: {
 		'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
 		'@typescript-eslint/no-unused-vars': 'warn',
@@ -21,7 +21,9 @@ module.exports = {
 		'react/jsx-fragments': 'error',
 		'react/jsx-no-useless-fragment': 'error',
 		'react/destructuring-assignment': 'error',
-		'react/self-closing-comp': 'error'
+		'react/self-closing-comp': 'error',
+		'react/jsx-curly-brace-presence': 'error',
+		'react-compiler/react-compiler': 'error'
 	},
 	parserOptions: {
 		ecmaVersion: 'latest',

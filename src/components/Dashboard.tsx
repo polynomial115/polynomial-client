@@ -1,5 +1,6 @@
 import { Task } from '../types'
 import { PieChart } from './PieChart'
+import { useEffect } from 'react'
 import { taskStatuses } from '../types'
 
 interface DashboardProps {
@@ -7,5 +8,8 @@ interface DashboardProps {
 }
 
 export const Dashboard = ({ tasks }: DashboardProps) => {
-	return <PieChart label={'Tasks'} property={'status'} tasks={tasks} data={taskStatuses} />
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [])
+	return <PieChart label="Tasks" property="status" tasks={tasks} data={taskStatuses} />
 }

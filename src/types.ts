@@ -68,6 +68,7 @@ export interface Task {
 	id: string
 	assignees: string[]
 	name: string
+	description: string
 	priority: Priority
 	status: TaskStatus
 	deadline: Deadline
