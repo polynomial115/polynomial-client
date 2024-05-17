@@ -4,7 +4,6 @@ import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { CreateTask } from './CreateTask'
 import { useGuildMembers } from '../hooks/useGuildMembers'
-import { TableComponent } from './TableComponent.tsx'
 import { EditProject } from './EditProject.tsx'
 import { useAuth } from '../hooks/useAuth.ts'
 import { DiscordAvatar } from './User.tsx'
@@ -12,8 +11,6 @@ import { ChoiceButtons } from './ChoiceButtons.tsx'
 import { useState } from 'react'
 import { TaskList } from './TaskList.tsx'
 import { Dashboard } from './Dashboard.tsx'
-// import { UpdateTask } from './EditTask.tsx'
-// import { Task } from '../types'
 import { CardView } from './CardView.tsx'
 import { EditTask } from './EditTask.tsx'
 
@@ -56,6 +53,16 @@ export function ProjectPage({ project, close }: ProjectProps) {
 	const currUserRoles = useAuth().claims.roles as string[]
 	return (
 		<div>
+			<ChoiceButtons
+				style={{ position: 'fixed', left: 0, right: 0, top: '4vh' }}
+				defaultValue={0}
+				setValueCallback={(value: number) => setActiveView(value)}
+				choices={[
+					{ value: 0, label: 'Dashboard', color: 'limegreen' },
+					{ value: 1, label: 'Card View', color: 'orange' },
+					{ value: 2, label: 'All Tasks', color: 'aqua' }
+				]}
+			/>
 			<button
 				className="projectBackButton"
 				style={{
@@ -71,84 +78,76 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			>
 				{'< Projects'}
 			</button>
-			<ChoiceButtons
-				// style={{ position: 'sticky', top: '4vh' }}
-				defaultValue={0}
-				setValueCallback={(value: number) => setActiveView(value)}
-				choices={[
-					{ value: 0, label: 'Dashboard', color: 'limegreen' },
-					{ value: 1, label: 'Card View', color: 'orange' },
-					{ value: 2, label: 'All Tasks', color: 'aqua' }
-				]}
-			/>
-			<h2>{project.name}</h2>
-			{ActiveView()}
-			<button
-				onClick={() =>
-					swal.fire({
-						html: (
-							<EditProject
-								name={project.name}
-								managerRoles={project.managerRoles}
-								tasks={project.tasks}
-								projectId={project.id}
-								currUserRoles={currUserRoles}
-								token={auth.serverToken}
-							/>
-						),
-						background: '#202225',
-						color: 'white',
-						showConfirmButton: false
-					})
-				}
-			>
-				Edit Project
-			</button>
-			<button
-				onClick={() =>
-					swal.fire({
-						html: <CreateTask projectId={project.id} members={members} />,
-						background: '#202225',
-						color: 'white',
-						showConfirmButton: false,
-						width: '625px'
-					})
-				}
-			>
-				Create Task
-			</button>
-			<TableComponent project={project} />
-			{tasks.map(task => (
-				<li key={task.id}>
-					{/* <p>ID: {task.id}</p> */}
-					<button style={{ width: '75vw', height: '12vh', margin: 10 }} className="TaskContainer">
-						<b>Task Name</b>: {task.name} |
-						<span style={{ color: taskStatuses[task.status].color }}>
-							{' '}
-							<b>&nbsp;{taskStatuses[task.status].label}&nbsp;</b>{' '}
-						</span>{' '}
-						|<b>&nbsp;Assignees:</b>
-						<div style={{ margin: 12 }}>
-							{task.assignees.map(assigneeId => {
-								return <DiscordAvatar key={assigneeId} memberId={assigneeId} />
-							})}
-						</div>
-						<button
-							onClick={() =>
-								swal.fire({
-									html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
-									background: '#202225',
-									color: 'white',
-									showConfirmButton: false,
-									width: '625px'
-								})
-							}
-						>
-							Edit Task
+			<div style={{ marginTop: 75 }}>
+				<h2>{project.name}</h2>
+				{ActiveView()}
+				<button
+					onClick={() =>
+						swal.fire({
+							html: (
+								<EditProject
+									name={project.name}
+									managerRoles={project.managerRoles}
+									tasks={project.tasks}
+									projectId={project.id}
+									currUserRoles={currUserRoles}
+									token={auth.serverToken}
+								/>
+							),
+							background: '#202225',
+							color: 'white',
+							showConfirmButton: false
+						})
+					}
+				>
+					Edit Project
+				</button>
+				<button
+					onClick={() =>
+						swal.fire({
+							html: <CreateTask projectId={project.id} members={members} />,
+							background: '#202225',
+							color: 'white',
+							showConfirmButton: false,
+							width: '625px'
+						})
+					}
+				>
+					Create Task
+				</button>
+				{/* <TableComponent project={project} /> */}
+				{tasks.map(task => (
+					<li key={task.id}>
+						{/* <p>ID: {task.id}</p> */}
+						<button style={{ width: '75vw', height: '12vh', margin: 10 }} className="TaskContainer">
+							<b>Task Name</b>: {task.name} |
+							<span style={{ color: taskStatuses[task.status].color }}>
+								{' '}
+								<b>&nbsp;{taskStatuses[task.status].label}&nbsp;</b>{' '}
+							</span>{' '}
+							|<b>&nbsp;Assignees:</b>
+							<div style={{ margin: 12 }}>
+								{task.assignees.map(assigneeId => {
+									return <DiscordAvatar key={assigneeId} memberId={assigneeId} />
+								})}
+							</div>
+							<button
+								onClick={() =>
+									swal.fire({
+										html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
+										background: '#202225',
+										color: 'white',
+										showConfirmButton: false,
+										width: '625px'
+									})
+								}
+							>
+								Edit Task
+							</button>
 						</button>
-					</button>
-				</li>
-			))}
+					</li>
+				))}
+			</div>
 			{/* <TaskList tasks={tasks} /> */}
 		</div>
 	)
