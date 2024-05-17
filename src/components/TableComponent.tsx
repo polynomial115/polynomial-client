@@ -23,10 +23,11 @@ interface TaskRow {
 	status: string
 	assignees: string
 	deadline: string
+	priority: string
 }
 
 interface ExpandedComponentProps {
-	data: TaskRow // Assuming `TaskRow` has the properties you need like `id`
+	data: TaskRow
 }
 
 export function TableComponent({ project }: Props) {
@@ -38,7 +39,8 @@ export function TableComponent({ project }: Props) {
 		name: task.name,
 		status: taskStatuses[task.status].label,
 		assignees: task.assignees.join(', '),
-		deadline: new Date(task.deadline).toUTCString()
+		deadline: new Date(task.deadline).toUTCString(),
+		priority: task.priority
 	}))
 
 	const columns = [
@@ -51,7 +53,10 @@ export function TableComponent({ project }: Props) {
 			name: 'Status',
 			selector: (row: TaskRow) => row.status,
 			sortable: true,
-			cell: (row: TaskRow) => <CBadge color={GetColour(row.status)}>{row.status}</CBadge>
+			cell: (row: TaskRow) => {
+				const statusChoice = taskStatuses.find(s => s.label === row.status)
+				return <span style={{ color: statusChoice ? statusChoice.color : 'default' }}>{row.status}</span>
+			}
 		},
 		{
 			name: 'Assignees',
@@ -64,6 +69,11 @@ export function TableComponent({ project }: Props) {
 					))}
 				</div>
 			)
+		},
+		{
+			name: 'Priority',
+			selector: (row: TaskRow) => row.priority,
+			sortable: true
 		},
 		{
 			name: 'Deadline',
@@ -140,12 +150,17 @@ export function TableComponent({ project }: Props) {
 	return (
 		<div className="TableDiv">
 			<DataTable
+				title="Tasks Overview"
 				className="ActualTable"
 				pagination
 				columns={columns}
 				data={taskData}
 				selectableRows
+				highlightOnHover
+				pointerOnHover
+				onRowClicked={row => console.log(row)}
 				expandableRows
+				persistTableHead
 				expandableRowsComponent={ExpandedComponent}
 				theme="dark"
 			/>
