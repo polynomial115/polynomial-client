@@ -12,12 +12,8 @@ export function TaskCard({ task }: Props) {
 	return (
 		<div
 			ref={setNodeRef}
+			className="task-card"
 			style={{
-				fontWeight: 500,
-				margin: 10,
-				borderRadius: 10,
-				background: '#121212',
-				position: 'relative',
 				transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
 				transition: isDragging ? undefined : 'transform 0.2s',
 				cursor: isDragging ? (over ? 'grabbing' : 'no-drop') : 'grab',
@@ -26,8 +22,8 @@ export function TaskCard({ task }: Props) {
 			{...listeners}
 			{...attributes}
 		>
-			<p style={{ margin: 3, padding: 3 }}>{task.name}</p>
-			<div style={{ margin: 12 }}>
+			<p className="name">{task.name}</p>
+			<div className="assignees">
 				{task.assignees.map(assigneeId => (
 					<DiscordAvatar key={assigneeId} memberId={assigneeId} size={25} />
 				))}

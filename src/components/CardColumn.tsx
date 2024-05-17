@@ -16,17 +16,14 @@ export function CardColumn({ id, title, color, numCols, tasks }: Props) {
 	return (
 		<div
 			ref={setNodeRef}
+			className="card-column"
 			style={{
 				borderColor: color,
-				borderRadius: 10,
-				borderWidth: 3,
 				borderStyle: isOver ? 'dashed' : 'solid',
-				backgroundColor: '#1a1a1a',
-				width: `${100 / numCols}%`,
-				margin: 10
+				width: `${100 / numCols}%`
 			}}
 		>
-			<h2 style={{ margin: 12 }}>{title}</h2>
+			<h2>{title}</h2>
 			{tasks.map(task => (
 				<TaskCard key={task.id} task={task} />
 			))}

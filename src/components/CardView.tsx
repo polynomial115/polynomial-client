@@ -4,6 +4,7 @@ import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { CardColumn } from './CardColumn'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '../services/firebase'
+import '../styles/CardView.css'
 
 interface CardViewProps {
 	projectId: string
@@ -29,7 +30,7 @@ export const CardView = ({ projectId, tasks, columns, property }: CardViewProps)
 
 	return (
 		<DndContext onDragEnd={handleDragEnd} autoScroll={false}>
-			<div style={{ display: 'flex', fontWeight: 100, flexDirection: 'row', minHeight: '50vh' }}>
+			<div className="card-view">
 				{columns.map(card => (
 					<CardColumn
 						key={card.value}
