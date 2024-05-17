@@ -13,6 +13,7 @@ import { TaskList } from './TaskList.tsx'
 import { Dashboard } from './Dashboard.tsx'
 import { CardView } from './CardView.tsx'
 import { EditTask } from './EditTask.tsx'
+import { TableComponent } from './TableComponent.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -41,7 +42,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			case ProjectView.CardView:
 				return <CardView tasks={tasks} cards={taskStatuses} property={'status'} />
 			case ProjectView.Tasks:
-				return <TaskList tasks={tasks} />
+				return <TableComponent project={project} />
 		}
 	}
 	// const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => {
