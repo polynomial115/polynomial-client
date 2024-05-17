@@ -1,69 +1,46 @@
 import { Choice, Task } from '../types'
 import { useEffect } from 'react'
-import { DiscordAvatar } from './User'
+import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import { CardColumn } from './CardColumn'
+import { doc, updateDoc } from 'firebase/firestore'
+import { db } from '../services/firebase'
+
 interface CardViewProps {
+	projectId: string
 	tasks: Task[]
-	cards: Choice[]
-	property: string
+	columns: Choice[]
+	property: keyof Task
 }
 
-export const CardView = ({ tasks, cards, property }: CardViewProps) => {
-	// useEffect(() => {
-	// 	console.log('tasks:', tasks)
-	// 	if (!tasks || tasks.length === 0) {
-	// 		console.log('Tasks array is empty or undefined')
-	// 		return
-	// 	}
-	// 	if (!((property as keyof Task) in tasks[0])) {
-	// 		console.error(`Key ${property} not found in Task interface`)
-	// 		return
-	// 	}
-	// })
+export const CardView = ({ projectId, tasks, columns, property }: CardViewProps) => {
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [])
+
+	async function handleDragEnd(event: DragEndEvent) {
+		if (event.over) {
+			const taskId = event.active.id
+			const newValue = event.over.id
+			await updateDoc(doc(db, 'projects', projectId), {
+				tasks: tasks.map(task => (task.id === taskId ? { ...task, [property]: newValue } : task))
+			})
+		}
+	}
+
 	return (
-		<div style={{ display: 'flex', fontWeight: 100, flexDirection: 'row', minHeight: '50vh' }}>
-			{cards.map((card: Choice) => (
-				<div
-					key={card.label}
-					style={{
-						borderColor: card.color,
-						borderRadius: 10,
-						borderWidth: 3,
-						borderStyle: 'solid',
-						backgroundColor: '#1a1a1a',
-						width: `${100 / cards.length}%`,
-						margin: 10
-					}}
-				>
-					<h2 style={{ margin: 12 }}>{card.label}</h2>
-					{tasks
-						.filter(task => (task[property as keyof Task] as number) === card.value)
-						.map((task: Task) => (
-							<div
-								style={{
-									fontWeight: 500,
-									margin: 10,
-									borderRadius: 10,
-									// opacity: 0.5,
-									// maxWidth: '75%',
-									// display: 'flex',
-									// justifyContent: 'center'
-									background: '#121212'
-								}}
-								key={task.id}
-							>
-								<p style={{ margin: 3, padding: 3 }}>{task.name}</p>
-								<div style={{ margin: 12 }}>
-									{task.assignees.map(assigneeId => (
-										<DiscordAvatar key={assigneeId} memberId={assigneeId} size={25} />
-									))}
-								</div>
-							</div>
-						))}
-				</div>
-			))}
-		</div>
+		<DndContext onDragEnd={handleDragEnd} autoScroll={false}>
+			<div style={{ display: 'flex', fontWeight: 100, flexDirection: 'row', minHeight: '50vh' }}>
+				{columns.map(card => (
+					<CardColumn
+						key={card.value}
+						id={card.value}
+						title={card.label}
+						color={card.color}
+						numCols={columns.length}
+						tasks={tasks.filter(task => (task[property] as number) === card.value)}
+					/>
+				))}
+			</div>
+		</DndContext>
 	)
 }

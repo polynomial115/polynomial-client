@@ -41,7 +41,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 
 		try {
 			await updateDoc(projectDoc, {
-				tasks: allTasks.map(t => (t.id == currTask.id ? taskData : t))
+				tasks: allTasks.map(t => (t.id === currTask.id ? taskData : t))
 			})
 			setError('Edited task successfully.')
 			Swal.close()
