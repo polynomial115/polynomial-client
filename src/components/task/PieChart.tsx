@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Choice, Task } from '../types'
+import { Choice, Task } from '../../types.ts'
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
 
@@ -32,7 +32,13 @@ export function PieChart({ label, property, tasks, data }: PieChartProps) {
 			{/* Parent container takes full width */}
 			{!tasks || tasks.length === 0 ? (
 				<div className="empty-tasks-message">
-					<p>Add some Tasks to see Pie Chart Visualization!</p>
+					<Doughnut
+						data={{
+							labels: ['No Tasks: Add some Tasks to see Pie Chart Visualization!', ''],
+							datasets: [{ data: [1], borderWidth: 0, backgroundColor: ['#e0e0e0'] }]
+						}}
+						options={{ cutout: '80%', plugins: { tooltip: { enabled: false } } }}
+					/>
 				</div>
 			) : (
 				<div className="doughnut-wrapper">

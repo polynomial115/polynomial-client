@@ -11,14 +11,12 @@
 	color: #fff;
 	height: 100vh;
 	width: 100vw;
-	background-color: #222;
 	left: 0 !important;
 }
 
 .pie-chart-container {
 	flex: 1;
 	max-width: 50%;
-	background-color: #333;
 }
 
 .doughnut-wrapper {
@@ -29,27 +27,53 @@
 	min-height: 70vh;
 }
 
+.empty-tasks-message {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 50vh;
+	width: 100%;
+	min-width: 50vw;
+	text-align: center;
+	border-radius: 10px;
+	padding: 20px;
+	margin: 20px;
+}
+
+.empty-tasks-message p {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
 .task-list-container {
 	flex: 1;
 	max-width: 50%;
 	padding: 20px;
-	background-color: #333;
 	border-radius: 10px;
 	overflow-x: hidden;
 }
 
-.c-data-table {
-	max-width: 100%;
-	border-collapse: collapse;
+.project-title {
+	font-size: 36px;
+	font-weight: bold;
+	color: #ffffff;
+	text-align: center;
+	margin: 20px 0;
+	font-family: 'Helvetica Neue', Arial, sans-serif;
+	letter-spacing: 1px;
 }
 
-.c-data-table th,
-.c-data-table td {
-	border: 1px solid #555;
-	padding: 8px;
-	text-align: left;
-}
-
-.c-data-table th {
-	background-color: #444;
+@media (max-width: 768px) {
+	.dashboard-container {
+		flex-direction: column;
+	}
+	.pie-chart-container {
+		min-width: 100%;
+	}
+	.doughnut-wrapper {
+		height: 50vh;
+	}
+	.task-list-container {
+		min-width: 100%;
+	}
 }

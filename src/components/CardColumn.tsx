@@ -1,6 +1,6 @@
 import { useDroppable } from '@dnd-kit/core'
 import { Task } from '../types'
-import { TaskCard } from './TaskCard'
+import { TaskCard } from './task/TaskCard.tsx'
 
 interface Props {
 	id: number

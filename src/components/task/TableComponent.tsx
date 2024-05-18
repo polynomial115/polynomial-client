@@ -1,8 +1,8 @@
 import { CDataTable } from '@coreui/react'
-import { taskStatuses } from './TaskStatuses'
+import { taskStatus } from './TaskStatus.tsx'
 // import { useGuildMembers } from '../hooks/useGuildMembers'
 // import { getAvatar, getDisplayName } from '../util'
-import { Project } from '../types'
+import { Project } from '../../types.ts'
 
 interface Props {
 	project: Project
@@ -15,7 +15,7 @@ export function TableComponent({ project }: Props) {
 	const taskData = tasks.map(task => ({
 		id: task.id,
 		name: task.name,
-		status: taskStatuses[task.status].label,
+		status: taskStatus[task.status].label,
 		// assignees: task.assignees.map(assigneeID => {
 		// 	const member = getMember(assigneeID)
 		// 	if (!member) return 'Unknown'

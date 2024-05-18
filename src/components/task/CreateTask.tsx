@@ -1,12 +1,12 @@
 import { FormEvent, useState } from 'react'
 import Select from 'react-select'
-import { selectStyles } from '../styles/select-styles.ts'
-import { db } from '../services/firebase.ts'
+import { selectStyles } from '../../styles/select-styles.ts'
+import { db } from '../../services/firebase.ts'
 import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
-import { ChoiceButtons } from './ChoiceButtons.tsx'
-import { Priority, Task, TaskStatus, priorities, taskStatuses, deadlines, Deadline } from '../types.ts'
-import CalculateDeadline from '../scripts/CalculateDeadline.ts'
+import { ChoiceButtons } from '../ChoiceButtons.tsx'
+import { Priority, Task, TaskStatus, priorities, taskStatuses, deadlines, Deadline } from '../../types.ts'
+import CalculateDeadline from '../../scripts/CalculateDeadline.ts'
 import Swal from 'sweetalert2'
 
 type FormData = Omit<Task, 'id'>

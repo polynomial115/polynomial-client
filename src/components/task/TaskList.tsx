@@ -1,7 +1,10 @@
+// THIS FILE IS DEPRECATED AND WILL BE REMOVED IN THE FUTURE DO NOT USE IT
+// USE TableComponent.tsx INSTEAD
+
 import { useEffect } from 'react'
 import { CDataTable } from '@coreui/react'
-import { Task } from '../types'
-import calculateDeadline from '../scripts/CalculateDeadline.ts'
+import { Task } from '../../types.ts'
+import calculateDeadline from '../../scripts/CalculateDeadline.ts'
 
 interface TaskListProps {
 	tasks: Task[]

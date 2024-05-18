@@ -1,18 +1,19 @@
-import '../styles/ProjectView.css'
-import { type Project, taskStatuses } from '../types'
+import '../../styles/ProjectView.css'
+import { type Project, taskStatuses } from '../../types.ts'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
-import { CreateTask } from './CreateTask'
-import { useGuildMembers } from '../hooks/useGuildMembers'
+import { CreateTask } from '../task/CreateTask.tsx'
+import { useGuildMembers } from '../../hooks/useGuildMembers.ts'
 import { EditProject } from './EditProject.tsx'
-import { useAuth } from '../hooks/useAuth.ts'
-import { DiscordAvatar } from './User.tsx'
-import { ChoiceButtons } from './ChoiceButtons.tsx'
+import { useAuth } from '../../hooks/useAuth.ts'
+// import { DiscordAvatar } from '../User.tsx'
+import { ChoiceButtons } from '../ChoiceButtons.tsx'
 import { useState } from 'react'
-import { TaskList } from './TaskList.tsx'
-import { Dashboard } from './Dashboard.tsx'
-import { CardView } from './CardView.tsx'
-import { EditTask } from './EditTask.tsx'
+import { TaskList } from '../task/TaskList.tsx'
+import { Dashboard } from '../Dashboard.tsx'
+import { CardView } from '../task/CardView.tsx'
+// import { EditTask } from '../task/EditTask.tsx'
+import '../../styles/ProjectView.css'
 
 const swal = withReactContent(Swal)
 
@@ -80,7 +81,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 				{'< Projects'}
 			</button>
 			<div style={{ marginTop: 75 }}>
-				<h2>{project.name}</h2>
+				<p className="project-title"> {project.name}</p>
 				{ActiveView()}
 				<button
 					onClick={() =>
@@ -117,37 +118,37 @@ export function ProjectPage({ project, close }: ProjectProps) {
 					Create Task
 				</button>
 				{/* <TableComponent project={project} /> */}
-				{tasks.map(task => (
-					<li key={task.id}>
-						{/* <p>ID: {task.id}</p> */}
-						<button style={{ width: '75vw', height: '12vh', margin: 10 }} className="TaskContainer">
-							<b>Task Name</b>: {task.name} |
-							<span style={{ color: taskStatuses[task.status].color }}>
-								{' '}
-								<b>&nbsp;{taskStatuses[task.status].label}&nbsp;</b>{' '}
-							</span>{' '}
-							|<b>&nbsp;Assignees:</b>
-							<div style={{ margin: 12 }}>
-								{task.assignees.map(assigneeId => {
-									return <DiscordAvatar key={assigneeId} memberId={assigneeId} />
-								})}
-							</div>
-							<button
-								onClick={() =>
-									swal.fire({
-										html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
-										background: '#202225',
-										color: 'white',
-										showConfirmButton: false,
-										width: '625px'
-									})
-								}
-							>
-								Edit Task
-							</button>
-						</button>
-					</li>
-				))}
+				{/*{tasks.map(task => (*/}
+				{/*	<li key={task.id}>*/}
+				{/*		/!* <p>ID: {task.id}</p> *!/*/}
+				{/*		<button style={{ width: '75vw', height: '12vh', margin: 10 }} className="TaskContainer">*/}
+				{/*			<b>Task Name</b>: {task.name} |*/}
+				{/*			<span style={{ color: taskStatuses[task.status].color }}>*/}
+				{/*				{' '}*/}
+				{/*				<b>&nbsp;{taskStatuses[task.status].label}&nbsp;</b>{' '}*/}
+				{/*			</span>{' '}*/}
+				{/*			|<b>&nbsp;Assignees:</b>*/}
+				{/*			<div style={{ margin: 12 }}>*/}
+				{/*				{task.assignees.map(assigneeId => {*/}
+				{/*					return <DiscordAvatar key={assigneeId} memberId={assigneeId} />*/}
+				{/*				})}*/}
+				{/*			</div>*/}
+				{/*			<button*/}
+				{/*				onClick={() =>*/}
+				{/*					swal.fire({*/}
+				{/*						html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,*/}
+				{/*						background: '#202225',*/}
+				{/*						color: 'white',*/}
+				{/*						showConfirmButton: false,*/}
+				{/*						width: '625px'*/}
+				{/*					})*/}
+				{/*				}*/}
+				{/*			>*/}
+				{/*				Edit Task*/}
+				{/*			</button>*/}
+				{/*		</button>*/}
+				{/*	</li>*/}
+				{/*))}*/}
 			</div>
 			{/* <TaskList tasks={tasks} /> */}
 		</div>

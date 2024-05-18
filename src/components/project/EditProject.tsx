@@ -1,11 +1,11 @@
 import { createRef, useEffect, useState } from 'react'
 import type { APIRole } from 'discord-api-types/v10'
-import { discordSdk } from '../services/discord.ts'
+import { discordSdk } from '../../services/discord.ts'
 import Select from 'react-select'
-import { selectStyles } from '../styles/select-styles.ts'
+import { selectStyles } from '../../styles/select-styles.ts'
 import { Timestamp, doc, updateDoc } from 'firebase/firestore'
-import { db } from '../services/firebase.ts'
-import { Task } from '../types.ts'
+import { db } from '../../services/firebase.ts'
+import { Task } from '../../types.ts'
 
 const transformColor = (color: number) => (color ? '#' + color.toString(16).padStart(6, '0') : 'white')
 interface Props {

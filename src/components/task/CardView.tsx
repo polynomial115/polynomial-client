@@ -1,10 +1,10 @@
-import { Choice, Task } from '../types'
+import { Choice, Task } from '../../types.ts'
 import { useEffect } from 'react'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
-import { CardColumn } from './CardColumn'
+import { CardColumn } from '../CardColumn.tsx'
 import { doc, updateDoc } from 'firebase/firestore'
-import { db } from '../services/firebase'
-import '../styles/CardView.css'
+import { db } from '../../services/firebase.ts'
+import '../../styles/CardView.css'
 
 interface CardViewProps {
 	projectId: string
