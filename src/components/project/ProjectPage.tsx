@@ -14,6 +14,8 @@ import { CardView } from '../task/CardView.tsx'
 import { EditTask } from '../task/EditTask.tsx'
 import '../../styles/ProjectView.css'
 import { TableComponent } from '../task/TableComponent.tsx'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faAngleLeft, faBarsStaggered, faChartPie, faListCheck } from '@fortawesome/free-solid-svg-icons'
 
 const swal = withReactContent(Swal)
 
@@ -48,20 +50,44 @@ export function ProjectPage({ project, close }: ProjectProps) {
 	const currUserRoles = useAuth().claims.roles as string[]
 	return (
 		<div>
+			<div className="top-blur" />
 			<ChoiceButtons
-				style={{ position: 'fixed', left: 0, right: 0, top: '4vh', zIndex: 2 }}
+				className="project-page-switcher"
 				defaultValue={0}
 				setValueCallback={(value: number) => setActiveView(value)}
 				choices={[
-					{ value: 0, label: 'Dashboard', color: 'limegreen' },
-					{ value: 1, label: 'Card View', color: 'orange' },
-					{ value: 2, label: 'All Tasks', color: 'aqua' }
+					{
+						value: 0,
+						label: (
+							<>
+								<FontAwesomeIcon icon={faChartPie} /> Overview
+							</>
+						),
+						color: 'limegreen'
+					},
+					{
+						value: 1,
+						label: (
+							<>
+								<FontAwesomeIcon icon={faBarsStaggered} /> Board
+							</>
+						),
+						color: 'orange'
+					},
+					{
+						value: 2,
+						label: (
+							<>
+								<FontAwesomeIcon icon={faListCheck} /> Task List
+							</>
+						),
+						color: 'aqua'
+					}
 				]}
 			/>
 			<button
 				className="projectBackButton"
 				style={{
-					boxShadow: '0 0 20px 0 red',
 					position: 'fixed',
 					top: '4vh',
 					left: '3.5vw',
@@ -73,7 +99,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 				}}
 				onClick={close}
 			>
-				{'< Projects'}
+				<FontAwesomeIcon icon={faAngleLeft} /> Projects
 			</button>
 			<div style={{ marginTop: 75 }}>
 				<p className="project-title">{project.name}</p>

@@ -122,3 +122,21 @@ ul {
 	border: 1px solid black;
 	box-shadow: 10px 5px 5px black;
 }
+
+.top-blur {
+	position: fixed;
+	width: 100%;
+	top: 0;
+	height: 100px;
+	z-index: 1;
+	backdrop-filter: blur(50px);
+	mask-image: linear-gradient(to bottom, black, transparent);
+}
+
+.project-page-switcher {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 4vh;
+	z-index: 2;
+}
