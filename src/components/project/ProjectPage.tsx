@@ -6,14 +6,14 @@ import { CreateTask } from '../task/CreateTask.tsx'
 import { useGuildMembers } from '../../hooks/useGuildMembers.ts'
 import { EditProject } from './EditProject.tsx'
 import { useAuth } from '../../hooks/useAuth.ts'
-// import { DiscordAvatar } from '../User.tsx'
+import { DiscordAvatar } from '../User.tsx'
 import { ChoiceButtons } from '../ChoiceButtons.tsx'
 import { useState } from 'react'
-import { TaskList } from '../task/TaskList.tsx'
 import { Dashboard } from '../Dashboard.tsx'
 import { CardView } from '../task/CardView.tsx'
-// import { EditTask } from '../task/EditTask.tsx'
+import { EditTask } from '../task/EditTask.tsx'
 import '../../styles/ProjectView.css'
+import { TableComponent } from '../task/TableComponent.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -42,15 +42,9 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			case ProjectView.CardView:
 				return <CardView projectId={project.id} tasks={tasks} columns={taskStatuses} property="status" />
 			case ProjectView.Tasks:
-				return <TaskList tasks={tasks} />
+				return <TableComponent project={project} />
 		}
 	}
-	// const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => {
-	// 	setFormData(prev => ({
-	// 		...prev,
-	// 		[name]: value
-	// 	}))
-	// }
 	const currUserRoles = useAuth().claims.roles as string[]
 	return (
 		<div>
@@ -67,6 +61,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			<button
 				className="projectBackButton"
 				style={{
+					boxShadow: '0 0 20px 0 red',
 					position: 'fixed',
 					top: '4vh',
 					left: '3.5vw',
@@ -81,7 +76,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 				{'< Projects'}
 			</button>
 			<div style={{ marginTop: 75 }}>
-				<p className="project-title"> {project.name}</p>
+				<p className="project-title">{project.name}</p>
 				{ActiveView()}
 				<button
 					onClick={() =>
@@ -118,37 +113,37 @@ export function ProjectPage({ project, close }: ProjectProps) {
 					Create Task
 				</button>
 				{/* <TableComponent project={project} /> */}
-				{/*{tasks.map(task => (*/}
-				{/*	<li key={task.id}>*/}
-				{/*		/!* <p>ID: {task.id}</p> *!/*/}
-				{/*		<button style={{ width: '75vw', height: '12vh', margin: 10 }} className="TaskContainer">*/}
-				{/*			<b>Task Name</b>: {task.name} |*/}
-				{/*			<span style={{ color: taskStatuses[task.status].color }}>*/}
-				{/*				{' '}*/}
-				{/*				<b>&nbsp;{taskStatuses[task.status].label}&nbsp;</b>{' '}*/}
-				{/*			</span>{' '}*/}
-				{/*			|<b>&nbsp;Assignees:</b>*/}
-				{/*			<div style={{ margin: 12 }}>*/}
-				{/*				{task.assignees.map(assigneeId => {*/}
-				{/*					return <DiscordAvatar key={assigneeId} memberId={assigneeId} />*/}
-				{/*				})}*/}
-				{/*			</div>*/}
-				{/*			<button*/}
-				{/*				onClick={() =>*/}
-				{/*					swal.fire({*/}
-				{/*						html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,*/}
-				{/*						background: '#202225',*/}
-				{/*						color: 'white',*/}
-				{/*						showConfirmButton: false,*/}
-				{/*						width: '625px'*/}
-				{/*					})*/}
-				{/*				}*/}
-				{/*			>*/}
-				{/*				Edit Task*/}
-				{/*			</button>*/}
-				{/*		</button>*/}
-				{/*	</li>*/}
-				{/*))}*/}
+				{tasks.map(task => (
+					<li key={task.id}>
+						{/* <p>ID: {task.id}</p> */}
+						<button style={{ width: '75vw', height: '12vh', margin: 10 }} className="TaskContainer">
+							<b>Task Name</b>: {task.name} |
+							<span style={{ color: taskStatuses[task.status].color }}>
+								{' '}
+								<b>&nbsp;{taskStatuses[task.status].label}&nbsp;</b>{' '}
+							</span>{' '}
+							|<b>&nbsp;Assignees:</b>
+							<div style={{ margin: 12 }}>
+								{task.assignees.map(assigneeId => {
+									return <DiscordAvatar key={assigneeId} memberId={assigneeId} />
+								})}
+							</div>
+							<button
+								onClick={() =>
+									swal.fire({
+										html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
+										background: '#202225',
+										color: 'white',
+										showConfirmButton: false,
+										width: '625px'
+									})
+								}
+							>
+								Edit Task
+							</button>
+						</button>
+					</li>
+				))}
 			</div>
 			{/* <TaskList tasks={tasks} /> */}
 		</div>
