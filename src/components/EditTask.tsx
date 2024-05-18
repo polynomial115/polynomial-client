@@ -24,7 +24,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 		assignees: currTask.assignees,
 		deadline: currTask.deadline,
 		name: currTask.name,
-		description: currTask.description ? currTask.description : ''
+		description: currTask.description ?? ''
 	})
 	const [error, setError] = useState('')
 
@@ -41,7 +41,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 
 		try {
 			await updateDoc(projectDoc, {
-				tasks: allTasks.map(t => (t.id == currTask.id ? taskData : t))
+				tasks: allTasks.map(t => (t.id === currTask.id ? taskData : t))
 			})
 			setError('Edited task successfully.')
 			Swal.close()
@@ -73,6 +73,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 					value={formData.description}
 					onChange={e => handleInputChange('description', e.target.value)}
 					placeholder="Enter task description..."
+					maxLength={1000}
 				/>
 				<br />
 				<br />
@@ -120,7 +121,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 					styles={selectStyles}
 				/>
 
-				<button type="submit">Edit Task</button>
+				<button type="submit">Save</button>
 			</form>
 		</div>
 	)

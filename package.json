@@ -12,9 +12,8 @@
 		"check-format": "prettier . --check"
 	},
 	"dependencies": {
-		"@coreui/coreui": "3.3",
-		"@coreui/react": "3.3",
 		"@discord/embedded-app-sdk": "^1.2.0",
+		"@dnd-kit/core": "^6.1.0",
 		"chart.js": "^4.4.2",
 		"chroma-js": "^2.4.2",
 		"discord-api-types": "^0.37.83",
@@ -22,9 +21,11 @@
 		"partysocket": "^1.0.1",
 		"react": "^18.3.1",
 		"react-chartjs-2": "^5.2.0",
+		"react-data-table-component": "^7.6.2",
 		"react-dom": "^18.3.1",
 		"react-router-dom": "^6.23.0",
 		"react-select": "^5.8.0",
+		"styled-components": "^6.1.11",
 		"sweetalert2": "^11.10.8",
 		"sweetalert2-react-content": "^5.0.7"
 	},
@@ -39,6 +40,7 @@
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-prettier": "^5.1.3",
 		"eslint-plugin-react": "^7.34.1",
+		"eslint-plugin-react-compiler": "0.0.0-experimental-53bb89e-20240515",
 		"eslint-plugin-react-hooks": "^4.6.2",
 		"eslint-plugin-react-refresh": "^0.4.6",
 		"prettier": "^3.2.5",

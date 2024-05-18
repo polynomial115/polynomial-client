@@ -71,6 +71,7 @@ export function CreateTask({ projectId, members }: Props) {
 					value={formData.description}
 					onChange={e => handleInputChange('description', e.target.value)}
 					placeholder="Enter task description..."
+					maxLength={1000}
 				/>
 				<br />
 				<br />

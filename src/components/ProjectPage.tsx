@@ -9,10 +9,10 @@ import { useAuth } from '../hooks/useAuth.ts'
 import { DiscordAvatar } from './User.tsx'
 import { ChoiceButtons } from './ChoiceButtons.tsx'
 import { useState } from 'react'
-import { TaskList } from './TaskList.tsx'
 import { Dashboard } from './Dashboard.tsx'
 import { CardView } from './CardView.tsx'
 import { EditTask } from './EditTask.tsx'
+import { TableComponent } from './TableComponent.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -39,22 +39,16 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			case ProjectView.Dashboard:
 				return <Dashboard tasks={tasks} />
 			case ProjectView.CardView:
-				return <CardView tasks={tasks} cards={taskStatuses} property={'status'} />
+				return <CardView projectId={project.id} tasks={tasks} columns={taskStatuses} property="status" />
 			case ProjectView.Tasks:
-				return <TaskList tasks={tasks} />
+				return <TableComponent project={project} />
 		}
 	}
-	// const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => {
-	// 	setFormData(prev => ({
-	// 		...prev,
-	// 		[name]: value
-	// 	}))
-	// }
 	const currUserRoles = useAuth().claims.roles as string[]
 	return (
 		<div>
 			<ChoiceButtons
-				style={{ position: 'fixed', left: 0, right: 0, top: '4vh' }}
+				style={{ position: 'fixed', left: 0, right: 0, top: '4vh', zIndex: 2 }}
 				defaultValue={0}
 				setValueCallback={(value: number) => setActiveView(value)}
 				choices={[
@@ -66,13 +60,15 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			<button
 				className="projectBackButton"
 				style={{
+					boxShadow: '0 0 20px 0 red',
 					position: 'fixed',
 					top: '4vh',
 					left: '3.5vw',
 					color: 'white',
 					backgroundColor: 'crimson',
 					borderRadius: 50,
-					alignSelf: 'end'
+					alignSelf: 'end',
+					zIndex: 2
 				}}
 				onClick={close}
 			>

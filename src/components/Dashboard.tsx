@@ -11,5 +11,5 @@ export const Dashboard = ({ tasks }: DashboardProps) => {
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [])
-	return <PieChart label={'Tasks'} property={'status'} tasks={tasks} data={taskStatuses} />
+	return <PieChart label="Tasks" property="status" tasks={tasks} data={taskStatuses} />
 }
