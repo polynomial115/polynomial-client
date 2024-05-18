@@ -88,25 +88,6 @@ export function TableComponent({ project }: Props) {
 		}
 	]
 
-	// const handleChange = state => {
-	// 	setSelectedRows(state.selectedRows)
-	// }
-
-	// const GetColour = (status: string) => {
-	// 	switch (status) {
-	// 		case 'Completed':
-	// 			return 'success'
-	// 		case 'In Progress':
-	// 			return 'secondary'
-	// 		case 'Backlog':
-	// 			return 'warning'
-	// 		case 'To Do':
-	// 			return 'danger'
-	// 		default:
-	// 			return 'primary'
-	// 	}
-	// }
-
 	const ExpandedComponent: React.FC<ExpandedComponentProps> = ({ data }) => {
 		const task = project.tasks.find(task => task.id === data.id)
 
@@ -114,8 +95,6 @@ export function TableComponent({ project }: Props) {
 			<div>
 				<button
 					onClick={() => {
-						// const task = project.tasks.find(task => task.id === data.id)
-
 						if (task) {
 							swal.fire({
 								html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,

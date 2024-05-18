@@ -9,7 +9,6 @@ import { useAuth } from '../hooks/useAuth.ts'
 import { DiscordAvatar } from './User.tsx'
 import { ChoiceButtons } from './ChoiceButtons.tsx'
 import { useState } from 'react'
-// import { TaskList } from './TaskList.tsx'
 import { Dashboard } from './Dashboard.tsx'
 import { CardView } from './CardView.tsx'
 import { EditTask } from './EditTask.tsx'
@@ -45,12 +44,6 @@ export function ProjectPage({ project, close }: ProjectProps) {
 				return <TableComponent project={project} />
 		}
 	}
-	// const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => {
-	// 	setFormData(prev => ({
-	// 		...prev,
-	// 		[name]: value
-	// 	}))
-	// }
 	const currUserRoles = useAuth().claims.roles as string[]
 	return (
 		<div>
