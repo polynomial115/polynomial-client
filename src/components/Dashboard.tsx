@@ -12,10 +12,10 @@ export const Dashboard = ({ tasks }: DashboardProps) => {
 	return (
 		<div className="dashboard-container">
 			<div className="pie-chart-container">
-				<PieChart label={'Tasks'} property={'status'} tasks={tasks} data={taskStatuses} />
+				<PieChart label="Tasks" property="status" tasks={tasks} data={taskStatuses} />
 			</div>
 			<div className="task-list-container">
-				<TaskList tasks={tasks} displayCount={2} />
+				<TaskList tasks={tasks} displayCount={5} />
 			</div>
 		</div>
 	)

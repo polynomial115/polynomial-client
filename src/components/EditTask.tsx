@@ -6,10 +6,12 @@ import { doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { ChoiceButtons } from './ChoiceButtons.tsx'
 import { Task, priorities, taskStatuses, deadlines, Deadline } from '../types.ts'
-import CalculateDeadline from '../scripts/CalculateDeadline.ts'
+import calculateDeadline from '../scripts/CalculateDeadline.ts'
 import Swal from 'sweetalert2'
 
-type FormData = Omit<Task, 'id'>
+type FormData = Omit<Task, 'id' | 'deadline'> & {
+	deadline: Date | null
+}
 
 interface EditTaskProps {
 	projectId: string
@@ -23,7 +25,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 		status: currTask.status,
 		priority: currTask.priority,
 		assignees: currTask.assignees,
-		deadline: currTask.deadline,
+		deadline: calculateDeadline({ deadlineType: currTask.deadline }),
 		name: currTask.name,
 		description: currTask.description ?? ''
 	})
@@ -52,7 +54,9 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 		}
 	}
 
-	const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => setFormData(prev => ({ ...prev, [name]: value }))
+	const handleInputChange = (name: keyof FormData, value: string | string[] | number | Date | null) => {
+		setFormData(prev => ({ ...prev, [name]: value }))
+	}
 
 	return (
 		<div style={{ padding: '20px' }}>
@@ -108,14 +112,19 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} defaultValue={currTask.status} />
 				<br />
 				<h3 style={{ marginBottom: 5 }}>When will this task be due?</h3>
+
 				<Select
 					isMulti={false}
 					name="deadline"
 					options={deadlines}
 					placeholder="Select deadline..."
 					onChange={selected => {
-						const dl = CalculateDeadline({ deadlineType: selected!.value as Deadline })
-						handleInputChange('deadline', dl)
+						if (selected) {
+							const dl = calculateDeadline({ deadlineType: selected.value as Deadline })
+							handleInputChange('deadline', dl)
+						} else {
+							console.error('Selected deadline is null or undefined')
+						}
 					}}
 					styles={selectStyles}
 				/>

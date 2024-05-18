@@ -31,7 +31,7 @@ export function TaskList({ tasks, displayCount = tasks.length }: TaskListProps) 
 
 	return (
 		<CDataTable
-			addTableClasses={'c-data-table'}
+			addTableClasses="c-data-table"
 			items={sortedTasks}
 			fields={[
 				{ key: 'name', label: 'Name' },
@@ -46,7 +46,9 @@ export function TaskList({ tasks, displayCount = tasks.length }: TaskListProps) 
 			activePage={1}
 			clickableRows
 			scopedSlots={{
-				dueDate: item => <td>{item.dueDate ? new Date(item.dueDate).toLocaleDateString() : 'No Due Date'}</td>
+				dueDate: (item: { dueDate: string | number | Date }) => (
+					<td>{item.dueDate ? new Date(item.dueDate).toLocaleDateString() : 'No Due Date'}</td>
+				)
 			}}
 		/>
 	)

@@ -13,13 +13,13 @@ interface Props {
 	deadlineType: Deadline
 }
 
-const calculateDeadline = ({ deadlineType }: Props) => {
+const calculateDeadline = ({ deadlineType }: Props): Date | null => {
 	if (deadlineType === Deadline.Never) {
 		return null
 	}
 
 	const days = deadlineToDays[deadlineType]
-	if (!days) {
+	if (days === undefined) {
 		console.warn('Invalid deadline value')
 		return null
 	}

@@ -50,8 +50,9 @@ export function CreateTask({ projectId, members }: Props) {
 		}
 	}
 
-	const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => setFormData(prev => ({ ...prev, [name]: value }))
-
+	const handleInputChange = (name: keyof FormData, value: string | string[] | number | Date | null) => {
+		setFormData(prev => ({ ...prev, [name]: value }))
+	}
 	return (
 		<div style={{ padding: '20px' }}>
 			<h2>Create Task</h2>
