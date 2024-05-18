@@ -1,31 +1,29 @@
 import { FormEvent, useState } from 'react'
 import Select from 'react-select'
-import { selectStyles } from '../styles/select-styles.ts'
-import { db } from '../services/firebase.ts'
-import { doc, updateDoc } from 'firebase/firestore'
+import { selectStyles } from '../../styles/select-styles.ts'
+import { db } from '../../services/firebase.ts'
+import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
-import { ChoiceButtons } from './ChoiceButtons.tsx'
-import { Task, priorities, taskStatuses, deadlines, Deadline } from '../types.ts'
-import CalculateDeadline from '../scripts/CalculateDeadline.ts'
+import { ChoiceButtons } from '../ChoiceButtons.tsx'
+import { Priority, Task, TaskStatus, priorities, taskStatuses, deadlines, Deadline } from '../../types.ts'
+import CalculateDeadline from '../../scripts/CalculateDeadline.ts'
 import Swal from 'sweetalert2'
 
 type FormData = Omit<Task, 'id'>
 
-interface EditTaskProps {
+interface Props {
 	projectId: string
 	members: APIGuildMember[]
-	currTask: Task
-	allTasks: Task[]
 }
 
-export function EditTask({ projectId, members, currTask, allTasks }: EditTaskProps) {
+export function CreateTask({ projectId, members }: Props) {
 	const [formData, setFormData] = useState<FormData>({
-		status: currTask.status,
-		priority: currTask.priority,
-		assignees: currTask.assignees,
-		deadline: currTask.deadline,
-		name: currTask.name,
-		description: currTask.description ?? ''
+		status: TaskStatus.ToDo,
+		priority: Priority.Normal,
+		assignees: [],
+		deadline: 0,
+		name: '',
+		description: ''
 	})
 	const [error, setError] = useState('')
 
@@ -36,27 +34,28 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 			return
 		}
 
-		const taskData = { ...formData, id: currTask.id }
+		const taskData = { ...formData, id: doc(collection(db, 'tasks')).id } // generate random id
 
 		const projectDoc = doc(db, 'projects', projectId)
 
 		try {
 			await updateDoc(projectDoc, {
-				tasks: allTasks.map(t => (t.id === currTask.id ? taskData : t))
+				tasks: arrayUnion(taskData)
 			})
-			setError('Edited task successfully.')
+			setError('Created task successfully.')
 			Swal.close()
 		} catch (error) {
 			console.error('Error adding document:', error)
-			setError('Failed to edit task.')
+			setError('Failed to create task.')
 		}
 	}
 
-	const handleInputChange = <T extends keyof FormData>(name: T, value: FormData[T]) => setFormData(prev => ({ ...prev, [name]: value }))
-
+	const handleInputChange = (name: keyof FormData, value: string | string[] | number | Date | null) => {
+		setFormData(prev => ({ ...prev, [name]: value }))
+	}
 	return (
 		<div style={{ padding: '20px' }}>
-			<h2>Edit Task: {currTask.name}</h2>
+			<h2>Create Task</h2>
 			{error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
 			<form onSubmit={handleSubmit}>
 				<input
@@ -85,9 +84,6 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 						value: m.user!.id,
 						label: m.user!.username
 					}))}
-					value={members
-						.filter((m: APIGuildMember) => formData.assignees.includes(m.user!.id))
-						.map(m => ({ value: m.user!.id, label: m.user!.username }))}
 					placeholder="Select assignees..."
 					onChange={selected =>
 						handleInputChange(
@@ -98,14 +94,10 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 					styles={selectStyles}
 				/>
 				<h3 style={{ marginBottom: 5 }}>Set Priority</h3>
-				<ChoiceButtons
-					choices={priorities}
-					setValueCallback={value => handleInputChange('priority', value)}
-					defaultValue={currTask.priority}
-				/>
+				<ChoiceButtons choices={priorities} setValueCallback={value => handleInputChange('priority', value)} defaultValue={NaN} />
 
 				<h3 style={{ marginBottom: 5 }}>Set Status</h3>
-				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} defaultValue={currTask.status} />
+				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} defaultValue={NaN} />
 				<br />
 				<h3 style={{ marginBottom: 5 }}>When will this task be due?</h3>
 				<Select
@@ -120,7 +112,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 					styles={selectStyles}
 				/>
 
-				<button type="submit">Save</button>
+				<button type="submit">Create Task</button>
 			</form>
 		</div>
 	)

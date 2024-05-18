@@ -1,6 +1,6 @@
-import { Task } from '../types'
+import { Task } from '../../types.ts'
 import { doc, updateDoc } from 'firebase/firestore'
-import { db } from '../services/firebase.ts'
+import { db } from '../../services/firebase.ts'
 import Swal from 'sweetalert2'
 interface Props {
 	projectId: string

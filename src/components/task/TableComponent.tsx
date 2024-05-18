@@ -1,19 +1,18 @@
 import React from 'react'
 import DataTable from 'react-data-table-component'
-import { Project, taskStatuses, priorities } from '../types'
-import { DiscordAvatar } from './User'
-import { useGuildMembers } from '../hooks/useGuildMembers'
-
+import { priorities, Project, Task, taskStatuses } from '../../types'
+import { DiscordAvatar } from '../User'
+import { useGuildMembers } from '../../hooks/useGuildMembers'
 import { EditTask } from './EditTask'
 import { DeleteTask } from './DeleteTask'
-
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
 const swal = withReactContent(Swal)
 
 interface Props {
-	project: Project
+	tasks?: Task[]
+	project?: Project
 }
 
 interface TaskRow {
@@ -29,11 +28,19 @@ interface ExpandedComponentProps {
 	data: TaskRow
 }
 
-export function TableComponent({ project }: Props) {
-	const { tasks } = project
+export function TableComponent({ tasks, project }: Props) {
 	const { members } = useGuildMembers()
 
-	const taskData = tasks.map(task => ({
+	// Determine the tasks array based on the input props
+	let taskList = tasks ?? project?.tasks ?? []
+
+	// Limit the number of tasks to 5
+	if (!project) {
+		taskList = taskList.slice(0, 5)
+	}
+
+	// Map tasks to TaskRow format
+	const taskData = taskList.map(task => ({
 		id: task.id,
 		name: task.name,
 		status: taskStatuses[task.status].label,
@@ -42,6 +49,15 @@ export function TableComponent({ project }: Props) {
 		priority: priorities[task.priority].label
 	}))
 
+	// Auto-sort by priority if no project is provided
+	if (!project) {
+		taskData.sort((a, b) => {
+			const priorityOrder = priorities.map(p => p.label)
+			return priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority)
+		})
+	}
+
+	// Define columns
 	const columns = [
 		{
 			name: 'Name',
@@ -61,7 +77,7 @@ export function TableComponent({ project }: Props) {
 		{
 			name: 'Assignees',
 			selector: (row: TaskRow) => row.assignees,
-			sortable: true,
+			sortable: false,
 			cell: (row: TaskRow) => (
 				<div style={{ display: 'flex', flexWrap: 'wrap' }}>
 					{row.assignees.split(', ').map(id => (
@@ -77,7 +93,7 @@ export function TableComponent({ project }: Props) {
 			sortable: true,
 			cell: (row: TaskRow) => {
 				const priorityChoice = priorities.find(s => s.label === row.priority)
-				return <span color={priorityChoice ? priorityChoice.color : 'default'}>{row.priority}</span>
+				return <span style={{ color: priorityChoice ? priorityChoice.color : 'default' }}>{row.priority}</span>
 			}
 		},
 		{
@@ -88,8 +104,24 @@ export function TableComponent({ project }: Props) {
 		}
 	]
 
+	// Add "Assignees" column if project is provided
+	// // if (project) {
+	// columns.splice(2, 0, {
+	// 	name: 'Assignees',
+	// 	selector: (row: TaskRow) => row.assignees,
+	// 	sortable: true,
+	// 	cell: (row: TaskRow) => (
+	// 		<div>
+	// 			{row.assignees!.split(', ').map(assigneeId => {
+	// 				return <DiscordAvatar key={assigneeId} memberId={assigneeId} />
+	// 			})}
+	// 		</div>
+	// 	)
+	// })
+	// }
+
 	const ExpandedComponent: React.FC<ExpandedComponentProps> = ({ data }) => {
-		const task = project.tasks.find(task => task.id === data.id)
+		const task = taskList.find(task => task.id === data.id)
 
 		return (
 			<div>
@@ -97,7 +129,7 @@ export function TableComponent({ project }: Props) {
 					onClick={() => {
 						if (task) {
 							swal.fire({
-								html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
+								html: <EditTask projectId={project!.id} members={members} currTask={task} allTasks={taskList} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,
@@ -115,7 +147,7 @@ export function TableComponent({ project }: Props) {
 					onClick={() => {
 						if (task) {
 							swal.fire({
-								html: <DeleteTask projectId={project.id} tasks={project.tasks} delTask={task} />,
+								html: <DeleteTask projectId={project!.id} tasks={taskList} delTask={task} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false
@@ -132,20 +164,19 @@ export function TableComponent({ project }: Props) {
 	}
 
 	return (
-		<div className="TableDiv">
+		<div className="TableDiv" style={{ maxWidth: '1000px', margin: 'auto' }}>
 			<DataTable
 				title="Tasks Overview"
 				className="ActualTable"
-				pagination
 				columns={columns}
 				data={taskData}
-				selectableRows
 				highlightOnHover
 				pointerOnHover
-				onRowClicked={row => console.log(row)}
-				expandableRows
+				pagination={!!project}
+				selectableRows={!!project}
+				expandableRows={!!project}
 				persistTableHead
-				expandableRowsComponent={ExpandedComponent}
+				expandableRowsComponent={project ? ExpandedComponent : undefined}
 				theme="dark"
 			/>
 		</div>

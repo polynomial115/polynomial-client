@@ -1,6 +1,6 @@
 import { useDraggable } from '@dnd-kit/core'
-import { Task } from '../types'
-import { DiscordAvatar } from './User'
+import { Task } from '../../types.ts'
+import { DiscordAvatar } from '../User.tsx'
 
 interface Props {
 	task: Task

@@ -1,18 +1,19 @@
-import '../styles/ProjectView.css'
-import { type Project, taskStatuses } from '../types'
+import '../../styles/ProjectView.css'
+import { type Project, taskStatuses } from '../../types.ts'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
-import { CreateTask } from './CreateTask'
-import { useGuildMembers } from '../hooks/useGuildMembers'
+import { CreateTask } from '../task/CreateTask.tsx'
+import { useGuildMembers } from '../../hooks/useGuildMembers.ts'
 import { EditProject } from './EditProject.tsx'
-import { useAuth } from '../hooks/useAuth.ts'
-import { DiscordAvatar } from './User.tsx'
-import { ChoiceButtons } from './ChoiceButtons.tsx'
+import { useAuth } from '../../hooks/useAuth.ts'
+import { DiscordAvatar } from '../User.tsx'
+import { ChoiceButtons } from '../ChoiceButtons.tsx'
 import { useState } from 'react'
-import { Dashboard } from './Dashboard.tsx'
-import { CardView } from './CardView.tsx'
-import { EditTask } from './EditTask.tsx'
-import { TableComponent } from './TableComponent.tsx'
+import { Dashboard } from '../Dashboard.tsx'
+import { CardView } from '../task/CardView.tsx'
+import { EditTask } from '../task/EditTask.tsx'
+import '../../styles/ProjectView.css'
+import { TableComponent } from '../task/TableComponent.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -75,7 +76,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 				{'< Projects'}
 			</button>
 			<div style={{ marginTop: 75 }}>
-				<h2>{project.name}</h2>
+				<p className="project-title">{project.name}</p>
 				{ActiveView()}
 				<button
 					onClick={() =>
