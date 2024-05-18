@@ -2,7 +2,6 @@
 // USE TableComponent.tsx INSTEAD
 
 import { useEffect } from 'react'
-import { CDataTable } from '@coreui/react'
 import { Task } from '../../types.ts'
 import calculateDeadline from '../../scripts/CalculateDeadline.ts'
 

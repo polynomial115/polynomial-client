@@ -129,7 +129,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 					styles={selectStyles}
 				/>
 
-				<button type="submit">Edit Task</button>
+				<button type="submit">Save</button>
 			</form>
 		</div>
 	)
