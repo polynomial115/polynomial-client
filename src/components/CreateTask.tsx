@@ -22,7 +22,8 @@ export function CreateTask({ projectId, members }: Props) {
 		priority: Priority.Normal,
 		assignees: [],
 		deadline: 0,
-		name: ''
+		name: '',
+		description: ''
 	})
 	const [error, setError] = useState('')
 
@@ -64,6 +65,14 @@ export function CreateTask({ projectId, members }: Props) {
 					onChange={e => handleInputChange('name', e.target.value)}
 					placeholder="Enter task name..."
 					required
+				/>
+				<textarea
+					id="task-description"
+					className="textbox"
+					value={formData.description}
+					onChange={e => handleInputChange('description', e.target.value)}
+					placeholder="Enter task description..."
+					maxLength={1000}
 				/>
 				<br />
 				<br />

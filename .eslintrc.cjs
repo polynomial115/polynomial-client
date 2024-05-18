@@ -22,6 +22,7 @@ module.exports = {
 		'react/jsx-no-useless-fragment': 'error',
 		'react/destructuring-assignment': 'error',
 		'react/self-closing-comp': 'error',
+		'react/jsx-curly-brace-presence': 'error',
 		'react-compiler/react-compiler': 'error'
 	},
 	parserOptions: {
