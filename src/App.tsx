@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import './styles/App.css'
 import './providers/auth.tsx'
-import { PayloadType, sendPayload } from './party'
+import { ProjectView, PayloadType, sendPayload } from './party'
 import { discordSdk } from './services/discord.ts'
 import { useAuth } from './hooks/useAuth.ts'
 import { useParticipants } from './hooks/useParticipants.ts'
@@ -23,6 +23,7 @@ function App() {
 	const [channel, setChannel] = useState('')
 	const [projects, setProjects] = useState<Project[]>([])
 	const [activeProject, setActiveProject] = useState('')
+	const [activeProjectView, setActiveProjectView] = useState(ProjectView.Overview)
 	const participants = useParticipants()
 
 	useEffect(() => {
@@ -43,16 +44,28 @@ function App() {
 		return () => unsubscribe()
 	}, [])
 
-	useEvent(PayloadType.PageUpdate, data => setActiveProject(data.project))
+	useEvent(PayloadType.PageUpdate, data => {
+		setActiveProject(data.project)
+		setActiveProjectView(data.projectView)
+	})
 
 	const auth = useAuth()
 
-	function updateProject(projectId: string) {
-		setActiveProject(projectId)
-		sendPayload(PayloadType.PageUpdate, { project: projectId })
+	function updateProject({ project, projectView }: { project?: string; projectView?: ProjectView }) {
+		if (project !== undefined) setActiveProject(project)
+		if (projectView !== undefined) setActiveProjectView(projectView)
+		sendPayload(PayloadType.PageUpdate, { project: project ?? activeProject, projectView: projectView ?? activeProjectView })
 	}
 
-	if (activeProject) return <ProjectPage project={projects.find(p => p.id === activeProject)!} close={() => updateProject('')} />
+	if (activeProject)
+		return (
+			<ProjectPage
+				project={projects.find(p => p.id === activeProject)!}
+				close={() => updateProject({ project: '', projectView: ProjectView.Overview })}
+				activeView={activeProjectView}
+				setActiveView={view => updateProject({ projectView: view })}
+			/>
+		)
 
 	return (
 		<div className="RootProject">
@@ -74,7 +87,7 @@ function App() {
 			>
 				Create Project
 			</button>
-			<ProjectList projects={projects} setActiveProject={updateProject} />
+			<ProjectList projects={projects} setActiveProject={project => updateProject({ project })} />
 			<p className="read-the-docs">
 				Connected to Firebase as user {auth.claims.user_id as string} with roles {JSON.stringify(auth.claims.roles)}
 			</p>

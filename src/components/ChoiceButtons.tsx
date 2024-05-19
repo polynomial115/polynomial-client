@@ -1,5 +1,6 @@
 import { ReactNode, useState } from 'react'
 import { Choice } from '../types'
+import { useEffect } from 'react'
 
 interface ChoiceButtonChoice extends Omit<Choice, 'label'> {
 	label: ReactNode
@@ -14,7 +15,8 @@ interface ChoiceButtonProps {
 }
 
 export const ChoiceButtons = ({ choices, defaultValue, style, className, setValueCallback }: ChoiceButtonProps) => {
-	const [whichButtonClicked, setWhichButtonClicked] = useState<number | undefined>(defaultValue ?? undefined)
+	const [whichButtonClicked, setWhichButtonClicked] = useState(defaultValue ?? undefined)
+	useEffect(() => setWhichButtonClicked(defaultValue), [defaultValue]) // update state when defaultValue changes
 
 	return (
 		<div className={className} style={style}>

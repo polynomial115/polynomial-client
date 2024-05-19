@@ -8,7 +8,6 @@ import { EditProject } from './EditProject.tsx'
 import { useAuth } from '../../hooks/useAuth.ts'
 import { DiscordAvatar } from '../User.tsx'
 import { ChoiceButtons } from '../ChoiceButtons.tsx'
-import { useState } from 'react'
 import { Dashboard } from '../Dashboard.tsx'
 import { CardView } from '../task/CardView.tsx'
 import { EditTask } from '../task/EditTask.tsx'
@@ -16,34 +15,30 @@ import '../../styles/ProjectView.css'
 import { TableComponent } from '../task/TableComponent.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faBarsStaggered, faChartPie, faListCheck } from '@fortawesome/free-solid-svg-icons'
+import { ProjectView } from '../../party.ts'
 
 const swal = withReactContent(Swal)
-
-enum ProjectView {
-	Dashboard = 0,
-	CardView = 1,
-	Tasks = 2
-}
 
 interface ProjectProps {
 	project: Project
 	close: () => void
+	activeView: ProjectView
+	setActiveView: (view: ProjectView) => void
 }
 
-export function ProjectPage({ project, close }: ProjectProps) {
+export function ProjectPage({ project, close, activeView, setActiveView }: ProjectProps) {
 	const { tasks } = project
 
 	const { members } = useGuildMembers() // can't access context inside modal so getting here
 	const auth = useAuth()
 
-	const [activeView, setActiveView] = useState<ProjectView>(ProjectView.Dashboard) // Default to dashboard
 	const ActiveView = () => {
 		switch (activeView) {
-			case ProjectView.Dashboard:
+			case ProjectView.Overview:
 				return <Dashboard tasks={tasks} />
-			case ProjectView.CardView:
+			case ProjectView.Board:
 				return <CardView projectId={project.id} tasks={tasks} columns={taskStatuses} property="status" />
-			case ProjectView.Tasks:
+			case ProjectView.TaskList:
 				return <TableComponent project={project} />
 		}
 	}
@@ -53,11 +48,11 @@ export function ProjectPage({ project, close }: ProjectProps) {
 			<div className="top-blur" />
 			<ChoiceButtons
 				className="project-page-switcher"
-				defaultValue={0}
+				defaultValue={activeView}
 				setValueCallback={(value: number) => setActiveView(value)}
 				choices={[
 					{
-						value: 0,
+						value: ProjectView.Overview,
 						label: (
 							<>
 								<FontAwesomeIcon icon={faChartPie} /> Overview
@@ -66,7 +61,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 						color: 'limegreen'
 					},
 					{
-						value: 1,
+						value: ProjectView.Board,
 						label: (
 							<>
 								<FontAwesomeIcon icon={faBarsStaggered} /> Board
@@ -75,7 +70,7 @@ export function ProjectPage({ project, close }: ProjectProps) {
 						color: 'orange'
 					},
 					{
-						value: 2,
+						value: ProjectView.TaskList,
 						label: (
 							<>
 								<FontAwesomeIcon icon={faListCheck} /> Task List
