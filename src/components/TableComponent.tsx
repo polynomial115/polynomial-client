@@ -1,8 +1,9 @@
 import React from 'react'
 import DataTable from 'react-data-table-component'
-import { Project, taskStatuses, priorities } from '../types'
+import { Project, taskStatuses, priorities, Task } from '../types'
 import { DiscordAvatar } from './User'
 import { useGuildMembers } from '../hooks/useGuildMembers'
+import TaskDetails from './TaskDetails'
 
 import { EditTask } from './EditTask'
 import { DeleteTask } from './DeleteTask'
@@ -37,6 +38,7 @@ export function TableComponent({ project }: Props) {
 		id: task.id,
 		name: task.name,
 		status: taskStatuses[task.status].label,
+		description: task.description,
 		assignees: task.assignees.join(', '),
 		deadline: new Date(task.deadline).toUTCString(),
 		priority: priorities[task.priority].label
@@ -142,7 +144,14 @@ export function TableComponent({ project }: Props) {
 				selectableRows
 				highlightOnHover
 				pointerOnHover
-				onRowClicked={row => console.log(row)}
+				onRowClicked={(task: Task) => {
+					swal.fire({
+						html: <TaskDetails task={task} />,
+						background: '#202225',
+						color: 'white',
+						showConfirmButton: false
+					})
+				}}
 				expandableRows
 				persistTableHead
 				expandableRowsComponent={ExpandedComponent}
