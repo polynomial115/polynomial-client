@@ -1,8 +1,10 @@
 import React from 'react'
 import DataTable from 'react-data-table-component'
-import { priorities, Project, Task, taskStatuses } from '../../types'
-import { DiscordAvatar } from '../User'
-import { useGuildMembers } from '../../hooks/useGuildMembers'
+import { Project, taskStatuses, priorities, Task } from '../types'
+import { DiscordAvatar } from './User'
+import { useGuildMembers } from '../hooks/useGuildMembers'
+import TaskDetails from './TaskDetails'
+
 import { EditTask } from './EditTask'
 import { DeleteTask } from './DeleteTask'
 import Swal from 'sweetalert2'
@@ -44,6 +46,7 @@ export function TableComponent({ tasks, project }: Props) {
 		id: task.id,
 		name: task.name,
 		status: taskStatuses[task.status].label,
+		description: task.description,
 		assignees: task.assignees.join(', '),
 		deadline: new Date(task.deadline).toUTCString(),
 		priority: priorities[task.priority].label
@@ -172,9 +175,15 @@ export function TableComponent({ tasks, project }: Props) {
 				data={taskData}
 				highlightOnHover
 				pointerOnHover
-				pagination={!!project}
-				selectableRows={!!project}
-				expandableRows={!!project}
+				onRowClicked={(task: Task) => {
+					swal.fire({
+						html: <TaskDetails task={task} />,
+						background: '#202225',
+						color: 'white',
+						showConfirmButton: false
+					})
+				}}
+				expandableRows
 				persistTableHead
 				expandableRowsComponent={project ? ExpandedComponent : undefined}
 				theme="dark"
