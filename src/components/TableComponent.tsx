@@ -1,6 +1,6 @@
 import React from 'react'
 import DataTable from 'react-data-table-component'
-import { Project, taskStatuses, priorities, Task } from '../types'
+import { Project, taskStatuses, priorities } from '../types'
 import { DiscordAvatar } from './User'
 import { useGuildMembers } from '../hooks/useGuildMembers'
 import TaskDetails from './TaskDetails'
@@ -144,13 +144,18 @@ export function TableComponent({ project }: Props) {
 				selectableRows
 				highlightOnHover
 				pointerOnHover
-				onRowClicked={(task: Task) => {
-					swal.fire({
-						html: <TaskDetails task={task} />,
-						background: '#202225',
-						color: 'white',
-						showConfirmButton: false
-					})
+				onRowClicked={(row: TaskRow) => {
+					const task = project.tasks.find(task => task.id === row.id)
+					if (task) {
+						swal.fire({
+							html: <TaskDetails task={task} />,
+							background: '#202225',
+							color: 'white',
+							showConfirmButton: false
+						})
+					} else {
+						console.error('Task not found')
+					}
 				}}
 				expandableRows
 				persistTableHead
