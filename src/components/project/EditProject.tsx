@@ -80,6 +80,7 @@ export function EditProject({ name, managerRoles, tasks, projectId, currUserRole
 					options={roles.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
 					styles={selectStyles}
 					name="roles"
+					menuPosition="fixed"
 				/>
 				<button type="submit">Submit</button>
 			</form>
