@@ -22,7 +22,7 @@ body {
 	background-color: #3a3a3a;
 	border-radius: 10px;
 	padding: 20px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 .doughnut-wrapper {
@@ -34,10 +34,10 @@ body {
 }
 
 .empty-tasks-message {
-	display: flex;
+	/* display: flex; */
 	justify-content: center;
 	align-items: center;
-	height: 50vh;
+	/* height: 75vh; */
 	text-align: center;
 	border-radius: 10px;
 	padding: 20px;

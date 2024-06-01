@@ -32,19 +32,40 @@ export function PieChart({ label, property, tasks, data }: PieChartProps) {
 			{/* Parent container takes full width */}
 			{!tasks || tasks.length === 0 ? (
 				<div className="empty-tasks-message">
+					<h2 style={{ color: 'white' }}>Add some Tasks to see Pie Chart Visualization!</h2>
 					<Doughnut
-						data={{
-							labels: ['No Tasks: Add some Tasks to see Pie Chart Visualization!', ''],
-							datasets: [{ data: [1], borderWidth: 0, backgroundColor: ['#e0e0e0'] }]
+						style={{
+							padding: 10
 						}}
-						options={{ cutout: '80%', plugins: { tooltip: { enabled: false } } }}
+						data={{
+							datasets: [{ data: [1], borderWidth: 0, backgroundColor: 'crimson' }]
+						}}
+						options={{
+							cutout: '50%',
+							plugins: {
+								legend: {
+									display: true,
+									align: 'center',
+									labels: {
+										color: 'white',
+										font: {
+											family: 'Helvetica',
+											size: 15
+										},
+										usePointStyle: true
+									},
+									onClick: () => undefined
+								},
+								tooltip: { enabled: false }
+							}
+						}}
 					/>
 				</div>
 			) : (
 				<div className="doughnut-wrapper">
 					<Doughnut
 						data={{
-							labels: data.map((d: Choice) => d.label),
+							labels: data.map((d: Choice) => ` ${d.label}  `),
 							datasets: [
 								{
 									label: label,
@@ -64,8 +85,14 @@ export function PieChart({ label, property, tasks, data }: PieChartProps) {
 									position: 'left',
 									align: 'center',
 									labels: {
+										color: 'white',
+										font: {
+											family: 'Helvetica',
+											size: 15
+										},
 										usePointStyle: true
-									}
+									},
+									onClick: () => undefined
 								}
 							}
 						}}
