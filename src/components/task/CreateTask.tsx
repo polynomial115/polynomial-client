@@ -5,18 +5,22 @@ import { db } from '../../services/firebase.ts'
 import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { ChoiceButtons } from '../ChoiceButtons.tsx'
-import { Priority, Task, TaskStatus, priorities, taskStatuses, deadlines, Deadline } from '../../types.ts'
+import { Priority, Task, TaskStatus, priorities, taskStatuses, deadlines, Deadline, Project } from '../../types.ts'
 import CalculateDeadline from '../../scripts/CalculateDeadline.ts'
 import Swal from 'sweetalert2'
+import { getAuth } from 'firebase/auth'
 
 type FormData = Omit<Task, 'id'>
 
 interface Props {
-	projectId: string
+	project: Project
 	members: APIGuildMember[]
+	token: string
 }
 
-export function CreateTask({ projectId, members }: Props) {
+const firebaseAuth = getAuth()
+
+export function CreateTask({ project, members, token }: Props) {
 	const [formData, setFormData] = useState<FormData>({
 		status: TaskStatus.ToDo,
 		priority: Priority.Normal,
@@ -36,13 +40,23 @@ export function CreateTask({ projectId, members }: Props) {
 
 		const taskData = { ...formData, id: doc(collection(db, 'tasks')).id } // generate random id
 
-		const projectDoc = doc(db, 'projects', projectId)
+		const projectDoc = doc(db, 'projects', project.id)
 
 		try {
 			await updateDoc(projectDoc, {
 				tasks: arrayUnion(taskData)
 			})
-			setError('Created task successfully.')
+
+			if (project.notificationsChannel) {
+				await fetch(`/api/projects/${project.id}/tasks/${taskData.id}/notify/create`, {
+					method: 'POST',
+					headers: {
+						Authorization: token,
+						'Firebase-Token': await firebaseAuth.currentUser!.getIdToken()
+					}
+				})
+			}
+
 			Swal.close()
 		} catch (error) {
 			console.error('Error adding document:', error)
