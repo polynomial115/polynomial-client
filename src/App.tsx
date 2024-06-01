@@ -7,7 +7,7 @@ import { discordSdk } from './services/discord.ts'
 import { useAuth } from './hooks/useAuth.ts'
 import { useParticipants } from './hooks/useParticipants.ts'
 import { db } from './services/firebase.ts'
-import { collection, onSnapshot, query, where } from 'firebase/firestore'
+import { collection, onSnapshot, query, where, and, or } from 'firebase/firestore'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { CreateProject } from './components/project/CreateProject.tsx'
@@ -25,11 +25,23 @@ function App() {
 	const [activeProject, setActiveProject] = useState('')
 	const [activeProjectView, setActiveProjectView] = useState(ProjectView.Overview)
 	const participants = useParticipants()
+	const auth = useAuth()
 
 	useEffect(() => {
 		discordSdk.commands.getChannel({ channel_id: discordSdk.channelId! }).then(channel => setChannel(channel.name!))
 
-		const projectsQuery = query(collection(db, 'projects'), where('guildId', '==', discordSdk.guildId))
+		const projectsQuery = query(
+			collection(db, 'projects'),
+			and(
+				where('guildId', '==', discordSdk.guildId),
+				or(
+					where('managerRoles', 'array-contains-any', auth.claims.roles),
+					where('memberRoles', 'array-contains-any', auth.claims.roles),
+					where('managerUsers', 'array-contains', auth.claims.user_id),
+					where('memberUsers', 'array-contains', auth.claims.user_id)
+				)
+			)
+		)
 		const unsubscribe = onSnapshot(
 			projectsQuery,
 			snapshot => {
@@ -42,14 +54,12 @@ function App() {
 		)
 
 		return () => unsubscribe()
-	}, [])
+	}, [auth.claims.roles, auth.claims.user_id])
 
 	useEvent(PayloadType.PageUpdate, data => {
 		setActiveProject(data.project)
 		setActiveProjectView(data.projectView)
 	})
-
-	const auth = useAuth()
 
 	function updateProject({ project, projectView }: { project?: string; projectView?: ProjectView }) {
 		if (project !== undefined) setActiveProject(project)
