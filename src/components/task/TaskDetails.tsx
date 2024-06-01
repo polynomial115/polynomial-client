@@ -1,12 +1,13 @@
-import { Task, priorities, taskStatuses } from '../types'
-import '../styles/TaskModal.css'
+import { Task, priorities, taskStatuses } from '../../types'
+import { DiscordAvatar } from '../User'
+import '../../styles/TaskModal.css'
 
 interface Props {
 	task: Task
+	getMember: (id: string) => any
 }
 
-export default function TaskDetails({ task }: Props) {
-	console.log(task.description)
+export default function TaskDetails({ task, getMember }: Props) {
 	return (
 		<div
 			style={{
@@ -22,22 +23,6 @@ export default function TaskDetails({ task }: Props) {
 			>
 				{task.name}
 			</h2>
-			<p
-				style={{
-					margin: '0px',
-					fontSize: '15px'
-				}}
-			>
-				<b>Priority:</b> {priorities[task.priority].label}
-			</p>
-			<p
-				style={{
-					color: taskStatuses[task.status].color,
-					marginTop: '10px'
-				}}
-			>
-				<b>{taskStatuses[task.status].label}</b>
-			</p>
 			<div className="container">
 				<div className="leftColumn">
 					<h3
@@ -56,11 +41,41 @@ export default function TaskDetails({ task }: Props) {
 							fontSize: '15px'
 						}}
 					>
-						<b>{task.description}</b>
+						{task.description}
 					</p>
 				</div>
 				<div className="divider" />
-				<div className="rightColumn">
+				<div
+					className="rightColumn"
+					style={{
+						verticalAlign: 'middle'
+					}}
+				>
+					<p
+						style={{
+							marginTop: '25px',
+							fontSize: '15px'
+						}}
+					>
+						<b>Priority:</b> {priorities[task.priority].label}
+					</p>
+					<h3
+						style={{
+							marginTop: '30px',
+							marginBottom: '2px'
+						}}
+					>
+						Status
+					</h3>
+					<p
+						style={{
+							color: taskStatuses[task.status].color,
+							marginTop: '5px',
+							marginBottom: '30px'
+						}}
+					>
+						<b>{taskStatuses[task.status].label}</b>
+					</p>
 					<h3
 						style={{
 							marginBottom: '4px',
@@ -79,18 +94,16 @@ export default function TaskDetails({ task }: Props) {
 					</p>
 					<h3
 						style={{
-							marginTop: '30px',
+							marginTop: '35px',
 							marginBottom: '4px'
 						}}
 					>
 						Assignees
 					</h3>
 					<div>
-						<p>PUT ASSIGNEES HERE!!</p>
-
-						{/* {task.assignees.map(memberId => (
-							<DiscordAvatar key={memberId} memberId={memberId} size={128} />
-						))} */}
+						{task.assignees.map(id => (
+							<DiscordAvatar key={id} member={getMember(id)} size={48} />
+						))}
 					</div>
 				</div>
 			</div>

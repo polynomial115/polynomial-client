@@ -10,7 +10,7 @@ import calculateDeadline from '../../scripts/CalculateDeadline.ts'
 import Swal from 'sweetalert2'
 
 type FormData = Omit<Task, 'id' | 'deadline'> & {
-	deadline: Date | null
+	deadline: number | null
 }
 
 interface EditTaskProps {
@@ -120,7 +120,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 					placeholder="Select deadline..."
 					onChange={selected => {
 						if (selected) {
-							const dl = calculateDeadline({ deadlineType: selected.value as Deadline })
+							const dl = calculateDeadline({ deadlineType: selected!.value as Deadline })
 							handleInputChange('deadline', dl)
 						} else {
 							console.error('Selected deadline is null or undefined')

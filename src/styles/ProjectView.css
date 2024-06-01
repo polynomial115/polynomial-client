@@ -87,7 +87,7 @@ ul {
 
 .ToolTip {
 	position: absolute;
-	font-size: large;
+	font-size: medium;
 	transition:
 		visibility 0.25s,
 		opacity 0.25s linear;
@@ -102,6 +102,8 @@ ul {
 
 	padding-left: 0.5rem;
 	padding-right: 0.5rem;
+	white-space: nowrap;
+	justify-content: center;
 
 	margin-top: 2px;
 	margin-bottom: 5rem;

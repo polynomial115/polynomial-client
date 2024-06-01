@@ -1,8 +1,8 @@
 import React from 'react'
 import DataTable from 'react-data-table-component'
-import { Project, taskStatuses, priorities } from '../types'
-import { DiscordAvatar } from './User'
-import { useGuildMembers } from '../hooks/useGuildMembers'
+import { Project, taskStatuses, priorities, Task } from '../../types'
+import { DiscordAvatar } from '../User'
+import { useGuildMembers } from '../../hooks/useGuildMembers'
 import TaskDetails from './TaskDetails'
 
 import { EditTask } from './EditTask'
@@ -13,7 +13,7 @@ import withReactContent from 'sweetalert2-react-content'
 const swal = withReactContent(Swal)
 
 interface Props {
-	tasks?: Task[]
+	tasks: Task[]
 	project?: Project
 }
 
@@ -176,10 +176,10 @@ export function TableComponent({ tasks, project }: Props) {
 				highlightOnHover
 				pointerOnHover
 				onRowClicked={(row: TaskRow) => {
-					const task = project.tasks.find(task => task.id === row.id)
+					const task = project?.tasks.find(task => task.id === row.id)
 					if (task) {
 						swal.fire({
-							html: <TaskDetails task={task} />,
+							html: <TaskDetails task={task} getMember={getMember} />,
 							background: '#202225',
 							color: 'white',
 							showConfirmButton: false,
