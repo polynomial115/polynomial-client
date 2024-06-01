@@ -1,6 +1,7 @@
 import { useDraggable } from '@dnd-kit/core'
 import { Task } from '../../types.ts'
 import { DiscordAvatar } from '../User.tsx'
+import { useGuildMembers } from '../../hooks/useGuildMembers.ts'
 
 interface Props {
 	task: Task
@@ -8,6 +9,7 @@ interface Props {
 
 export function TaskCard({ task }: Props) {
 	const { attributes, listeners, setNodeRef, transform, isDragging, over } = useDraggable({ id: task.id })
+	const { getMember } = useGuildMembers()
 
 	return (
 		<div
@@ -25,7 +27,7 @@ export function TaskCard({ task }: Props) {
 			<p className="name">{task.name}</p>
 			<div className="assignees">
 				{task.assignees.map(assigneeId => (
-					<DiscordAvatar key={assigneeId} memberId={assigneeId} size={25} />
+					<DiscordAvatar key={assigneeId} member={getMember(assigneeId)} size={25} />
 				))}
 			</div>
 		</div>

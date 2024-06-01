@@ -29,7 +29,7 @@ interface ExpandedComponentProps {
 }
 
 export function TableComponent({ tasks, project }: Props) {
-	const { members } = useGuildMembers()
+	const { members, getMember } = useGuildMembers()
 
 	// Determine the tasks array based on the input props
 	let taskList = tasks ?? project?.tasks ?? []
@@ -81,7 +81,7 @@ export function TableComponent({ tasks, project }: Props) {
 			cell: (row: TaskRow) => (
 				<div style={{ display: 'flex', flexWrap: 'wrap' }}>
 					{row.assignees.split(', ').map(id => (
-						<DiscordAvatar size={35} key={id} memberId={id} />
+						<DiscordAvatar size={35} key={id} member={getMember(id)} />
 					))}
 				</div>
 			)

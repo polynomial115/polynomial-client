@@ -29,7 +29,7 @@ interface ProjectProps {
 export function ProjectPage({ project, close, activeView, setActiveView }: ProjectProps) {
 	const { tasks } = project
 
-	const { members } = useGuildMembers() // can't access context inside modal so getting here
+	const { members, getMember } = useGuildMembers() // can't access context inside modal so getting here
 	const auth = useAuth()
 
 	const ActiveView = () => {
@@ -146,7 +146,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 							|<b>&nbsp;Assignees:</b>
 							<div style={{ margin: 12 }}>
 								{task.assignees.map(assigneeId => {
-									return <DiscordAvatar key={assigneeId} memberId={assigneeId} />
+									return <DiscordAvatar key={assigneeId} member={getMember(assigneeId)} />
 								})}
 							</div>
 							<button
