@@ -1,10 +1,11 @@
 import { Task, priorities, taskStatuses } from '../../types'
+import { APIGuildMember } from 'discord-api-types/v10'
 import { DiscordAvatar } from '../User'
 import '../../styles/TaskModal.css'
 
 interface Props {
 	task: Task
-	getMember: (id: string) => any
+	getMember: (id: string) => APIGuildMember | undefined
 }
 
 export default function TaskDetails({ task, getMember }: Props) {

@@ -25,7 +25,7 @@ const calculateDeadline = ({ deadlineType }: Props): number | null => {
 	}
 
 	const currentDate = Date.now()
-	let finalDate = currentDate + days * 86400000
+	const finalDate = currentDate + days * 86400000
 	return finalDate
 }
 

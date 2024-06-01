@@ -22,11 +22,7 @@ export function DiscordAvatar({ member, size }: DiscordAvatarProps) {
 				onMouseEnter={() => setAnimate(true)}
 				onMouseLeave={() => setAnimate(false)}
 			/>
-			<div
-				className="ToolTip"
-			>
-				{name}
-			</div>
+			<div className="ToolTip">{name}</div>
 		</div>
 	)
 }

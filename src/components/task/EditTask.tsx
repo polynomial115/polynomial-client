@@ -120,7 +120,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 					placeholder="Select deadline..."
 					onChange={selected => {
 						if (selected) {
-							const dl = calculateDeadline({ deadlineType: selected!.value as Deadline })
+							const dl = calculateDeadline({ deadlineType: selected.value as Deadline })
 							handleInputChange('deadline', dl)
 						} else {
 							console.error('Selected deadline is null or undefined')
