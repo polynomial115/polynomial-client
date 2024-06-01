@@ -48,7 +48,7 @@ export function CreateProject({ token }: Props) {
 					setCreated(true)
 				}}
 			>
-				Project name: <input type="text" name="name" required ref={nameInputRef} />
+				Project name: <input type="text" name="name" className="textbox" required ref={nameInputRef} placeholder="Enter Project Name" />
 				{/* {roles.map(r => <div key={r.id}>{r.name}</div>)} */}
 				<Select
 					isMulti

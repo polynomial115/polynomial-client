@@ -96,43 +96,45 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 			>
 				<FontAwesomeIcon icon={faAngleLeft} /> Projects
 			</button>
-			<div style={{ marginTop: 75 }}>
+			<div style={{ marginTop: 100 }}>
 				<p className="project-title">{project.name}</p>
+				<div style={{ margin: 15 }}>
+					<button
+						onClick={() =>
+							swal.fire({
+								html: (
+									<EditProject
+										name={project.name}
+										managerRoles={project.managerRoles}
+										tasks={project.tasks}
+										projectId={project.id}
+										currUserRoles={currUserRoles}
+										token={auth.serverToken}
+									/>
+								),
+								background: '#202225',
+								color: 'white',
+								showConfirmButton: false
+							})
+						}
+					>
+						Edit Project
+					</button>
+					<button
+						onClick={() =>
+							swal.fire({
+								html: <CreateTask projectId={project.id} members={members} />,
+								background: '#202225',
+								color: 'white',
+								showConfirmButton: false,
+								width: '625px'
+							})
+						}
+					>
+						Create Task
+					</button>
+				</div>
 				{ActiveView()}
-				<button
-					onClick={() =>
-						swal.fire({
-							html: (
-								<EditProject
-									name={project.name}
-									managerRoles={project.managerRoles}
-									tasks={project.tasks}
-									projectId={project.id}
-									currUserRoles={currUserRoles}
-									token={auth.serverToken}
-								/>
-							),
-							background: '#202225',
-							color: 'white',
-							showConfirmButton: false
-						})
-					}
-				>
-					Edit Project
-				</button>
-				<button
-					onClick={() =>
-						swal.fire({
-							html: <CreateTask projectId={project.id} members={members} />,
-							background: '#202225',
-							color: 'white',
-							showConfirmButton: false,
-							width: '625px'
-						})
-					}
-				>
-					Create Task
-				</button>
 				{/* <TableComponent project={project} /> */}
 				{tasks.map(task => (
 					<li key={task.id}>
