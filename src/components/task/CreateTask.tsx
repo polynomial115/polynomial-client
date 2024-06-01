@@ -92,6 +92,7 @@ export function CreateTask({ projectId, members }: Props) {
 						)
 					}
 					styles={selectStyles}
+					menuPosition="fixed"
 				/>
 				<h3 style={{ marginBottom: 5 }}>Set Priority</h3>
 				<ChoiceButtons choices={priorities} setValueCallback={value => handleInputChange('priority', value)} defaultValue={NaN} />
@@ -110,6 +111,7 @@ export function CreateTask({ projectId, members }: Props) {
 						handleInputChange('deadline', dl)
 					}}
 					styles={selectStyles}
+					menuPosition="fixed"
 				/>
 
 				<button type="submit">Create Task</button>

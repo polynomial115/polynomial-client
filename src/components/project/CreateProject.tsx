@@ -57,6 +57,7 @@ export function CreateProject({ token }: Props) {
 					placeholder="Roles with management power for this project"
 					onChange={selected => setSelectedRoles(selected.map(e => e.value as string))}
 					name="roles"
+					menuPosition="fixed"
 				/>
 				<button type="submit">Submit</button>
 			</form>
