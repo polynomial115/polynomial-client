@@ -1,0 +1,26 @@
+.showLineBreaks {
+	white-space: pre-line;
+}
+
+.container {
+	display: flex;
+	flex-direction: row;
+	gap: 10;
+	justify-content: space-between;
+}
+
+.leftColumn {
+	width: 57%;
+	margin: '20px';
+}
+
+.divider {
+	border-color: white;
+	position: relative;
+	border-width: '1px';
+}
+
+.rightColumn {
+	width: 37%;
+	margin: '20px';
+}

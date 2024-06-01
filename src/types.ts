@@ -48,10 +48,10 @@ export const taskStatuses: Choice[] = [
 ]
 
 export const priorities: Choice[] = [
-	{ value: Priority.Low, label: '🔵 Low', color: 'lightgreen' },
-	{ value: Priority.Normal, label: '🟢 Normal', color: 'yellow' },
-	{ value: Priority.High, label: '🟡 High', color: 'orange' },
-	{ value: Priority.Urgent, label: '🔴 Urgent', color: 'crimson' }
+	{ value: Priority.Low, label: '🔵 Low', color: 'lightblue' },
+	{ value: Priority.Normal, label: '🟢 Normal', color: 'lightgreen' },
+	{ value: Priority.High, label: '🟡 High', color: 'yellow' },
+	{ value: Priority.Urgent, label: '🔴 Urgent', color: 'red' }
 ]
 
 export const deadlines: Choice[] = [

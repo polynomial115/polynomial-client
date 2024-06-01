@@ -182,7 +182,8 @@ export function TableComponent({ tasks, project }: Props) {
 							html: <TaskDetails task={task} />,
 							background: '#202225',
 							color: 'white',
-							showConfirmButton: false
+							showConfirmButton: false,
+							width: '800px'
 						})
 					} else {
 						console.error('Task not found')
