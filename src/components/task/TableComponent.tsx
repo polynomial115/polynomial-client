@@ -12,6 +12,7 @@ const swal = withReactContent(Swal)
 
 interface Props {
 	project: Project
+	mini?: boolean
 }
 
 interface TaskRow {
@@ -23,9 +24,7 @@ interface TaskRow {
 	priority: Priority
 }
 
-export function TableComponent({ project }: Props) {
-	const { tasks } = project
-
+export function TableComponent({ project, mini }: Props) {
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [])
@@ -33,12 +32,10 @@ export function TableComponent({ project }: Props) {
 	const { members, getMember } = useGuildMembers()
 
 	// Determine the tasks array based on the input props
-	let taskList = tasks ?? project?.tasks ?? []
+	let taskList = project.tasks
 
-	// Limit the number of tasks to 5
-	if (!project) {
-		taskList = taskList.slice(0, 5)
-	}
+	// Limit the number of tasks to 5 in the mini task list
+	if (mini) taskList = taskList.slice(0, 5)
 
 	// Map tasks to TaskRow format
 	const taskData = taskList.map(task => ({
