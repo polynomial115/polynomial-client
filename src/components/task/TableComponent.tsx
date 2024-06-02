@@ -66,7 +66,10 @@ export function TableComponent({ tasks, project }: Props) {
 		{
 			name: 'Name',
 			selector: (row: TaskRow) => row.name,
-			sortable: true
+			sortable: true,
+			cell: (row: TaskRow) => {
+				return <span style={{ fontWeight: 'bold' }}>{row.name}</span>
+			}
 		},
 		{
 			name: 'Status',
@@ -75,7 +78,7 @@ export function TableComponent({ tasks, project }: Props) {
 			sortable: true,
 			cell: (row: TaskRow) => {
 				const status = getStatus(row.status)
-				return <span style={{ color: status.color }}>{status.label}</span>
+				return <span style={{ fontWeight: 'bolder', color: status.color }}>{status.label}</span>
 			}
 		},
 		{
@@ -83,7 +86,7 @@ export function TableComponent({ tasks, project }: Props) {
 			selector: (row: TaskRow) => row.assignees,
 			sortable: false,
 			cell: (row: TaskRow) => (
-				<div style={{ display: 'flex', flexWrap: 'wrap' }}>
+				<div style={{ display: 'flex', flexWrap: 'nowrap' }}>
 					{row.assignees.split(', ').map(id => (
 						<DiscordAvatar size={35} key={id} member={getMember(id)} />
 					))}
@@ -97,7 +100,7 @@ export function TableComponent({ tasks, project }: Props) {
 			sortable: true,
 			cell: (row: TaskRow) => {
 				const priority = getPriority(row.priority)
-				return <span style={{ color: priority.color }}>{priority.label}</span>
+				return <span style={{ fontWeight: 'bolder', color: priority.color }}>{priority.label}</span>
 			}
 		},
 		{
@@ -180,6 +183,40 @@ export function TableComponent({ tasks, project }: Props) {
 				persistTableHead
 				expandableRowsComponent={project ? ExpandedComponent : undefined}
 				theme="dark"
+				striped
+				customStyles={{
+					table: {
+						style: {
+							// boxShadow: '0px 0px 5px black'
+						}
+					},
+					headRow: {
+						style: {
+							fontSize: '16px',
+							backgroundColor: '#191919'
+						}
+					},
+					rows: {
+						style: {
+							color: 'white',
+							backgroundColor: '#303030',
+							border: '0px solid',
+							fontSize: '15px',
+							borderCollapse: 'collapse'
+						},
+						stripedStyle: {
+							color: 'white',
+							backgroundColor: '#282828',
+							fontSize: '15px',
+							borderCollapse: 'collapse'
+						}
+					},
+					pagination: {
+						style: {
+							backgroundColor: '#191919'
+						}
+					}
+				}}
 			/>
 		</div>
 	)
