@@ -37,7 +37,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 			case ProjectView.Board:
 				return <CardView projectId={project.id} tasks={tasks} columns={taskStatuses} property="status" />
 			case ProjectView.TaskList:
-				return <TableComponent project={project} tasks={tasks} />
+				return <TableComponent project={project} />
 		}
 	}
 	const currUserRoles = useAuth().claims.roles as string[]

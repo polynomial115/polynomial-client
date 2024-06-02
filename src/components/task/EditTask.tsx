@@ -51,7 +51,7 @@ export function EditTask({ project, members, currTask, allTasks }: EditTaskProps
 			})
 			setError('Edited task successfully.')
 			withReactContent(Swal).fire({
-				html: <TaskDetails tasks={allTasks} project={project} task={taskData as Task} getMember={getMember} members={members} />,
+				html: <TaskDetails project={project} task={taskData as Task} getMember={getMember} members={members} />,
 				background: '#202225',
 				color: 'white',
 				showConfirmButton: false,

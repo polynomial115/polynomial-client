@@ -11,88 +11,34 @@ import withReactContent from 'sweetalert2-react-content'
 const swal = withReactContent(Swal)
 
 interface Props {
-	tasks: Task[]
 	project: Project
 	task: Task
 	getMember: (id: string) => APIGuildMember | undefined
 	members: APIGuildMember[]
 }
 
-export default function TaskDetails({ tasks, project, task, getMember, members }: Props) {
+export default function TaskDetails({ project, task, getMember, members }: Props) {
+	const { tasks } = project
 	const taskList = tasks ?? project?.tasks ?? []
 
 	return (
-		<div
-			style={{
-				padding: '20px'
-			}}
-		>
-			<h2
-				style={{
-					margin: '0px',
-					fontSize: '40px'
-				}}
-			>
-				{task.name}
-			</h2>
+		<div className="modal">
+			<h2 className="task-name">{task.name}</h2>
 			<div className="container">
-				<div className="leftColumn">
-					<p
-						className="showLineBreaks"
-						style={{
-							textAlign: 'left',
-							marginTop: '30px',
-							fontSize: '15px'
-						}}
-					>
-						{task.description}
-					</p>
+				<div className="left-column">
+					<p className="showLineBreaks">{task.description}</p>
 				</div>
 				<div className="divider" />
-				<div
-					className="rightColumn"
-					style={{
-						verticalAlign: 'middle'
-					}}
-				>
-					<h3
-						style={{
-							marginTop: '30px'
-						}}
-					>
+				<div className="right-column">
+					<h3 className="margin-text">
 						<b>{priorities[task.priority].label} Priority</b>
 					</h3>
-					<h3
-						style={{
-							color: taskStatuses[task.status].color,
-							marginTop: '30px',
-							marginBottom: '30px'
-						}}
-					>
+					<h3 style={{ color: taskStatuses[task.status].color }}>
 						<b>{taskStatuses[task.status].label}</b>
 					</h3>
-					<h3
-						style={{
-							marginTop: '30px',
-							marginBottom: '30px',
-							color: '#FF5544'
-						}}
-					>
-						Due {new Date(task.deadline).toLocaleDateString('en', { month: 'long', day: 'numeric' })}
-					</h3>
-					<h3
-						style={{
-							marginTop: '30px',
-							marginBottom: '4px'
-						}}
-					>
-						Assigned to
-					</h3>
-					<div
-						style={{
-							marginBottom: '30px'
-						}}
-					>
+					<h3 className="deadline-text">Due {new Date(task.deadline).toLocaleDateString('en', { month: 'long', day: 'numeric' })}</h3>
+					<h3 className="assign-header">Assigned to</h3>
+					<div className="margin-text">
 						{task.assignees.map(id => (
 							<DiscordAvatar key={id} member={getMember(id)} size={48} />
 						))}

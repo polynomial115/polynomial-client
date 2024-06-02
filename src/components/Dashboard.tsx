@@ -18,7 +18,7 @@ export const Dashboard = ({ tasks, project }: DashboardProps) => {
 				<PieChart label="Tasks" property="status" tasks={tasks} data={taskStatuses} />
 			</div>
 			<div className="task-list-container">
-				<TableComponent tasks={tasks} project={project} />
+				<TableComponent project={project} />
 			</div>
 		</div>
 	)

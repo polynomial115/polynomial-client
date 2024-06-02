@@ -1,5 +1,5 @@
 import DataTable from 'react-data-table-component'
-import { Project, taskStatuses, priorities, Task } from '../../types'
+import { Project, taskStatuses, priorities } from '../../types'
 import { DiscordAvatar } from '../User'
 import { useGuildMembers } from '../../hooks/useGuildMembers'
 import TaskDetails from './TaskDetails'
@@ -10,7 +10,6 @@ import withReactContent from 'sweetalert2-react-content'
 const swal = withReactContent(Swal)
 
 interface Props {
-	tasks: Task[]
 	project: Project
 }
 
@@ -23,7 +22,8 @@ interface TaskRow {
 	priority: string
 }
 
-export function TableComponent({ tasks, project }: Props) {
+export function TableComponent({ project }: Props) {
+	const { tasks } = project
 	const { members, getMember } = useGuildMembers()
 
 	// Determine the tasks array based on the input props
@@ -100,22 +100,6 @@ export function TableComponent({ tasks, project }: Props) {
 		}
 	]
 
-	// Add "Assignees" column if project is provided
-	// // if (project) {
-	// columns.splice(2, 0, {
-	// 	name: 'Assignees',
-	// 	selector: (row: TaskRow) => row.assignees,
-	// 	sortable: true,
-	// 	cell: (row: TaskRow) => (
-	// 		<div>
-	// 			{row.assignees!.split(', ').map(assigneeId => {
-	// 				return <DiscordAvatar key={assigneeId} memberId={assigneeId} />
-	// 			})}
-	// 		</div>
-	// 	)
-	// })
-	// }
-
 	return (
 		<div className="TableDiv" style={{ maxWidth: '1000px', margin: 'auto' }}>
 			<DataTable
@@ -129,7 +113,7 @@ export function TableComponent({ tasks, project }: Props) {
 					const task = project?.tasks.find(task => task.id === row.id)
 					if (task) {
 						swal.fire({
-							html: <TaskDetails tasks={tasks} project={project} task={task} getMember={getMember} members={members} />,
+							html: <TaskDetails project={project} task={task} getMember={getMember} members={members} />,
 							background: '#202225',
 							color: 'white',
 							showConfirmButton: false,
@@ -139,7 +123,6 @@ export function TableComponent({ tasks, project }: Props) {
 						console.error('Task not found')
 					}
 				}}
-				expandableRows
 				persistTableHead
 				theme="dark"
 			/>

@@ -1,5 +1,8 @@
 .showLineBreaks {
 	white-space: pre-line;
+	text-align: left;
+	margin-top: 30px;
+	font-size: 15px;
 }
 
 .container {
@@ -11,7 +14,7 @@
 	margin-bottom: 20px;
 }
 
-.leftColumn {
+.left-column {
 	background-color: rgb(20, 21, 22);
 	border-radius: 10px;
 	width: 50%;
@@ -19,11 +22,41 @@
 	padding-right: 30px;
 }
 
-.rightColumn {
+.right-column {
 	background-color: rgb(20, 21, 22);
 	border-radius: 10px;
 	flex: 1;
 	width: 27%;
-	margin-left: '20px';
+	margin-left: 20px;
 	justify-content: center;
+	vertical-align: middle;
+}
+
+.modal {
+	padding: 20px;
+}
+
+.task-name {
+	margin: 0px;
+	font-size: 40px;
+}
+
+.margin-text {
+	margin-top: 30px;
+}
+
+.status-text {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+.deadline-text {
+	margin-top: 30px;
+	margin-bottom: 30px;
+	color: #FF5544;
+}
+
+.assign-header {
+	margin-top: 30px;
+	margin-bottom: 4px;
 }
