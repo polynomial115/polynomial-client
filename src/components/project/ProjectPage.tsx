@@ -1,5 +1,5 @@
 import '../../styles/ProjectView.css'
-import { type Project, taskStatuses, getStatus } from '../../types.ts'
+import { type Project, taskStatuses } from '../../types.ts'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { CreateTask } from '../task/CreateTask.tsx'
@@ -25,8 +25,6 @@ interface ProjectProps {
 }
 
 export function ProjectPage({ project, close, activeView, setActiveView }: ProjectProps) {
-	const { tasks } = project
-
 	const { members } = useGuildMembers() // can't access context inside modal so getting here
 	const auth = useAuth()
 
@@ -35,7 +33,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 			case ProjectView.Overview:
 				return <Dashboard project={project} />
 			case ProjectView.Board:
-				return <CardView projectId={project.id} tasks={tasks} columns={taskStatuses} property="status" />
+				return <CardView project={project} columns={taskStatuses} property="status" />
 			case ProjectView.TaskList:
 				return <TableComponent project={project} />
 		}

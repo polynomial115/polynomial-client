@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import DataTable from 'react-data-table-component'
-import { getPriority, getStatus, priorities, Priority, Project, Task, TaskStatus } from '../../types'
+import { getPriority, getStatus, priorities, Priority, Project, TaskStatus } from '../../types'
 import { DiscordAvatar } from '../User'
 import { useGuildMembers } from '../../hooks/useGuildMembers'
 import TaskDetails from './TaskDetails'

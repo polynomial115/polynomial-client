@@ -12,13 +12,11 @@ interface DashboardProps {
 }
 
 export const Dashboard = ({ project }: DashboardProps) => {
-	const { tasks } = project
-
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [])
 
-	if (!tasks.length)
+	if (!project.tasks.length)
 		return (
 			<div className="no-tasks">
 				<FontAwesomeIcon icon={faFolderOpen} size="10x" />
@@ -29,7 +27,7 @@ export const Dashboard = ({ project }: DashboardProps) => {
 	return (
 		<div className="dashboard-container">
 			<div className="pie-chart-container">
-				<PieChart label="Tasks" property="status" tasks={tasks} data={taskStatuses} />
+				<PieChart label="Tasks" property="status" tasks={project.tasks} data={taskStatuses} />
 			</div>
 			<div className="task-list-container">
 				<TableComponent project={project} />

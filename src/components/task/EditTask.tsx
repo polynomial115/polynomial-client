@@ -22,9 +22,6 @@ interface EditTaskProps {
 }
 
 export function EditTask({ project, members, currTask }: EditTaskProps) {
-	const { tasks } = project
-	const allTasks = tasks ?? project?.tasks ?? []
-
 	const [formData, setFormData] = useState<FormData>({
 		status: currTask.status,
 		priority: currTask.priority,
@@ -48,7 +45,7 @@ export function EditTask({ project, members, currTask }: EditTaskProps) {
 
 		try {
 			await updateDoc(projectDoc, {
-				tasks: allTasks.map(t => (t.id === currTask.id ? taskData : t))
+				tasks: project.tasks.map(t => (t.id === currTask.id ? taskData : t))
 			})
 			setError('Edited task successfully.')
 			withReactContent(Swal).fire({
