@@ -26,7 +26,9 @@ export default function TaskDetails({ project, task, members }: Props) {
 			<h2 className="task-name">{task.name}</h2>
 			<div className="container">
 				<div className="left-column">
-					<p className="description">{task.description}</p>
+					<p className="description" style={{ color: task.description.length > 0 ? 'inherit' : '#888' }}>
+						{task.description.length > 0 ? task.description : 'No description.'}
+					</p>
 				</div>
 				<div className="divider" />
 				<div className="right-column">
@@ -37,8 +39,8 @@ export default function TaskDetails({ project, task, members }: Props) {
 						<b>{taskStatuses[task.status].label}</b>
 					</h3>
 					<h3 className="deadline-text">Due {new Date(task.deadline).toLocaleDateString('en', { month: 'long', day: 'numeric' })}</h3>
-					<h3 className="assign-header">Assigned to</h3>
-					<div className="margin-text">
+					<h3 className="assign-header">{task.assignees.length > 0 ? 'Assigned to' : 'No assignees'}</h3>
+					<div className="assignee-avatars">
 						{task.assignees.map(id => (
 							<DiscordAvatar key={id} member={getMember(id)} size={48} />
 						))}

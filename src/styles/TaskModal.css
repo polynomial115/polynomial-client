@@ -8,7 +8,7 @@
 .container {
 	display: flex;
 	flex-direction: row;
-	gap: 10px;
+	gap: 8px;
 	justify-content: space-between;
 	margin-top: 20px;
 	margin-bottom: 20px;
@@ -43,6 +43,7 @@
 
 .margin-text {
 	margin-top: 30px;
+	margin-bottom: 30px;
 }
 
 .status-text {
@@ -59,4 +60,8 @@
 .assign-header {
 	margin-top: 30px;
 	margin-bottom: 4px;
+}
+
+.assignee-avatars {
+	margin-top: 5px;
 }
