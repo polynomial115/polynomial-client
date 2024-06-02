@@ -19,10 +19,12 @@ interface EditTaskProps {
 	project: Project
 	members: APIGuildMember[]
 	currTask: Task
-	allTasks: Task[]
 }
 
-export function EditTask({ project, members, currTask, allTasks }: EditTaskProps) {
+export function EditTask({ project, members, currTask }: EditTaskProps) {
+	const { tasks } = project
+	const allTasks = tasks ?? project?.tasks ?? []
+
 	const [formData, setFormData] = useState<FormData>({
 		status: currTask.status,
 		priority: currTask.priority,

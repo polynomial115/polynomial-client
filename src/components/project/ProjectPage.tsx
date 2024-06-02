@@ -33,7 +33,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 	const ActiveView = () => {
 		switch (activeView) {
 			case ProjectView.Overview:
-				return <Dashboard tasks={tasks} project={project} />
+				return <Dashboard project={project} />
 			case ProjectView.Board:
 				return <CardView projectId={project.id} tasks={tasks} columns={taskStatuses} property="status" />
 			case ProjectView.TaskList:

@@ -1,15 +1,15 @@
-import { Task, Project } from '../types'
+import { Project } from '../types'
 import { PieChart } from './task/PieChart'
 import { TableComponent } from './task/TableComponent'
 import { taskStatuses } from '../types'
 import '../styles/dashboardStyle.css'
 
 interface DashboardProps {
-	tasks: Task[]
 	project: Project
 }
 
-export const Dashboard = ({ tasks, project }: DashboardProps) => {
+export const Dashboard = ({ project }: DashboardProps) => {
+	const { tasks } = project
 	window.scrollTo(0, 0)
 
 	return (

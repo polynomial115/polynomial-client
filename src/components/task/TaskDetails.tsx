@@ -50,7 +50,7 @@ export default function TaskDetails({ project, task, getMember, members }: Props
 					onClick={() => {
 						if (task) {
 							swal.fire({
-								html: <EditTask project={project} members={members} currTask={task} allTasks={taskList} />,
+								html: <EditTask project={project} members={members} currTask={task} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,
