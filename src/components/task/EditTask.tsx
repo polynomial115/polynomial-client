@@ -43,7 +43,6 @@ export function EditTask({ project, members, currTask }: EditTaskProps) {
 		}
 
 		const taskData = { ...formData, id: currTask.id }
-		const getMember = (id: string) => members.find(m => m.user?.id === id)
 
 		const projectDoc = doc(db, 'projects', project.id)
 
@@ -53,7 +52,7 @@ export function EditTask({ project, members, currTask }: EditTaskProps) {
 			})
 			setError('Edited task successfully.')
 			withReactContent(Swal).fire({
-				html: <TaskDetails project={project} task={taskData as Task} getMember={getMember} members={members} />,
+				html: <TaskDetails project={project} task={taskData as Task} members={members} />,
 				background: '#202225',
 				color: 'white',
 				showConfirmButton: false,

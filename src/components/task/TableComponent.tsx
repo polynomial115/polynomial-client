@@ -113,7 +113,7 @@ export function TableComponent({ project }: Props) {
 					const task = project?.tasks.find(task => task.id === row.id)
 					if (task) {
 						swal.fire({
-							html: <TaskDetails project={project} task={task} getMember={getMember} members={members} />,
+							html: <TaskDetails project={project} task={task} members={members} />,
 							background: '#202225',
 							color: 'white',
 							showConfirmButton: false,

@@ -13,20 +13,20 @@ const swal = withReactContent(Swal)
 interface Props {
 	project: Project
 	task: Task
-	getMember: (id: string) => APIGuildMember | undefined
 	members: APIGuildMember[]
 }
 
-export default function TaskDetails({ project, task, getMember, members }: Props) {
+export default function TaskDetails({ project, task, members }: Props) {
 	const { tasks } = project
 	const taskList = tasks ?? project?.tasks ?? []
+	const getMember = (id: string) => members.find(m => m.user?.id === id)
 
 	return (
 		<div className="modal">
 			<h2 className="task-name">{task.name}</h2>
 			<div className="container">
 				<div className="left-column">
-					<p className="showLineBreaks">{task.description}</p>
+					<p className="description">{task.description}</p>
 				</div>
 				<div className="divider" />
 				<div className="right-column">
