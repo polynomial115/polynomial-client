@@ -1,4 +1,4 @@
-import { Task, Project, priorities, taskStatuses } from '../../types'
+import { Task, Project, priorities, taskStatuses, getStatus, getPriority } from '../../types'
 import { EditTask } from './EditTask'
 import { DeleteTask } from './DeleteTask'
 import { APIGuildMember } from 'discord-api-types/v10'
@@ -31,6 +31,8 @@ export default function TaskDetails(props: Props) {
 			animation: false
 		})
 
+	const status = getStatus(task.status)
+
 	return (
 		<div className="modal">
 			<h2 className="task-name">{task.name}</h2>
@@ -43,10 +45,10 @@ export default function TaskDetails(props: Props) {
 				<div className="divider" />
 				<div className="right-column">
 					<h3 className="margin-text">
-						<b>{priorities[task.priority].label} Priority</b>
+						<b>{getPriority(task.priority).label} Priority</b>
 					</h3>
-					<h3 style={{ color: taskStatuses[task.status].color }}>
-						<b>{taskStatuses[task.status].label}</b>
+					<h3 style={{ color: status.color }}>
+						<b>{status.label}</b>
 					</h3>
 					<h3 className="deadline-text">Due {new Date(task.deadline).toLocaleDateString('en', { month: 'long', day: 'numeric' })}</h3>
 					<h3 className="assign-header">{task.assignees.length > 0 ? 'Assigned to' : 'No assignees'}</h3>
