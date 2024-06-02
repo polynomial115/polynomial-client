@@ -1,4 +1,4 @@
-import { Task, Project, priorities, taskStatuses, getStatus, getPriority } from '../../types'
+import { Task, Project, getStatus, getPriority } from '../../types'
 import { EditTask } from './EditTask'
 import { DeleteTask } from './DeleteTask'
 import { APIGuildMember } from 'discord-api-types/v10'
