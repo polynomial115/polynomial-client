@@ -16,10 +16,20 @@ interface Props {
 	members: APIGuildMember[]
 }
 
-export default function TaskDetails({ project, task, members }: Props) {
-	const { tasks } = project
-	const taskList = tasks ?? project?.tasks ?? []
+export default function TaskDetails(props: Props) {
+	const { project, task, members } = props
+
 	const getMember = (id: string) => members.find(m => m.user?.id === id)
+
+	const reopen = () =>
+		swal.fire({
+			html: <TaskDetails {...props} />,
+			background: '#202225',
+			color: 'white',
+			showConfirmButton: false,
+			width: '800px',
+			animation: false
+		})
 
 	return (
 		<div className="modal">
@@ -56,7 +66,8 @@ export default function TaskDetails({ project, task, members }: Props) {
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,
-								width: '625px'
+								width: '625px',
+								willClose: reopen
 							})
 						} else {
 							console.error('Task not found')
@@ -70,10 +81,11 @@ export default function TaskDetails({ project, task, members }: Props) {
 					onClick={() => {
 						if (task) {
 							swal.fire({
-								html: <DeleteTask projectId={project.id} tasks={taskList} delTask={task} />,
+								html: <DeleteTask projectId={project.id} tasks={project.tasks} delTask={task} />,
 								background: '#202225',
 								color: 'white',
-								showConfirmButton: false
+								showConfirmButton: false,
+								willClose: reopen
 							})
 						} else {
 							console.error('Task not found for deletion')
