@@ -20,6 +20,7 @@ export function CardColumn({ id, title, color, numCols, tasks }: Props) {
 			style={{
 				borderColor: color,
 				borderStyle: isOver ? 'dashed' : 'solid',
+				backgroundColor: isOver ? '#202020' : '#1a1a1a',
 				width: `${100 / numCols}%`
 			}}
 		>

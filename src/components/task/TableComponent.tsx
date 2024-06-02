@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import DataTable from 'react-data-table-component'
-import { priorities, Project, Task, taskStatuses } from '../../types'
+import { getPriority, getStatus, priorities, Priority, Project, Task, TaskStatus } from '../../types'
 import { DiscordAvatar } from '../User'
 import { useGuildMembers } from '../../hooks/useGuildMembers'
 import { EditTask } from './EditTask'
@@ -18,10 +18,10 @@ interface Props {
 interface TaskRow {
 	id: string
 	name: string
-	status: string
+	status: TaskStatus
 	assignees: string
 	deadline: string
-	priority: string
+	priority: Priority
 }
 
 interface ExpandedComponentProps {
@@ -29,6 +29,10 @@ interface ExpandedComponentProps {
 }
 
 export function TableComponent({ tasks, project }: Props) {
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [])
+
 	const { members, getMember } = useGuildMembers()
 
 	// Determine the tasks array based on the input props
@@ -43,16 +47,16 @@ export function TableComponent({ tasks, project }: Props) {
 	const taskData = taskList.map(task => ({
 		id: task.id,
 		name: task.name,
-		status: taskStatuses[task.status].label,
+		status: task.status,
 		assignees: task.assignees.join(', '),
 		deadline: new Date(task.deadline).toUTCString(),
-		priority: priorities[task.priority].label
-	}))
+		priority: task.priority
+	})) satisfies TaskRow[]
 
 	// Auto-sort by priority if no project is provided
 	if (!project) {
 		taskData.sort((a, b) => {
-			const priorityOrder = priorities.map(p => p.label)
+			const priorityOrder = priorities.map(p => p.value)
 			return priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority)
 		})
 	}
@@ -70,8 +74,8 @@ export function TableComponent({ tasks, project }: Props) {
 			selector: (row: TaskRow) => row.status,
 			sortable: true,
 			cell: (row: TaskRow) => {
-				const statusChoice = taskStatuses.find(s => s.label === row.status)
-				return <span style={{ color: statusChoice ? statusChoice.color : 'default' }}>{row.status}</span>
+				const status = getStatus(row.status)
+				return <span style={{ color: status.color }}>{status.label}</span>
 			}
 		},
 		{
@@ -92,8 +96,8 @@ export function TableComponent({ tasks, project }: Props) {
 			selector: (row: TaskRow) => row.priority,
 			sortable: true,
 			cell: (row: TaskRow) => {
-				const priorityChoice = priorities.find(s => s.label === row.priority)
-				return <span style={{ color: priorityChoice ? priorityChoice.color : 'default' }}>{row.priority}</span>
+				const priority = getPriority(row.priority)
+				return <span style={{ color: priority.color }}>{priority.label}</span>
 			}
 		},
 		{
@@ -164,10 +168,8 @@ export function TableComponent({ tasks, project }: Props) {
 	}
 
 	return (
-		<div className="TableDiv" style={{ maxWidth: '1000px', margin: 'auto' }}>
+		<div className="table">
 			<DataTable
-				title="Tasks Overview"
-				className="ActualTable"
 				columns={columns}
 				data={taskData}
 				highlightOnHover

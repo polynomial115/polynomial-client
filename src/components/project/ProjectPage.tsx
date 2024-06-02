@@ -1,5 +1,5 @@
 import '../../styles/ProjectView.css'
-import { type Project, taskStatuses } from '../../types.ts'
+import { type Project, taskStatuses, getStatus } from '../../types.ts'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { CreateTask } from '../task/CreateTask.tsx'
@@ -14,7 +14,7 @@ import { EditTask } from '../task/EditTask.tsx'
 import '../../styles/ProjectView.css'
 import { TableComponent } from '../task/TableComponent.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faBarsStaggered, faChartPie, faListCheck } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { ProjectView } from '../../party.ts'
 
 const swal = withReactContent(Swal)
@@ -118,7 +118,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 							})
 						}
 					>
-						Edit Project
+						<FontAwesomeIcon icon={faEdit} /> Edit Project
 					</button>
 					<button
 						onClick={() =>
@@ -131,7 +131,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 							})
 						}
 					>
-						Create Task
+						<FontAwesomeIcon icon={faPlus} /> Create Task
 					</button>
 				</div>
 				{ActiveView()}
@@ -141,9 +141,9 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 						{/* <p>ID: {task.id}</p> */}
 						<button style={{ width: '75vw', height: '12vh', margin: 10 }} className="TaskContainer">
 							<b>Task Name</b>: {task.name} |
-							<span style={{ color: taskStatuses[task.status].color }}>
+							<span style={{ color: getStatus(task.status).color }}>
 								{' '}
-								<b>&nbsp;{taskStatuses[task.status].label}&nbsp;</b>{' '}
+								<b>&nbsp;{getStatus(task.status).label}&nbsp;</b>{' '}
 							</span>{' '}
 							|<b>&nbsp;Assignees:</b>
 							<div style={{ margin: 12 }}>

@@ -116,11 +116,18 @@ ul {
 	visibility: visible;
 }
 
-.TableDiv {
-	margin-top: 1rem;
-	margin-bottom: 1rem;
-	border: 1px solid black;
-	box-shadow: 10px 5px 5px black;
+.table {
+	margin: auto;
+	max-width: 1000px;
+}
+
+.rdt_Table,
+.rdt_TableHeadRow {
+	border-radius: 5px 5px 0 0;
+}
+
+.rdt_Pagination {
+	border-radius: 0 0 5px 5px;
 }
 
 .top-blur {

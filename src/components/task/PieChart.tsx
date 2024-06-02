@@ -28,77 +28,41 @@ export function PieChart({ label, property, tasks, data }: PieChartProps) {
 	}, [tasks, property])
 
 	return (
-		<div className="pie-chart-container">
-			{/* Parent container takes full width */}
-			{!tasks || tasks.length === 0 ? (
-				<div className="empty-tasks-message">
-					<h2 style={{ color: 'white' }}>Add some Tasks to see Pie Chart Visualization!</h2>
-					<Doughnut
-						style={{
-							padding: 10
-						}}
-						data={{
-							datasets: [{ data: [1], borderWidth: 0, backgroundColor: 'crimson' }]
-						}}
-						options={{
-							cutout: '50%',
-							plugins: {
-								legend: {
-									display: true,
-									align: 'center',
-									labels: {
-										color: 'white',
-										font: {
-											family: 'Helvetica',
-											size: 15
-										},
-										usePointStyle: true
-									},
-									onClick: () => undefined
+		<div className="doughnut-wrapper">
+			<Doughnut
+				data={{
+					labels: data.map((d: Choice) => ` ${d.label}  `),
+					datasets: [
+						{
+							label: label,
+							data: data.map((d: Choice) => tasks.filter((task: Task) => (task[property] as unknown) === d.value).length),
+							backgroundColor: data.map((d: Choice) => d.color),
+							borderWidth: 0
+						}
+					]
+				}}
+				options={{
+					responsive: true,
+					maintainAspectRatio: false,
+					cutout: '45%',
+					plugins: {
+						legend: {
+							display: true,
+							position: 'left',
+							align: 'center',
+							labels: {
+								color: 'white',
+								font: {
+									family: 'Helvetica',
+									size: 15
 								},
-								tooltip: { enabled: false }
-							}
-						}}
-					/>
-				</div>
-			) : (
-				<div className="doughnut-wrapper">
-					<Doughnut
-						data={{
-							labels: data.map((d: Choice) => ` ${d.label}  `),
-							datasets: [
-								{
-									label: label,
-									data: data.map((d: Choice) => tasks.filter((task: Task) => (task[property] as unknown) === d.value).length),
-									backgroundColor: data.map((d: Choice) => d.color),
-									borderWidth: 0
-								}
-							]
-						}}
-						options={{
-							responsive: true,
-							maintainAspectRatio: false,
-							cutout: '45%',
-							plugins: {
-								legend: {
-									display: true,
-									position: 'left',
-									align: 'center',
-									labels: {
-										color: 'white',
-										font: {
-											family: 'Helvetica',
-											size: 15
-										},
-										usePointStyle: true
-									},
-									onClick: () => undefined
-								}
-							}
-						}}
-					/>
-				</div>
-			)}
+								usePointStyle: true
+							},
+							onClick: () => undefined
+						}
+					}
+				}}
+			/>
 		</div>
 	)
 }
