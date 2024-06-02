@@ -1,5 +1,5 @@
 import '../../styles/ProjectView.css'
-import { type Project, taskStatuses } from '../../types.ts'
+import { type Project, taskStatuses, getStatus } from '../../types.ts'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { CreateTask } from '../task/CreateTask.tsx'
@@ -12,7 +12,7 @@ import { CardView } from '../task/CardView.tsx'
 import '../../styles/ProjectView.css'
 import { TableComponent } from '../task/TableComponent.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faBarsStaggered, faChartPie, faListCheck } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { ProjectView } from '../../party.ts'
 
 const swal = withReactContent(Swal)
@@ -94,43 +94,45 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 			>
 				<FontAwesomeIcon icon={faAngleLeft} /> Projects
 			</button>
-			<div style={{ marginTop: 75 }}>
+			<div style={{ marginTop: 100 }}>
 				<p className="project-title">{project.name}</p>
+				<div style={{ margin: 15 }}>
+					<button
+						onClick={() =>
+							swal.fire({
+								html: (
+									<EditProject
+										name={project.name}
+										managerRoles={project.managerRoles}
+										tasks={project.tasks}
+										projectId={project.id}
+										currUserRoles={currUserRoles}
+										token={auth.serverToken}
+									/>
+								),
+								background: '#202225',
+								color: 'white',
+								showConfirmButton: false
+							})
+						}
+					>
+						<FontAwesomeIcon icon={faEdit} /> Edit Project
+					</button>
+					<button
+						onClick={() =>
+							swal.fire({
+								html: <CreateTask projectId={project.id} members={members} />,
+								background: '#202225',
+								color: 'white',
+								showConfirmButton: false,
+								width: '625px'
+							})
+						}
+					>
+						<FontAwesomeIcon icon={faPlus} /> Create Task
+					</button>
+				</div>
 				{ActiveView()}
-				<button
-					onClick={() =>
-						swal.fire({
-							html: (
-								<EditProject
-									name={project.name}
-									managerRoles={project.managerRoles}
-									tasks={project.tasks}
-									projectId={project.id}
-									currUserRoles={currUserRoles}
-									token={auth.serverToken}
-								/>
-							),
-							background: '#202225',
-							color: 'white',
-							showConfirmButton: false
-						})
-					}
-				>
-					Edit Project
-				</button>
-				<button
-					onClick={() =>
-						swal.fire({
-							html: <CreateTask projectId={project.id} members={members} />,
-							background: '#202225',
-							color: 'white',
-							showConfirmButton: false,
-							width: '625px'
-						})
-					}
-				>
-					Create Task
-				</button>
 			</div>
 		</div>
 	)

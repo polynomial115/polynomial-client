@@ -110,6 +110,7 @@ export function EditTask({ project, members, currTask }: EditTaskProps) {
 						)
 					}
 					styles={selectStyles}
+					menuPosition="fixed"
 				/>
 				<h3 style={{ marginBottom: 5 }}>Set Priority</h3>
 				<ChoiceButtons
@@ -137,7 +138,7 @@ export function EditTask({ project, members, currTask }: EditTaskProps) {
 						}
 					}}
 					styles={selectStyles}
-					required
+					menuPosition="fixed"
 				/>
 
 				<button type="submit">Save</button>

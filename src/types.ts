@@ -40,21 +40,21 @@ export interface Choice {
 	color: string
 }
 
-export const taskStatuses: Choice[] = [
-	{ value: TaskStatus.ToDo, label: 'To Do', color: 'crimson' },
+export const taskStatuses = [
 	{ value: TaskStatus.Backlog, label: 'Backlog', color: 'orange' },
+	{ value: TaskStatus.ToDo, label: 'To Do', color: 'crimson' },
 	{ value: TaskStatus.InProgress, label: 'In Progress', color: 'lightblue' },
 	{ value: TaskStatus.Completed, label: 'Completed', color: 'lightgreen' }
-]
+] satisfies Choice[]
 
-export const priorities: Choice[] = [
+export const priorities = [
 	{ value: Priority.Low, label: '🔵 Low', color: 'lightblue' },
 	{ value: Priority.Normal, label: '🟢 Normal', color: 'lightgreen' },
 	{ value: Priority.High, label: '🟡 High', color: 'yellow' },
 	{ value: Priority.Urgent, label: '🔴 Urgent', color: 'red' }
-]
+] satisfies Choice[]
 
-export const deadlines: Choice[] = [
+export const deadlines = [
 	{ value: Deadline.Never, label: 'Never', color: 'white' },
 	{ value: Deadline.OneDay, label: 'in one day', color: 'white' },
 	{ value: Deadline.TwoDays, label: 'in two days', color: 'white' },
@@ -62,7 +62,15 @@ export const deadlines: Choice[] = [
 	{ value: Deadline.OneWeek, label: 'in one week', color: 'white' },
 	{ value: Deadline.TwoWeeks, label: 'in two weeks', color: 'white' },
 	{ value: Deadline.OneMonth, label: 'in one month', color: 'white' }
-]
+] satisfies Choice[]
+
+function getChoice<T extends number>(choices: Choice[]) {
+	return (value: T) => choices.find(c => c.value === value)!
+}
+
+export const getStatus = getChoice<TaskStatus>(taskStatuses)
+export const getPriority = getChoice<Priority>(priorities)
+export const getDeadline = getChoice<Deadline>(deadlines)
 
 export interface Task {
 	id: string

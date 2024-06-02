@@ -1,5 +1,6 @@
+import React, { useEffect } from 'react'
 import DataTable from 'react-data-table-component'
-import { Project, taskStatuses, priorities } from '../../types'
+import { getPriority, getStatus, priorities, Priority, Project, Task, TaskStatus } from '../../types'
 import { DiscordAvatar } from '../User'
 import { useGuildMembers } from '../../hooks/useGuildMembers'
 import TaskDetails from './TaskDetails'
@@ -16,14 +17,19 @@ interface Props {
 interface TaskRow {
 	id: string
 	name: string
-	status: string
+	status: TaskStatus
 	assignees: string
 	deadline: string
-	priority: string
+	priority: Priority
 }
 
 export function TableComponent({ project }: Props) {
 	const { tasks } = project
+
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [])
+
 	const { members, getMember } = useGuildMembers()
 
 	// Determine the tasks array based on the input props
@@ -38,17 +44,17 @@ export function TableComponent({ project }: Props) {
 	const taskData = taskList.map(task => ({
 		id: task.id,
 		name: task.name,
-		status: taskStatuses[task.status].label,
+		status: task.status,
 		description: task.description,
 		assignees: task.assignees.join(', '),
 		deadline: new Date(task.deadline).toUTCString(),
-		priority: priorities[task.priority].label
-	}))
+		priority: task.priority
+	})) satisfies TaskRow[]
 
 	// Auto-sort by priority if no project is provided
 	if (!project) {
 		taskData.sort((a, b) => {
-			const priorityOrder = priorities.map(p => p.label)
+			const priorityOrder = priorities.map(p => p.value)
 			return priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority)
 		})
 	}
@@ -58,7 +64,10 @@ export function TableComponent({ project }: Props) {
 		{
 			name: 'Name',
 			selector: (row: TaskRow) => row.name,
-			sortable: true
+			sortable: true,
+			cell: (row: TaskRow) => {
+				return <span style={{ fontWeight: 'bold' }}>{row.name}</span>
+			}
 		},
 		{
 			name: 'Status',
@@ -66,8 +75,8 @@ export function TableComponent({ project }: Props) {
 			selector: (row: TaskRow) => row.status,
 			sortable: true,
 			cell: (row: TaskRow) => {
-				const statusChoice = taskStatuses.find(s => s.label === row.status)
-				return <span style={{ color: statusChoice ? statusChoice.color : 'default' }}>{row.status}</span>
+				const status = getStatus(row.status)
+				return <span style={{ fontWeight: 'bolder', color: status.color }}>{status.label}</span>
 			}
 		},
 		{
@@ -75,7 +84,7 @@ export function TableComponent({ project }: Props) {
 			selector: (row: TaskRow) => row.assignees,
 			sortable: false,
 			cell: (row: TaskRow) => (
-				<div style={{ display: 'flex', flexWrap: 'wrap' }}>
+				<div style={{ display: 'flex', flexWrap: 'nowrap' }}>
 					{row.assignees.split(', ').map(id => (
 						<DiscordAvatar size={35} key={id} member={getMember(id)} />
 					))}
@@ -88,8 +97,8 @@ export function TableComponent({ project }: Props) {
 			selector: (row: TaskRow) => row.priority,
 			sortable: true,
 			cell: (row: TaskRow) => {
-				const priorityChoice = priorities.find(s => s.label === row.priority)
-				return <span style={{ color: priorityChoice ? priorityChoice.color : 'default' }}>{row.priority}</span>
+				const priority = getPriority(row.priority)
+				return <span style={{ fontWeight: 'bolder', color: priority.color }}>{priority.label}</span>
 			}
 		},
 		{
@@ -101,10 +110,8 @@ export function TableComponent({ project }: Props) {
 	]
 
 	return (
-		<div className="TableDiv" style={{ maxWidth: '1000px', margin: 'auto' }}>
+		<div className="table">
 			<DataTable
-				title="Tasks Overview"
-				className="ActualTable"
 				columns={columns}
 				data={taskData}
 				highlightOnHover
@@ -125,6 +132,40 @@ export function TableComponent({ project }: Props) {
 				}}
 				persistTableHead
 				theme="dark"
+				striped
+				customStyles={{
+					table: {
+						style: {
+							// boxShadow: '0px 0px 5px black'
+						}
+					},
+					headRow: {
+						style: {
+							fontSize: '16px',
+							backgroundColor: '#191919'
+						}
+					},
+					rows: {
+						style: {
+							color: 'white',
+							backgroundColor: '#303030',
+							border: '0px solid',
+							fontSize: '15px',
+							borderCollapse: 'collapse'
+						},
+						stripedStyle: {
+							color: 'white',
+							backgroundColor: '#282828',
+							fontSize: '15px',
+							borderCollapse: 'collapse'
+						}
+					},
+					pagination: {
+						style: {
+							backgroundColor: '#191919'
+						}
+					}
+				}}
 			/>
 		</div>
 	)
