@@ -110,6 +110,7 @@ export function CreateTask({ projectId, members }: Props) {
 						handleInputChange('deadline', dl)
 					}}
 					styles={selectStyles}
+					required
 				/>
 
 				<button type="submit">Create Task</button>

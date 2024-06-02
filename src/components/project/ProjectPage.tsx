@@ -6,11 +6,9 @@ import { CreateTask } from '../task/CreateTask.tsx'
 import { useGuildMembers } from '../../hooks/useGuildMembers.ts'
 import { EditProject } from './EditProject.tsx'
 import { useAuth } from '../../hooks/useAuth.ts'
-import { DiscordAvatar } from '../User.tsx'
 import { ChoiceButtons } from '../ChoiceButtons.tsx'
 import { Dashboard } from '../Dashboard.tsx'
 import { CardView } from '../task/CardView.tsx'
-import { EditTask } from '../task/EditTask.tsx'
 import '../../styles/ProjectView.css'
 import { TableComponent } from '../task/TableComponent.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -29,7 +27,7 @@ interface ProjectProps {
 export function ProjectPage({ project, close, activeView, setActiveView }: ProjectProps) {
 	const { tasks } = project
 
-	const { members, getMember } = useGuildMembers() // can't access context inside modal so getting here
+	const { members } = useGuildMembers() // can't access context inside modal so getting here
 	const auth = useAuth()
 
 	const ActiveView = () => {
@@ -133,40 +131,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 				>
 					Create Task
 				</button>
-				{/* <TableComponent project={project} /> */}
-				{tasks.map(task => (
-					<li key={task.id}>
-						{/* <p>ID: {task.id}</p> */}
-						<button style={{ width: '75vw', height: '12vh', margin: 10 }} className="TaskContainer">
-							<b>Task Name</b>: {task.name} |
-							<span style={{ color: taskStatuses[task.status].color }}>
-								{' '}
-								<b>&nbsp;{taskStatuses[task.status].label}&nbsp;</b>{' '}
-							</span>{' '}
-							|<b>&nbsp;Assignees:</b>
-							<div style={{ margin: 12 }}>
-								{task.assignees.map(assigneeId => {
-									return <DiscordAvatar key={assigneeId} member={getMember(assigneeId)} />
-								})}
-							</div>
-							<button
-								onClick={() =>
-									swal.fire({
-										html: <EditTask projectId={project.id} members={members} currTask={task} allTasks={project.tasks} />,
-										background: '#202225',
-										color: 'white',
-										showConfirmButton: false,
-										width: '625px'
-									})
-								}
-							>
-								Edit Task
-							</button>
-						</button>
-					</li>
-				))}
 			</div>
-			{/* <TaskList tasks={tasks} /> */}
 		</div>
 	)
 }

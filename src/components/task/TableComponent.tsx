@@ -1,12 +1,9 @@
-import React from 'react'
 import DataTable from 'react-data-table-component'
 import { Project, taskStatuses, priorities, Task } from '../../types'
 import { DiscordAvatar } from '../User'
 import { useGuildMembers } from '../../hooks/useGuildMembers'
 import TaskDetails from './TaskDetails'
 
-import { EditTask } from './EditTask'
-import { DeleteTask } from './DeleteTask'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
@@ -14,7 +11,7 @@ const swal = withReactContent(Swal)
 
 interface Props {
 	tasks: Task[]
-	project?: Project
+	project: Project
 }
 
 interface TaskRow {
@@ -24,10 +21,6 @@ interface TaskRow {
 	assignees: string
 	deadline: string
 	priority: string
-}
-
-interface ExpandedComponentProps {
-	data: TaskRow
 }
 
 export function TableComponent({ tasks, project }: Props) {
@@ -123,49 +116,6 @@ export function TableComponent({ tasks, project }: Props) {
 	// })
 	// }
 
-	const ExpandedComponent: React.FC<ExpandedComponentProps> = ({ data }) => {
-		const task = taskList.find(task => task.id === data.id)
-
-		return (
-			<div>
-				<button
-					onClick={() => {
-						if (task) {
-							swal.fire({
-								html: <EditTask projectId={project!.id} members={members} currTask={task} allTasks={taskList} />,
-								background: '#202225',
-								color: 'white',
-								showConfirmButton: false,
-								width: '625px'
-							})
-						} else {
-							console.error('Task not found')
-						}
-					}}
-				>
-					Edit Task
-				</button>
-
-				<button
-					onClick={() => {
-						if (task) {
-							swal.fire({
-								html: <DeleteTask projectId={project!.id} tasks={taskList} delTask={task} />,
-								background: '#202225',
-								color: 'white',
-								showConfirmButton: false
-							})
-						} else {
-							console.error('Task not found for deletion')
-						}
-					}}
-				>
-					Delete Task
-				</button>
-			</div>
-		)
-	}
-
 	return (
 		<div className="TableDiv" style={{ maxWidth: '1000px', margin: 'auto' }}>
 			<DataTable
@@ -179,7 +129,7 @@ export function TableComponent({ tasks, project }: Props) {
 					const task = project?.tasks.find(task => task.id === row.id)
 					if (task) {
 						swal.fire({
-							html: <TaskDetails task={task} getMember={getMember} />,
+							html: <TaskDetails tasks={tasks} project={project} task={task} getMember={getMember} members={members} />,
 							background: '#202225',
 							color: 'white',
 							showConfirmButton: false,
@@ -191,7 +141,6 @@ export function TableComponent({ tasks, project }: Props) {
 				}}
 				expandableRows
 				persistTableHead
-				expandableRowsComponent={project ? ExpandedComponent : undefined}
 				theme="dark"
 			/>
 		</div>

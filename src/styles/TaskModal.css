@@ -5,19 +5,25 @@
 .container {
 	display: flex;
 	flex-direction: row;
-	gap: 10;
+	gap: 10px;
 	justify-content: space-between;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
 .leftColumn {
-	width: 57%;
-	margin: '20px';
-	vertical-align: auto;
+	background-color: rgb(20, 21, 22);
+	border-radius: 10px;
+	width: 50%;
+	padding-left: 30px;
+	padding-right: 30px;
 }
 
 .rightColumn {
+	background-color: rgb(20, 21, 22);
+	border-radius: 10px;
 	flex: 1;
-	width: 37%;
-	margin: '20px';
+	width: 27%;
+	margin-left: '20px';
 	justify-content: center;
 }
