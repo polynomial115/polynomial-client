@@ -1,5 +1,5 @@
 import { createRef, useEffect, useState } from 'react'
-import type { APIRole } from 'discord-api-types/v10'
+import type { APIRole, APITextChannel } from 'discord-api-types/v10'
 import { discordSdk } from '../../services/discord.ts'
 import Select from 'react-select'
 import { selectStyles } from '../../styles/select-styles.ts'
@@ -14,14 +14,20 @@ interface Props {
 
 export function CreateProject({ token }: Props) {
 	const [roles, setRoles] = useState<APIRole[]>([])
+	const [channels, setChannels] = useState<APITextChannel[]>([])
 	const [selectedRoles, setSelectedRoles] = useState<string[]>([])
+	const [selectedChannel, setSelectedChannel] = useState<string | null>(null)
 	const nameInputRef = createRef<HTMLInputElement>()
 	const [created, setCreated] = useState(false)
 
 	useEffect(() => {
-		fetch(`/api/roles/${discordSdk.guildId}`, { headers: { Authorization: token } })
+		fetch('/api/roles', { headers: { Authorization: token } })
 			.then(r => r.json())
 			.then(roles => setRoles((roles as APIRole[]).sort((a, b) => b.position - a.position)))
+
+		fetch('/api/channels', { headers: { Authorization: token } })
+			.then(r => r.json())
+			.then(channels => setChannels((channels as APITextChannel[]).sort((a, b) => a.position - b.position)))
 	}, [token])
 
 	if (created) return <div>Project created!</div>
@@ -40,6 +46,7 @@ export function CreateProject({ token }: Props) {
 						managerUsers: [],
 						memberUsers: [],
 						tasks: [],
+						notificationsChannel: selectedChannel,
 						timestamp: Timestamp.now()
 					})
 					setCreated(true)
@@ -53,6 +60,16 @@ export function CreateProject({ token }: Props) {
 					placeholder="Roles with management power for this project"
 					onChange={selected => setSelectedRoles(selected.map(e => e.value as string))}
 					name="roles"
+					menuPosition="fixed"
+				/>
+				<br />
+				<Select
+					isMulti={false}
+					options={[{ value: null, label: 'None' }, ...channels.map(r => ({ value: r.id, label: '#' + r.name }))]}
+					styles={selectStyles}
+					placeholder="Notifications channel"
+					onChange={selected => setSelectedChannel(selected?.value as string)}
+					name="channels"
 					menuPosition="fixed"
 				/>
 				<button type="submit">Submit</button>

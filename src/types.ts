@@ -7,6 +7,7 @@ export interface Project {
 	managerUsers: string[]
 	memberUsers: string[]
 	tasks: Task[]
+	notificationsChannel?: string | null
 	timestamp: string
 }
 

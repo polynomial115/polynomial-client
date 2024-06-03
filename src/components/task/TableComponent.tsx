@@ -4,6 +4,7 @@ import { getPriority, getStatus, priorities, Priority, Project, TaskStatus } fro
 import { DiscordAvatar } from '../User'
 import { useGuildMembers } from '../../hooks/useGuildMembers'
 import TaskDetails from './TaskDetails'
+import { useAuth } from '../../hooks/useAuth'
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -30,6 +31,7 @@ export function TableComponent({ project, mini }: Props) {
 	}, [])
 
 	const { members, getMember } = useGuildMembers()
+	const auth = useAuth()
 
 	// Determine the tasks array based on the input props
 	let taskList = project.tasks
@@ -117,7 +119,7 @@ export function TableComponent({ project, mini }: Props) {
 					const task = project?.tasks.find(task => task.id === row.id)
 					if (task) {
 						swal.fire({
-							html: <TaskDetails project={project} task={task} members={members} />,
+							html: <TaskDetails project={project} task={task} members={members} token={auth.serverToken} />,
 							background: '#202225',
 							color: 'white',
 							showConfirmButton: false,

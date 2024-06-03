@@ -10,6 +10,9 @@ import TaskDetails from './TaskDetails'
 import calculateDeadline from '../../scripts/CalculateDeadline.ts'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { getAuth } from 'firebase/auth'
+
+const firebaseAuth = getAuth()
 
 type FormData = Omit<Task, 'id' | 'deadline'> & {
 	deadline: number | null
@@ -19,9 +22,10 @@ interface EditTaskProps {
 	project: Project
 	members: APIGuildMember[]
 	currTask: Task
+	token: string
 }
 
-export function EditTask({ project, members, currTask }: EditTaskProps) {
+export function EditTask({ project, members, currTask, token }: EditTaskProps) {
 	const [formData, setFormData] = useState<FormData>({
 		status: currTask.status,
 		priority: currTask.priority,
@@ -47,9 +51,20 @@ export function EditTask({ project, members, currTask }: EditTaskProps) {
 			await updateDoc(projectDoc, {
 				tasks: project.tasks.map(t => (t.id === currTask.id ? taskData : t))
 			})
-			setError('Edited task successfully.')
+
+			if (project.notificationsChannel) {
+				await fetch(`/api/projects/${project.id}/tasks/${currTask.id}/notify`, {
+					method: 'POST',
+					headers: {
+						Authorization: token,
+						'Firebase-Token': await firebaseAuth.currentUser!.getIdToken()
+					},
+					body: JSON.stringify({ oldTask: currTask })
+				})
+			}
+
 			withReactContent(Swal).fire({
-				html: <TaskDetails project={project} task={taskData as Task} members={members} />,
+				html: <TaskDetails project={project} task={taskData as Task} members={members} token={token} />,
 				background: '#202225',
 				color: 'white',
 				showConfirmButton: false,
