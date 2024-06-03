@@ -81,6 +81,7 @@ export function CreateTask({ project, members, token }: Props) {
 					onChange={e => handleInputChange('name', e.target.value)}
 					placeholder="Enter task name..."
 					required
+					style={{ marginBottom: 2.5 }}
 				/>
 				<textarea
 					id="task-description"
@@ -89,9 +90,10 @@ export function CreateTask({ project, members, token }: Props) {
 					onChange={e => handleInputChange('description', e.target.value)}
 					placeholder="Enter task description..."
 					maxLength={1000}
+					style={{ marginBottom: 2.5, height: 125 }}
 				/>
 				<br />
-				<br />
+				<h3 style={{ marginBottom: 5 }}>Add Assignees</h3>
 				<Select
 					isMulti={true}
 					name="assignees"
@@ -115,7 +117,7 @@ export function CreateTask({ project, members, token }: Props) {
 				<h3 style={{ marginBottom: 5 }}>Set Status</h3>
 				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} defaultValue={NaN} />
 				<br />
-				<h3 style={{ marginBottom: 5 }}>When will this task be due?</h3>
+				<h3 style={{ margin: '7.5px' }}>When will this task be due?</h3>
 				<Select
 					isMulti={false}
 					name="deadline"
