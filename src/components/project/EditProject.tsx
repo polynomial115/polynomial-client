@@ -1,5 +1,5 @@
 import { createRef, useEffect, useState } from 'react'
-import type { APIRole } from 'discord-api-types/v10'
+import type { APIRole, APITextChannel } from 'discord-api-types/v10'
 import { discordSdk } from '../../services/discord.ts'
 import Select from 'react-select'
 import { selectStyles } from '../../styles/select-styles.ts'
@@ -15,6 +15,7 @@ interface Props {
 	projectId: string
 	currUserRoles: string[]
 	token: string
+	notificationsChannel?: string | null
 }
 
 interface mockAPIRole {
@@ -23,14 +24,20 @@ interface mockAPIRole {
 	color: string
 }
 
-export function EditProject({ name, managerRoles, tasks, projectId, currUserRoles, token }: Props) {
+export function EditProject({ name, managerRoles, tasks, projectId, currUserRoles, token, notificationsChannel }: Props) {
 	const [roles, setRoles] = useState<APIRole[]>([])
 	const [selectedRoles, setSelectedRoles] = useState<mockAPIRole[]>([])
 	const nameInputRef = createRef<HTMLInputElement>()
 	const [edited, setEdited] = useState(false)
 	const [mgmt, setMgmt] = useState<string[]>(managerRoles)
+	const [selectedChannel, setSelectedChannel] = useState<string | null>(null)
+	const [channels, setChannels] = useState<APITextChannel[]>([])
 
 	useEffect(() => {
+		if (notificationsChannel != null) {
+			setSelectedChannel(notificationsChannel)
+		}
+		console.log(notificationsChannel, 40)
 		fetch('/api/roles', { headers: { Authorization: token } })
 			.then(r => r.json())
 			.then(roles => {
@@ -41,7 +48,10 @@ export function EditProject({ name, managerRoles, tasks, projectId, currUserRole
 						.map(r => ({ name: r.name, id: r.id, color: transformColor(r.color) }) as mockAPIRole)
 				)
 			})
-	}, [mgmt, token])
+		fetch('/api/channels', { headers: { Authorization: token } })
+			.then(r => r.json())
+			.then(channels => setChannels((channels as APITextChannel[]).sort((a, b) => a.position - b.position)))
+	}, [mgmt, notificationsChannel, token])
 
 	// checks if currnet user has manager role or @everyone has manager role
 	if (managerRoles.length && !currUserRoles.filter(r => managerRoles.includes(r)).length && !managerRoles.includes(discordSdk.guildId!))
@@ -63,6 +73,7 @@ export function EditProject({ name, managerRoles, tasks, projectId, currUserRole
 						managerUsers: [],
 						memberUsers: [],
 						tasks: tasks,
+						notificationsChannel: selectedChannel,
 						timestamp: Timestamp.now()
 					})
 					setEdited(true)
@@ -80,6 +91,17 @@ export function EditProject({ name, managerRoles, tasks, projectId, currUserRole
 					options={roles.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
 					styles={selectStyles}
 					name="roles"
+					menuPosition="fixed"
+				/>
+				<br />
+				<Select
+					isMulti={false}
+					options={[{ value: null, label: 'None' }, ...channels.map(r => ({ value: r.id, label: '#' + r.name }))]}
+					value={selectedChannel ? channels.filter(r => r.id == selectedChannel).map(r => ({ value: r.id, label: '#' + r.name })) : null}
+					styles={selectStyles}
+					placeholder="Notifications channel"
+					onChange={selected => setSelectedChannel(selected?.value as string)}
+					name="channels"
 					menuPosition="fixed"
 				/>
 				<button type="submit">Submit</button>

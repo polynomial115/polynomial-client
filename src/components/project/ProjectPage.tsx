@@ -106,6 +106,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 										projectId={project.id}
 										currUserRoles={currUserRoles}
 										token={auth.serverToken}
+										notificationsChannel={project.notificationsChannel}
 									/>
 								),
 								background: '#202225',
