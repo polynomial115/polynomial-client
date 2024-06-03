@@ -20,8 +20,6 @@ export function CreateProject({ token }: Props) {
 	const nameInputRef = createRef<HTMLInputElement>()
 	const [created, setCreated] = useState(false)
 
-	// const [users, setUsers] = useState<APIGuildMember[]>([])
-
 	useEffect(() => {
 		fetch('/api/roles', { headers: { Authorization: token } })
 			.then(r => r.json())
@@ -30,8 +28,6 @@ export function CreateProject({ token }: Props) {
 		fetch('/api/channels', { headers: { Authorization: token } })
 			.then(r => r.json())
 			.then(channels => setChannels((channels as APITextChannel[]).sort((a, b) => a.position - b.position)))
-
-		// fetch(`/api/users/${discordSdk.guildId}`).then(u => u.json()).then(setUsers)
 	}, [token])
 
 	if (created) return <div>Project created!</div>
@@ -57,7 +53,6 @@ export function CreateProject({ token }: Props) {
 				}}
 			>
 				Project name: <input type="text" name="name" className="textbox" required ref={nameInputRef} placeholder="Enter Project Name" />
-				{/* {roles.map(r => <div key={r.id}>{r.name}</div>)} */}
 				<Select
 					isMulti
 					options={roles.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
