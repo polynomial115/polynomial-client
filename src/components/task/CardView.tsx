@@ -5,6 +5,10 @@ import { CardColumn } from '../CardColumn.tsx'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '../../services/firebase.ts'
 import '../../styles/CardView.css'
+import { useAuth } from '../../hooks/useAuth.ts'
+import { getAuth } from 'firebase/auth'
+
+const firebaseAuth = getAuth()
 
 interface CardViewProps {
 	project: Project
@@ -17,13 +21,30 @@ export const CardView = ({ project, columns, property }: CardViewProps) => {
 		window.scrollTo(0, 0)
 	}, [])
 
+	const auth = useAuth()
+
 	async function handleDragEnd(event: DragEndEvent) {
 		if (event.over) {
 			const taskId = event.active.id
+			const task = project.tasks.find(task => task.id === taskId)!
 			const newValue = event.over.id
-			await updateDoc(doc(db, 'projects', project.id), {
-				tasks: project.tasks.map(task => (task.id === taskId ? { ...task, [property]: newValue } : task))
-			})
+
+			if (task[property] !== newValue) {
+				await updateDoc(doc(db, 'projects', project.id), {
+					tasks: project.tasks.map(task => (task.id === taskId ? { ...task, [property]: newValue } : task))
+				})
+
+				if (project.notificationsChannel) {
+					await fetch(`/api/projects/${project.id}/tasks/${task.id}/notify`, {
+						method: 'POST',
+						headers: {
+							Authorization: auth.serverToken,
+							'Firebase-Token': await firebaseAuth.currentUser!.getIdToken()
+						},
+						body: JSON.stringify({ oldTask: task })
+					})
+				}
+			}
 		}
 	}
 

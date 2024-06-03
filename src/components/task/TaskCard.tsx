@@ -5,6 +5,7 @@ import { useGuildMembers } from '../../hooks/useGuildMembers.ts'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import TaskDetails from './TaskDetails.tsx'
+import { useAuth } from '../../hooks/useAuth.ts'
 
 const swal = withReactContent(Swal)
 
@@ -16,6 +17,7 @@ interface Props {
 export function TaskCard({ task, project }: Props) {
 	const { attributes, listeners, setNodeRef, transform, isDragging, over } = useDraggable({ id: task.id })
 	const { members, getMember } = useGuildMembers()
+	const auth = useAuth()
 
 	return (
 		<div
@@ -31,7 +33,7 @@ export function TaskCard({ task, project }: Props) {
 			{...attributes}
 			onClick={() =>
 				swal.fire({
-					html: <TaskDetails project={project} task={task} members={members} />,
+					html: <TaskDetails project={project} task={task} members={members} token={auth.serverToken} />,
 					background: '#202225',
 					color: 'white',
 					showConfirmButton: false,

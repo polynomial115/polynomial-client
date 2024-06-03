@@ -14,10 +14,11 @@ interface Props {
 	project: Project
 	task: Task
 	members: APIGuildMember[]
+	token: string
 }
 
 export default function TaskDetails(props: Props) {
-	const { project, task, members } = props
+	const { project, task, members, token } = props
 
 	const getMember = (id: string) => members.find(m => m.user?.id === id)
 
@@ -64,7 +65,7 @@ export default function TaskDetails(props: Props) {
 					onClick={() => {
 						if (task) {
 							swal.fire({
-								html: <EditTask project={project} members={members} currTask={task} />,
+								html: <EditTask project={project} members={members} currTask={task} token={token} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,
