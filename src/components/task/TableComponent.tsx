@@ -131,11 +131,6 @@ export function TableComponent({ project, mini }: Props) {
 				theme="dark"
 				striped
 				customStyles={{
-					table: {
-						style: {
-							// boxShadow: '0px 0px 5px black'
-						}
-					},
 					headRow: {
 						style: {
 							fontSize: '16px',
