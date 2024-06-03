@@ -8,7 +8,6 @@
 .card-column {
 	border-radius: 10px;
 	border-width: 3px;
-	background-color: #1a1a1a;
 	margin: 10px;
 
 	h2 {
@@ -22,6 +21,11 @@
 	border-radius: 10px;
 	background: #121212;
 	position: relative;
+	border: 2px solid transparent;
+
+	&:hover {
+		border-color: #242424;
+	}
 
 	.name {
 		margin: 3px;
@@ -29,6 +33,6 @@
 	}
 
 	.assignees {
-		margin: 12px;
+		margin: 5px;
 	}
 }

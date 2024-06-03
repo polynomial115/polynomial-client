@@ -87,7 +87,7 @@ ul {
 
 .ToolTip {
 	position: absolute;
-	font-size: large;
+	font-size: medium;
 	transition:
 		visibility 0.25s,
 		opacity 0.25s linear;
@@ -102,6 +102,8 @@ ul {
 
 	padding-left: 0.5rem;
 	padding-right: 0.5rem;
+	white-space: nowrap;
+	justify-content: center;
 
 	margin-top: 2px;
 	margin-bottom: 5rem;
@@ -116,11 +118,23 @@ ul {
 	visibility: visible;
 }
 
-.TableDiv {
-	margin-top: 1rem;
-	margin-bottom: 1rem;
-	border: 1px solid black;
-	box-shadow: 10px 5px 5px black;
+.table {
+	border-radius: 5px;
+	margin: auto;
+	/* overflow: visible; */
+	max-width: 1000px;
+	/* box-shadow: 0px 0px 5px black; */
+}
+
+.rdt_Table,
+.rdt_TableHeadRow {
+	border-radius: 5px 5px 0 0;
+	/* box-shadow: 0px 0px 3px black; */
+	/* overflow: visible; */
+}
+
+.rdt_Pagination {
+	border-radius: 0 0 5px 5px;
 }
 
 .top-blur {

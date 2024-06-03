@@ -1,22 +1,27 @@
 body {
 	overflow-x: hidden;
 }
+
 .dashboard-container {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	align-items: flex-start;
 	color: #fff;
 	height: auto;
 	width: auto;
-	margin-right: 64px;
+	flex-wrap: wrap;
 	box-sizing: border-box;
-	background-color: #2e2e2e;
+}
+
+.no-tasks {
+	height: 50vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly;
 }
 
 .pie-chart-container {
 	flex: 1;
-	height: 100%;
 	max-width: 100%;
 	margin-right: 20px;
 	background-color: #3a3a3a;
@@ -54,6 +59,13 @@ body {
 	border-radius: 10px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 	overflow-x: hidden;
+
+	.rdt_TableHeader,
+	.rdt_Table,
+	.rdt_TableHeadRow,
+	.rdt_TableBody > * {
+		background: none;
+	}
 }
 
 .project-title {
@@ -72,19 +84,23 @@ body {
 	.dashboard-container {
 		flex-direction: column;
 	}
+
 	.pie-chart-container {
 		margin: 0;
 		padding: 20px 0 0;
 		width: 100%;
 	}
+
 	.task-list-container {
 		margin: 0;
 		padding: 0;
 		min-width: 100%;
 	}
+
 	.empty-tasks-message {
 		height: 50vh;
 	}
+
 	.doughnut-wrapper {
 		height: 50vh;
 	}

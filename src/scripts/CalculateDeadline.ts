@@ -13,7 +13,7 @@ interface Props {
 	deadlineType: Deadline
 }
 
-const calculateDeadline = ({ deadlineType }: Props): Date | null => {
+const calculateDeadline = ({ deadlineType }: Props): number | null => {
 	if (deadlineType === Deadline.Never) {
 		return null
 	}
@@ -24,9 +24,9 @@ const calculateDeadline = ({ deadlineType }: Props): Date | null => {
 		return null
 	}
 
-	const currentDate = new Date()
-	currentDate.setDate(currentDate.getDate() + days)
-	return currentDate
+	const currentDate = Date.now()
+	const finalDate = currentDate + days * 86400000
+	return finalDate
 }
 
 export default calculateDeadline

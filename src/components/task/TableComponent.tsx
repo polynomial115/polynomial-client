@@ -1,58 +1,57 @@
-import React from 'react'
+import { useEffect } from 'react'
 import DataTable from 'react-data-table-component'
-import { priorities, Project, Task, taskStatuses } from '../../types'
+import { getPriority, getStatus, priorities, Priority, Project, TaskStatus } from '../../types'
 import { DiscordAvatar } from '../User'
 import { useGuildMembers } from '../../hooks/useGuildMembers'
-import { EditTask } from './EditTask'
-import { DeleteTask } from './DeleteTask'
+import TaskDetails from './TaskDetails'
+
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
 const swal = withReactContent(Swal)
 
 interface Props {
-	tasks?: Task[]
-	project?: Project
+	project: Project
+	mini?: boolean
 }
 
 interface TaskRow {
 	id: string
 	name: string
-	status: string
+	status: TaskStatus
 	assignees: string
 	deadline: string
-	priority: string
+	priority: Priority
 }
 
-interface ExpandedComponentProps {
-	data: TaskRow
-}
+export function TableComponent({ project, mini }: Props) {
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [])
 
-export function TableComponent({ tasks, project }: Props) {
 	const { members, getMember } = useGuildMembers()
 
 	// Determine the tasks array based on the input props
-	let taskList = tasks ?? project?.tasks ?? []
+	let taskList = project.tasks
 
-	// Limit the number of tasks to 5
-	if (!project) {
-		taskList = taskList.slice(0, 5)
-	}
+	// Limit the number of tasks to 5 in the mini task list
+	if (mini) taskList = taskList.slice(0, 5)
 
 	// Map tasks to TaskRow format
 	const taskData = taskList.map(task => ({
 		id: task.id,
 		name: task.name,
-		status: taskStatuses[task.status].label,
+		status: task.status,
+		description: task.description,
 		assignees: task.assignees.join(', '),
 		deadline: new Date(task.deadline).toUTCString(),
-		priority: priorities[task.priority].label
-	}))
+		priority: task.priority
+	})) satisfies TaskRow[]
 
 	// Auto-sort by priority if no project is provided
 	if (!project) {
 		taskData.sort((a, b) => {
-			const priorityOrder = priorities.map(p => p.label)
+			const priorityOrder = priorities.map(p => p.value)
 			return priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority)
 		})
 	}
@@ -62,7 +61,10 @@ export function TableComponent({ tasks, project }: Props) {
 		{
 			name: 'Name',
 			selector: (row: TaskRow) => row.name,
-			sortable: true
+			sortable: true,
+			cell: (row: TaskRow) => {
+				return <span style={{ fontWeight: 'bold' }}>{row.name}</span>
+			}
 		},
 		{
 			name: 'Status',
@@ -70,8 +72,8 @@ export function TableComponent({ tasks, project }: Props) {
 			selector: (row: TaskRow) => row.status,
 			sortable: true,
 			cell: (row: TaskRow) => {
-				const statusChoice = taskStatuses.find(s => s.label === row.status)
-				return <span style={{ color: statusChoice ? statusChoice.color : 'default' }}>{row.status}</span>
+				const status = getStatus(row.status)
+				return <span style={{ fontWeight: 'bolder', color: status.color }}>{status.label}</span>
 			}
 		},
 		{
@@ -79,7 +81,7 @@ export function TableComponent({ tasks, project }: Props) {
 			selector: (row: TaskRow) => row.assignees,
 			sortable: false,
 			cell: (row: TaskRow) => (
-				<div style={{ display: 'flex', flexWrap: 'wrap' }}>
+				<div style={{ display: 'flex', flexWrap: 'nowrap' }}>
 					{row.assignees.split(', ').map(id => (
 						<DiscordAvatar size={35} key={id} member={getMember(id)} />
 					))}
@@ -92,8 +94,8 @@ export function TableComponent({ tasks, project }: Props) {
 			selector: (row: TaskRow) => row.priority,
 			sortable: true,
 			cell: (row: TaskRow) => {
-				const priorityChoice = priorities.find(s => s.label === row.priority)
-				return <span style={{ color: priorityChoice ? priorityChoice.color : 'default' }}>{row.priority}</span>
+				const priority = getPriority(row.priority)
+				return <span style={{ fontWeight: 'bolder', color: priority.color }}>{priority.label}</span>
 			}
 		},
 		{
@@ -104,80 +106,63 @@ export function TableComponent({ tasks, project }: Props) {
 		}
 	]
 
-	// Add "Assignees" column if project is provided
-	// // if (project) {
-	// columns.splice(2, 0, {
-	// 	name: 'Assignees',
-	// 	selector: (row: TaskRow) => row.assignees,
-	// 	sortable: true,
-	// 	cell: (row: TaskRow) => (
-	// 		<div>
-	// 			{row.assignees!.split(', ').map(assigneeId => {
-	// 				return <DiscordAvatar key={assigneeId} memberId={assigneeId} />
-	// 			})}
-	// 		</div>
-	// 	)
-	// })
-	// }
-
-	const ExpandedComponent: React.FC<ExpandedComponentProps> = ({ data }) => {
-		const task = taskList.find(task => task.id === data.id)
-
-		return (
-			<div>
-				<button
-					onClick={() => {
-						if (task) {
-							swal.fire({
-								html: <EditTask projectId={project!.id} members={members} currTask={task} allTasks={taskList} />,
-								background: '#202225',
-								color: 'white',
-								showConfirmButton: false,
-								width: '625px'
-							})
-						} else {
-							console.error('Task not found')
-						}
-					}}
-				>
-					Edit Task
-				</button>
-
-				<button
-					onClick={() => {
-						if (task) {
-							swal.fire({
-								html: <DeleteTask projectId={project!.id} tasks={taskList} delTask={task} />,
-								background: '#202225',
-								color: 'white',
-								showConfirmButton: false
-							})
-						} else {
-							console.error('Task not found for deletion')
-						}
-					}}
-				>
-					Delete Task
-				</button>
-			</div>
-		)
-	}
-
 	return (
-		<div className="TableDiv" style={{ maxWidth: '1000px', margin: 'auto' }}>
+		<div className="table">
 			<DataTable
-				title="Tasks Overview"
-				className="ActualTable"
 				columns={columns}
 				data={taskData}
 				highlightOnHover
 				pointerOnHover
-				pagination={!!project}
-				selectableRows={!!project}
-				expandableRows={!!project}
+				onRowClicked={(row: TaskRow) => {
+					const task = project?.tasks.find(task => task.id === row.id)
+					if (task) {
+						swal.fire({
+							html: <TaskDetails project={project} task={task} members={members} />,
+							background: '#202225',
+							color: 'white',
+							showConfirmButton: false,
+							width: '800px'
+						})
+					} else {
+						console.error('Task not found')
+					}
+				}}
 				persistTableHead
-				expandableRowsComponent={project ? ExpandedComponent : undefined}
 				theme="dark"
+				striped
+				customStyles={{
+					table: {
+						style: {
+							// boxShadow: '0px 0px 5px black'
+						}
+					},
+					headRow: {
+						style: {
+							fontSize: '16px',
+							backgroundColor: '#191919'
+						}
+					},
+					rows: {
+						style: {
+							color: 'white',
+							backgroundColor: '#303030',
+							border: '0px solid',
+							fontSize: '15px',
+							borderCollapse: 'collapse'
+						},
+						stripedStyle: {
+							color: 'white',
+							backgroundColor: '#282828',
+							fontSize: '15px',
+							borderCollapse: 'collapse'
+						}
+					},
+					pagination: {
+						style: {
+							backgroundColor: '#191919'
+						}
+					}
+				}}
 			/>
 		</div>
 	)
