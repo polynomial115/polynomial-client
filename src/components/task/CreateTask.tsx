@@ -48,12 +48,13 @@ export function CreateTask({ project, members, token }: Props) {
 			})
 
 			if (project.notificationsChannel) {
-				await fetch(`/api/projects/${project.id}/tasks/${taskData.id}/notify/create`, {
+				await fetch(`/api/projects/${project.id}/tasks/${taskData.id}/notify`, {
 					method: 'POST',
 					headers: {
 						Authorization: token,
 						'Firebase-Token': await firebaseAuth.currentUser!.getIdToken()
-					}
+					},
+					body: JSON.stringify({ oldTask: null })
 				})
 			}
 
