@@ -6,7 +6,7 @@
 	width: 100%;
 }
 
-.RootProject {
+.root-project {
 	max-width: 1280px;
 	margin: 0 auto;
 	padding: 2rem;
@@ -34,7 +34,7 @@
 	margin: 10px;
 }
 
-.projectCard {
+.project-card {
 	transition: ease-in-out 300ms;
 	background-color: #181818;
 }
@@ -67,21 +67,21 @@
 	color: #888;
 }
 
-.BackgroundColour {
+.background-color {
 	background-color: rgb(255, 255, 255);
 }
 
 @media (prefers-color-scheme: dark) {
-	.BackgroundColour {
+	.background-color {
 		background-color: rgb(32, 64, 37);
 	}
 }
 
-.ProjectCardContainer {
+.project-card-container {
 	overflow-x: auto;
 }
 
-.EditProjectButton {
+.edit-project-button {
 	background-color: #202225;
 }
 

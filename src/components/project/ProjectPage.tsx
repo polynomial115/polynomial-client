@@ -77,7 +77,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 				]}
 			/>
 			<button
-				className="projectBackButton"
+				className="project-back-button"
 				style={{
 					position: 'fixed',
 					top: '4vh',

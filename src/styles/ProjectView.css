@@ -44,7 +44,7 @@ ul {
 	cursor: pointer;
 }
 
-.TaskContainer {
+.task-container {
 	padding: 1rem;
 	margin-top: 1rem;
 	margin-bottom: 1rem;
@@ -56,7 +56,7 @@ ul {
 	text-align: center;
 }
 
-.Avatar {
+.avatar {
 	border-radius: 5rem;
 	transition: 0.2s;
 	margin-left: 0.1rem;
@@ -67,7 +67,7 @@ ul {
 	}
 }
 
-.AvatarsView {
+.avatars-view {
 	display: grid;
 	justify-content: center;
 	align-items: center;
@@ -76,16 +76,16 @@ ul {
 	z-index: 1;
 }
 
-.AvatarsView:hover:before {
+.avatars-view:hover:before {
 	display: block;
 }
 
-.AvatarContainer {
+.avatar-container {
 	display: inline-block;
 	position: relative;
 }
 
-.ToolTip {
+.tooltip {
 	position: absolute;
 	font-size: medium;
 	transition:
@@ -110,7 +110,7 @@ ul {
 	z-index: 1000;
 }
 
-.Avatar:hover + .ToolTip {
+.avatar:hover + .tooltip {
 	transition:
 		visibility 0.25s,
 		opacity 0.25s linear;

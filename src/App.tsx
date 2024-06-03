@@ -70,7 +70,7 @@ function App() {
 		)
 
 	return (
-		<div className="RootProject">
+		<div className="root-project">
 			<h3>Participants: </h3>
 			{participants.map(p => {
 				return <DiscordAvatar size={50} key={p.id} member={getMember(p.id)} />
