@@ -37,7 +37,6 @@ export function EditProject({ name, managerRoles, tasks, projectId, currUserRole
 		if (notificationsChannel != null) {
 			setSelectedChannel(notificationsChannel)
 		}
-		console.log(notificationsChannel, 40)
 		fetch('/api/roles', { headers: { Authorization: token } })
 			.then(r => r.json())
 			.then(roles => {
