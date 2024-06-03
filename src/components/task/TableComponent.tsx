@@ -1,9 +1,10 @@
 import { useEffect } from 'react'
 import DataTable from 'react-data-table-component'
-import { getPriority, getStatus, priorities, Priority, Project, TaskStatus } from '../../types'
+import { getPriority, getStatus, priorities, Priority, Project, TaskStatus, Deadline } from '../../types'
 import { DiscordAvatar } from '../User'
 import { useGuildMembers } from '../../hooks/useGuildMembers'
 import TaskDetails from './TaskDetails'
+import '../../styles/TableStyles.css'
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -20,7 +21,7 @@ interface TaskRow {
 	name: string
 	status: TaskStatus
 	assignees: string
-	deadline: string
+	deadline: Deadline
 	priority: Priority
 }
 
@@ -34,8 +35,23 @@ export function TableComponent({ project, mini }: Props) {
 	// Determine the tasks array based on the input props
 	let taskList = project.tasks
 
-	// Limit the number of tasks to 5 in the mini task list
-	if (mini) taskList = taskList.slice(0, 5)
+	// If mini, remove completed tasks, then sort by priority & deadline. Show 5 top tasks
+	if (mini) {
+		taskList = taskList.filter(task => {
+			return task.status != TaskStatus.Completed
+		})
+	}
+	let timedTasks = taskList.filter(task => {
+		return task.deadline != null
+	})
+	const unlimitedTasks = taskList.filter(task => {
+		return task.deadline == null
+	})
+	timedTasks = timedTasks.sort((t1, t2) => t1.deadline - t2.deadline)
+	taskList = [...timedTasks, ...unlimitedTasks]
+	if (mini) {
+		taskList = taskList.slice(0, 5)
+	}
 
 	// Map tasks to TaskRow format
 	const taskData = taskList.map(task => ({
@@ -44,7 +60,7 @@ export function TableComponent({ project, mini }: Props) {
 		status: task.status,
 		description: task.description,
 		assignees: task.assignees.join(', '),
-		deadline: new Date(task.deadline).toUTCString(),
+		deadline: task.deadline,
 		priority: task.priority
 	})) satisfies TaskRow[]
 
@@ -63,7 +79,7 @@ export function TableComponent({ project, mini }: Props) {
 			selector: (row: TaskRow) => row.name,
 			sortable: true,
 			cell: (row: TaskRow) => {
-				return <span style={{ fontWeight: 'bold' }}>{row.name}</span>
+				return <span className="row-name">{row.name}</span>
 			}
 		},
 		{
@@ -73,20 +89,38 @@ export function TableComponent({ project, mini }: Props) {
 			sortable: true,
 			cell: (row: TaskRow) => {
 				const status = getStatus(row.status)
-				return <span style={{ fontWeight: 'bolder', color: status.color }}>{status.label}</span>
+				return (
+					<span className="row-status" style={{ color: status.color }}>
+						{status.label}
+					</span>
+				)
 			}
 		},
 		{
 			name: 'Assignees',
 			selector: (row: TaskRow) => row.assignees,
 			sortable: false,
-			cell: (row: TaskRow) => (
-				<div style={{ display: 'flex', flexWrap: 'nowrap' }}>
-					{row.assignees.split(', ').map(id => (
-						<DiscordAvatar size={35} key={id} member={getMember(id)} />
-					))}
-				</div>
-			)
+			cell: (row: TaskRow) => {
+				const assignees = row.assignees.split(', ')
+				const shown = mini ? 1 : 3
+				const shownAssignees = assignees.slice(0, shown)
+				const remainingAssignees = assignees.length - shown
+
+				return (
+					<div className="assignees-container">
+						<div>
+							{shownAssignees.map(id => (
+								<DiscordAvatar size={28} key={id} member={getMember(id)} />
+							))}
+						</div>
+						{remainingAssignees > 0 && (
+							<span className="remaining-text">
+								+ {remainingAssignees} {mini ? '' : 'more'}
+							</span>
+						)}
+					</div>
+				)
+			}
 		},
 		{
 			name: 'Priority',
@@ -100,7 +134,8 @@ export function TableComponent({ project, mini }: Props) {
 		},
 		{
 			name: 'Deadline',
-			selector: (row: TaskRow) => row.deadline,
+			selector: (row: TaskRow) =>
+				row.deadline != null ? new Date(row.deadline).toLocaleDateString('en', { month: 'short', day: 'numeric' }) : 'None',
 			sortable: true,
 			right: true
 		}
