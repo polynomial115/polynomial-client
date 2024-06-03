@@ -30,7 +30,6 @@ export const ChoiceButtons = ({ choices, defaultValue, style, className, setValu
 						setWhichButtonClicked(p.value)
 					}}
 					style={{
-						display: 'inline-block',
 						color: p.value === whichButtonClicked ? 'black' : p.color,
 						backgroundColor: p.value === whichButtonClicked ? p.color : ''
 					}}

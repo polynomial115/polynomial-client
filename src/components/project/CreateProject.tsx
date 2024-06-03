@@ -27,7 +27,7 @@ export function CreateProject({ token }: Props) {
 	if (created) return <div>Project created!</div>
 
 	return (
-		<div style={{ height: '400px' }}>
+		<div className="project-modal">
 			<h2>Creating new project</h2>
 			<form
 				onSubmit={async (e: { preventDefault: () => void }) => {

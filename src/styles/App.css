@@ -85,6 +85,10 @@
 	background-color: #202225;
 }
 
+.task-button-row {
+	margin: 15px;
+}
+
 .textbox {
 	box-sizing: border-box;
 	border: 1px;
@@ -100,7 +104,27 @@
 	color: rgb(149, 149, 149);
 }
 
+.project-modal {
+	height: 400px;
+}
+
+.project-back-button {
+	position: fixed;
+	top: 4vh;
+	left: 3.5vw;
+	color: white;
+	background-color: crimson;
+	border-radius: 50px;
+	align-self: end;
+	z-index: 2;
+}
+
+.project-top {
+	margin-top: 100px;
+}
+
 .choice-buttons {
+	display: 'inline-block';
 	font-weight: bolder;
 	margin: 5px 0px;
 	padding: 12px 24px;

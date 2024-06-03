@@ -81,7 +81,7 @@ export function TableComponent({ project, mini }: Props) {
 			selector: (row: TaskRow) => row.assignees,
 			sortable: false,
 			cell: (row: TaskRow) => (
-				<div style={{ display: 'flex', flexWrap: 'nowrap' }}>
+				<div className="table-cell">
 					{row.assignees.split(', ').map(id => (
 						<DiscordAvatar size={35} key={id} member={getMember(id)} />
 					))}

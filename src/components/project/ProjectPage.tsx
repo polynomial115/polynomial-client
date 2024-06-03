@@ -76,25 +76,12 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 					}
 				]}
 			/>
-			<button
-				className="project-back-button"
-				style={{
-					position: 'fixed',
-					top: '4vh',
-					left: '3.5vw',
-					color: 'white',
-					backgroundColor: 'crimson',
-					borderRadius: 50,
-					alignSelf: 'end',
-					zIndex: 2
-				}}
-				onClick={close}
-			>
+			<button className="project-back-button" onClick={close}>
 				<FontAwesomeIcon icon={faAngleLeft} /> Projects
 			</button>
-			<div style={{ marginTop: 100 }}>
+			<div className="project-top">
 				<p className="project-title">{project.name}</p>
-				<div style={{ margin: 15 }}>
+				<div className="task-button-row">
 					<button
 						onClick={() =>
 							swal.fire({

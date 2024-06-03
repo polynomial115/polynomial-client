@@ -49,7 +49,7 @@ export function EditProject({ name, managerRoles, tasks, projectId, currUserRole
 	if (edited) return <div>Project edited!</div>
 	const projectDoc = doc(db, 'projects', projectId)
 	return (
-		<div style={{ height: '400px' }}>
+		<div className="project-modal">
 			<h2>Editing Project {name}</h2>
 			<form
 				onSubmit={async (e: { preventDefault: () => void }) => {

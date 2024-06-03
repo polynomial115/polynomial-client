@@ -17,7 +17,7 @@ export function DiscordAvatar({ member, size }: DiscordAvatarProps) {
 			<img
 				className="avatar"
 				src={getAvatar(member, 128, animate)}
-				style={{ margin: 3.5, width: size, height: size }}
+				style={{ width: size, height: size }}
 				alt={name}
 				onMouseEnter={() => setAnimate(true)}
 				onMouseLeave={() => setAnimate(false)}

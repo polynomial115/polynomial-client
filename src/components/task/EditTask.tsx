@@ -66,31 +66,29 @@ export function EditTask({ project, members, currTask }: EditTaskProps) {
 	}
 
 	return (
-		<div style={{ padding: '20px' }}>
+		<div className="task-modal">
 			<h2>Edit Task: {currTask.name}</h2>
-			{error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+			{error && <div className="error">{error}</div>}
 			<form onSubmit={handleSubmit}>
 				<input
 					id="task-name"
-					className="textbox"
+					className="textbox name-textbox"
 					type="text"
 					value={formData.name}
 					onChange={e => handleInputChange('name', e.target.value)}
 					placeholder="Enter task name..."
 					required
-					style={{ marginBottom: 2.5 }}
 				/>
 				<textarea
 					id="task-description"
-					className="textbox"
+					className="textbox description-textbox"
 					value={formData.description}
 					onChange={e => handleInputChange('description', e.target.value)}
 					placeholder="Enter task description..."
 					maxLength={1000}
-					style={{ marginBottom: 2.5, height: 125 }}
 				/>
 				<br />
-				<h3 style={{ marginBottom: 5 }}>Add Assignees</h3>
+				<h3 className="label">Add Assignees</h3>
 				<Select
 					isMulti={true}
 					name="assignees"
@@ -111,17 +109,17 @@ export function EditTask({ project, members, currTask }: EditTaskProps) {
 					styles={selectStyles}
 					menuPosition="fixed"
 				/>
-				<h3 style={{ marginBottom: 5 }}>Set Priority</h3>
+				<h3 className="label">Set Priority</h3>
 				<ChoiceButtons
 					choices={priorities}
 					setValueCallback={value => handleInputChange('priority', value)}
 					defaultValue={currTask.priority}
 				/>
 
-				<h3 style={{ marginBottom: 5 }}>Set Status</h3>
+				<h3 className="label">Set Status</h3>
 				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} defaultValue={currTask.status} />
 				<br />
-				<h3 style={{ margin: '7.5px' }}>When will this task be due?</h3>
+				<h3 className="label">When will this task be due?</h3>
 
 				<Select
 					isMulti={false}
