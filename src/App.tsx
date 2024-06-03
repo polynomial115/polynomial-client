@@ -80,7 +80,7 @@ function App() {
 			<button
 				onClick={() =>
 					swal.fire({
-						html: <CreateProject token={auth.serverToken} />,
+						html: <CreateProject token={auth.serverToken} updateProject={updateProject} />,
 						background: '#202225',
 						color: 'white',
 						showConfirmButton: false
