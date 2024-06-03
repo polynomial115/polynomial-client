@@ -31,7 +31,7 @@ export function EditProject({ name, managerRoles, tasks, projectId, currUserRole
 	const [mgmt, setMgmt] = useState<string[]>(managerRoles)
 
 	useEffect(() => {
-		fetch(`/api/roles/${discordSdk.guildId}`, { headers: { Authorization: token } })
+		fetch('/api/roles', { headers: { Authorization: token } })
 			.then(r => r.json())
 			.then(roles => {
 				setRoles((roles as APIRole[]).sort((a, b) => b.position - a.position))

@@ -23,11 +23,11 @@ export function CreateProject({ token }: Props) {
 	// const [users, setUsers] = useState<APIGuildMember[]>([])
 
 	useEffect(() => {
-		fetch(`/api/roles/${discordSdk.guildId}`, { headers: { Authorization: token } })
+		fetch('/api/roles', { headers: { Authorization: token } })
 			.then(r => r.json())
 			.then(roles => setRoles((roles as APIRole[]).sort((a, b) => b.position - a.position)))
 
-		fetch(`/api/channels/${discordSdk.guildId}`, { headers: { Authorization: token } })
+		fetch('/api/channels', { headers: { Authorization: token } })
 			.then(r => r.json())
 			.then(channels => setChannels((channels as APITextChannel[]).sort((a, b) => a.position - b.position)))
 
