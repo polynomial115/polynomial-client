@@ -123,7 +123,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,
-								width: '625px'
+								width: '50vw'
 							})
 						}
 					>
