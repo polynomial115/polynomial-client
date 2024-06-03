@@ -8,6 +8,7 @@ import '../../styles/TableStyles.css'
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { Primitive } from 'react-data-table-component/dist/DataTable/types'
 
 const swal = withReactContent(Swal)
 
@@ -135,11 +136,32 @@ export function TableComponent({ project, mini }: Props) {
 		{
 			name: 'Deadline',
 			selector: (row: TaskRow) =>
-				row.deadline != null ? new Date(row.deadline).toLocaleDateString('en', { month: 'short', day: 'numeric' }) : 'None',
+				// we use invisible character here to differentiate a task named "None" and the special nullable field
+				row.deadline != null ? new Date(row.deadline).toLocaleDateString('en', { month: 'short', day: 'numeric' }) : 'None‎',
 			sortable: true,
 			right: true
 		}
 	]
+	const customSort = (rows: TaskRow[], selector: (_: TaskRow) => Primitive, direction: string) => {
+		return rows.sort((a, b) => {
+			// use the selector to resolve your field names by passing the sort comparators
+			const aField = selector(a)
+			const bField = selector(b)
+
+			let comparison = 0
+
+			// this forces None to always be at the bottom of sorting
+			if (aField === 'None‎') {
+				comparison = bField === 'None‎' ? 0 : 1
+			} else if (bField === 'None‎') {
+				comparison = -1
+			} else {
+				comparison = (aField < bField ? -1 : 1) * (direction === 'desc' ? -1 : 1)
+			}
+
+			return comparison
+		})
+	}
 
 	return (
 		<div className="table">
@@ -165,6 +187,7 @@ export function TableComponent({ project, mini }: Props) {
 				persistTableHead
 				theme="dark"
 				striped
+				sortFunction={customSort}
 				customStyles={{
 					table: {
 						style: {
