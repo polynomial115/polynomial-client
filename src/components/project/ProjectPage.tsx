@@ -12,8 +12,9 @@ import { CardView } from '../task/CardView.tsx'
 import '../../styles/ProjectView.css'
 import { TableComponent } from '../task/TableComponent.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { ProjectView } from '../../party.ts'
+import DeleteProject from './DeleteProject.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -27,6 +28,11 @@ interface ProjectProps {
 export function ProjectPage({ project, close, activeView, setActiveView }: ProjectProps) {
 	const { members } = useGuildMembers() // can't access context inside modal so getting here
 	const auth = useAuth()
+
+	if (!project) {
+		// crash message in case no project load
+		return <div>No project loaded, relaunch Polynomial</div>
+	}
 
 	const ActiveView = () => {
 		switch (activeView) {
@@ -116,6 +122,20 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 						}
 					>
 						<FontAwesomeIcon icon={faPlus} /> Create Task
+					</button>
+					<button
+						onClick={() =>
+							swal.fire({
+								html: <DeleteProject project={project} closeProject={close} />,
+								background: '#202225',
+								icon: 'warning',
+								color: 'white',
+								showConfirmButton: false,
+								width: '800px'
+							})
+						}
+					>
+						<FontAwesomeIcon icon={faTrash} /> Delete Project
 					</button>
 				</div>
 				{ActiveView()}
