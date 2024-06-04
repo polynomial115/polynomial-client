@@ -1,4 +1,4 @@
-import type { Project } from '../../types.ts'
+import { Project, TaskStatus } from '../../types.ts'
 import '../../styles/ProjectView.css'
 
 interface Props {
@@ -16,8 +16,20 @@ export function ProjectList({ projects, setActiveProject }: Props) {
 		<div className="grid-container">
 			{projects.map(p => (
 				<button key={p.id} className="grid-item" onClick={() => handleCardClick(p.id)} aria-label={`Edit project ${p.name}`}>
-					<p className="id">ID: {p.id}</p>
-					<p>Name: {p.name}</p>
+					<p className="grid-item-title">
+						<b>{p.name}</b>
+					</p>
+					<p>
+						<span
+							className="task-count"
+							style={{
+								color: p.tasks.filter(task => task.status !== TaskStatus.Completed).length ? 'white' : 'lime'
+							}}
+						>
+							{p.tasks.filter(task => task.status !== TaskStatus.Completed).length}
+						</span>{' '}
+						active tasks
+					</p>
 				</button>
 			))}
 		</div>
