@@ -13,16 +13,16 @@ export function DiscordAvatar({ member, size }: DiscordAvatarProps) {
 	if (!size) size = 35 // Default avatar size
 	const name = getDisplayName(member)
 	return (
-		<div className="AvatarContainer">
+		<div className="avatar-container">
 			<img
-				className="Avatar"
+				className="avatar"
 				src={getAvatar(member, 128, animate)}
-				style={{ margin: 3.5, width: size, height: size }}
+				style={{ width: size, height: size }}
 				alt={name}
 				onMouseEnter={() => setAnimate(true)}
 				onMouseLeave={() => setAnimate(false)}
 			/>
-			<div className="ToolTip">{name}</div>
+			<div className="tooltip">{name}</div>
 		</div>
 	)
 }

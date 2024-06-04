@@ -4,6 +4,7 @@ import { getPriority, getStatus, priorities, Priority, Project, TaskStatus, Dead
 import { DiscordAvatar } from '../User'
 import { useGuildMembers } from '../../hooks/useGuildMembers'
 import TaskDetails from './TaskDetails'
+import { useAuth } from '../../hooks/useAuth'
 import '../../styles/TableStyles.css'
 
 import Swal from 'sweetalert2'
@@ -32,6 +33,7 @@ export function TableComponent({ project, mini }: Props) {
 	}, [])
 
 	const { members, getMember } = useGuildMembers()
+	const auth = useAuth()
 
 	// Determine the tasks array based on the input props
 	let taskList = project.tasks
@@ -101,27 +103,13 @@ export function TableComponent({ project, mini }: Props) {
 			name: 'Assignees',
 			selector: (row: TaskRow) => row.assignees,
 			sortable: false,
-			cell: (row: TaskRow) => {
-				const assignees = row.assignees.split(', ')
-				const shown = mini ? 1 : 3
-				const shownAssignees = assignees.slice(0, shown)
-				const remainingAssignees = assignees.length - shown
-
-				return (
-					<div className="assignees-container">
-						<div>
-							{shownAssignees.map(id => (
-								<DiscordAvatar size={28} key={id} member={getMember(id)} />
-							))}
-						</div>
-						{remainingAssignees > 0 && (
-							<span className="remaining-text">
-								+ {remainingAssignees} {mini ? '' : 'more'}
-							</span>
-						)}
-					</div>
-				)
-			}
+			cell: (row: TaskRow) => (
+				<div className="table-cell">
+					{row.assignees.split(', ').map(id => (
+						<DiscordAvatar size={35} key={id} member={getMember(id)} />
+					))}
+				</div>
+			)
 		},
 		{
 			name: 'Priority',
@@ -174,7 +162,7 @@ export function TableComponent({ project, mini }: Props) {
 					const task = project?.tasks.find(task => task.id === row.id)
 					if (task) {
 						swal.fire({
-							html: <TaskDetails project={project} task={task} members={members} />,
+							html: <TaskDetails project={project} task={task} members={members} token={auth.serverToken} />,
 							background: '#202225',
 							color: 'white',
 							showConfirmButton: false,
@@ -189,11 +177,6 @@ export function TableComponent({ project, mini }: Props) {
 				striped
 				sortFunction={customSort}
 				customStyles={{
-					table: {
-						style: {
-							// boxShadow: '0px 0px 5px black'
-						}
-					},
 					headRow: {
 						style: {
 							fontSize: '16px',

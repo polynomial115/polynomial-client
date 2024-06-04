@@ -44,7 +44,7 @@ ul {
 	cursor: pointer;
 }
 
-.TaskContainer {
+.task-container {
 	padding: 1rem;
 	margin-top: 1rem;
 	margin-bottom: 1rem;
@@ -56,18 +56,17 @@ ul {
 	text-align: center;
 }
 
-.Avatar {
+.avatar {
 	border-radius: 5rem;
+	margin: 7px 0.2rem;
 	transition: 0.2s;
-	margin-left: 0.1rem;
-	margin-right: 0.1rem;
 
 	&:hover {
 		transform: scale(1.15);
 	}
 }
 
-.AvatarsView {
+.avatars-view {
 	display: grid;
 	justify-content: center;
 	align-items: center;
@@ -76,16 +75,16 @@ ul {
 	z-index: 1;
 }
 
-.AvatarsView:hover:before {
+.avatars-view:hover:before {
 	display: block;
 }
 
-.AvatarContainer {
+.avatar-container {
 	display: inline-block;
 	position: relative;
 }
 
-.ToolTip {
+.tooltip {
 	position: absolute;
 	font-size: medium;
 	transition:
@@ -110,7 +109,7 @@ ul {
 	z-index: 1000;
 }
 
-.Avatar:hover + .ToolTip {
+.avatar:hover + .tooltip {
 	transition:
 		visibility 0.25s,
 		opacity 0.25s linear;
@@ -121,9 +120,16 @@ ul {
 .table {
 	border-radius: 5px;
 	margin: auto;
-	/* overflow: visible; */
 	max-width: 1000px;
-	/* box-shadow: 0px 0px 5px black; */
+}
+
+.table-cell {
+	display: flex;
+	flex-wrap: nowrap;
+}
+
+.rdt_TableRow {
+	padding: 5px;
 }
 
 .rdt_Table,

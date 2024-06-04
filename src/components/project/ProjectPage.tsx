@@ -38,7 +38,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 				return <TableComponent project={project} />
 		}
 	}
-	const currUserRoles = useAuth().claims.roles as string[]
+	const currUserRoles = auth.claims.roles as string[]
 	return (
 		<div>
 			<div className="top-blur" />
@@ -76,25 +76,12 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 					}
 				]}
 			/>
-			<button
-				className="projectBackButton"
-				style={{
-					position: 'fixed',
-					top: '4vh',
-					left: '3.5vw',
-					color: 'white',
-					backgroundColor: 'crimson',
-					borderRadius: 50,
-					alignSelf: 'end',
-					zIndex: 2
-				}}
-				onClick={close}
-			>
+			<button className="project-back-button" onClick={close}>
 				<FontAwesomeIcon icon={faAngleLeft} /> Projects
 			</button>
-			<div style={{ marginTop: 100 }}>
+			<div className="project-top">
 				<p className="project-title">{project.name}</p>
-				<div style={{ margin: 15 }}>
+				<div className="task-button-row">
 					<button
 						onClick={() =>
 							swal.fire({
@@ -106,6 +93,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 										projectId={project.id}
 										currUserRoles={currUserRoles}
 										token={auth.serverToken}
+										notificationsChannel={project.notificationsChannel}
 									/>
 								),
 								background: '#202225',
@@ -119,11 +107,11 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 					<button
 						onClick={() =>
 							swal.fire({
-								html: <CreateTask projectId={project.id} members={members} />,
+								html: <CreateTask project={project} members={members} token={auth.serverToken} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,
-								width: '625px'
+								width: '800px'
 							})
 						}
 					>

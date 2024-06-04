@@ -70,7 +70,7 @@ function App() {
 		)
 
 	return (
-		<div className="RootProject">
+		<div className="root-project">
 			<h3>Participants: </h3>
 			{participants.map(p => {
 				return <DiscordAvatar size={50} key={p.id} member={getMember(p.id)} />
@@ -80,7 +80,7 @@ function App() {
 			<button
 				onClick={() =>
 					swal.fire({
-						html: <CreateProject token={auth.serverToken} />,
+						html: <CreateProject token={auth.serverToken} updateProject={updateProject} />,
 						background: '#202225',
 						color: 'white',
 						showConfirmButton: false

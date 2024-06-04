@@ -5,6 +5,19 @@
 	font-size: 15px;
 }
 
+.task-modal {
+	padding: 20px;
+}
+
+.label {
+	margin-bottom: 7.5px;
+}
+
+.error {
+	color: red;
+	margin-bottom: 10px;
+}
+
 .container {
 	display: flex;
 	flex-direction: row;
@@ -34,6 +47,15 @@
 
 .modal {
 	padding: 20px;
+}
+
+.name-textbox {
+	margin-bottom: 2.5px;
+}
+
+.description-textbox {
+	margin-bottom: 2.5px;
+	height: 125px;
 }
 
 .task-name {

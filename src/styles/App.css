@@ -6,7 +6,7 @@
 	width: 100%;
 }
 
-.RootProject {
+.root-project {
 	max-width: 1280px;
 	margin: 0 auto;
 	padding: 2rem;
@@ -34,7 +34,7 @@
 	margin: 10px;
 }
 
-.projectCard {
+.project-card {
 	transition: ease-in-out 300ms;
 	background-color: #181818;
 }
@@ -67,22 +67,26 @@
 	color: #888;
 }
 
-.BackgroundColour {
+.background-color {
 	background-color: rgb(255, 255, 255);
 }
 
 @media (prefers-color-scheme: dark) {
-	.BackgroundColour {
+	.background-color {
 		background-color: rgb(32, 64, 37);
 	}
 }
 
-.ProjectCardContainer {
+.project-card-container {
 	overflow-x: auto;
 }
 
-.EditProjectButton {
+.edit-project-button {
 	background-color: #202225;
+}
+
+.task-button-row {
+	margin: 15px;
 }
 
 .textbox {
@@ -100,7 +104,27 @@
 	color: rgb(149, 149, 149);
 }
 
+.project-modal {
+	height: 400px;
+}
+
+.project-back-button {
+	position: fixed;
+	top: 4vh;
+	left: 3.5vw;
+	color: white;
+	background-color: crimson;
+	border-radius: 50px;
+	align-self: end;
+	z-index: 2;
+}
+
+.project-top {
+	margin-top: 100px;
+}
+
 .choice-buttons {
+	display: 'inline-block';
 	font-weight: bolder;
 	margin: 5px 0px;
 	padding: 12px 24px;
