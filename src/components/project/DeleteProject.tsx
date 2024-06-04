@@ -45,7 +45,7 @@ function DeleteProject({ project, close, closeModal }: Props) {
 
 	return (
 		<div>
-			<p>Are you sure you want to delete the project "{project.name}"? This action cannot be undone.</p>
+			<p>Are you sure you want to delete the project {project.name}? This action cannot be undone.</p>
 			<button className="delete-project-button" onClick={handleDelete} disabled={isDeleting}>
 				Delete Project
 			</button>

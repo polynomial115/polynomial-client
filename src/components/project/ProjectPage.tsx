@@ -14,11 +14,7 @@ import { TableComponent } from '../task/TableComponent.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { ProjectView } from '../../party.ts'
-import { DeleteTask } from '../task/DeleteTask.tsx'
 import DeleteProject from './DeleteProject.tsx'
-import { useState } from 'react'
-import { sendPayload } from '../../party'
-import { PayloadType } from '../../party'
 
 const swal = withReactContent(Swal)
 
@@ -36,15 +32,6 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 	if (!project) {
 		// crash message in case no project load
 		return <div>No project loaded, relaunch Polynomial</div>
-	}
-
-	const [activeProject, setActiveProject] = useState('')
-	const [activeProjectView, setActiveProjectView] = useState(ProjectView.Overview)
-
-	function updateProject({ project, projectView }: { project?: string; projectView?: ProjectView }) {
-		if (project !== undefined) setActiveProject(project)
-		if (projectView !== undefined) setActiveProjectView(projectView)
-		sendPayload(PayloadType.PageUpdate, { project: project ?? activeProject, projectView: projectView ?? activeProjectView })
 	}
 
 	const ActiveView = () => {
