@@ -4,7 +4,7 @@ import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { CreateTask } from '../task/CreateTask.tsx'
 import { useGuildMembers } from '../../hooks/useGuildMembers.ts'
-import { EditProject } from './EditProject.tsx'
+import { ProjectModal } from './InitProject.tsx'
 import { useAuth } from '../../hooks/useAuth.ts'
 import { ChoiceButtons } from '../ChoiceButtons.tsx'
 import { Dashboard } from '../Dashboard.tsx'
@@ -22,9 +22,10 @@ interface ProjectProps {
 	close: () => void
 	activeView: ProjectView
 	setActiveView: (view: ProjectView) => void
+	updateProject: ({ project, projectView }: { project?: string; projectView?: ProjectView }) => void
 }
 
-export function ProjectPage({ project, close, activeView, setActiveView }: ProjectProps) {
+export function ProjectPage({ project, close, activeView, setActiveView, updateProject }: ProjectProps) {
 	const { members } = useGuildMembers() // can't access context inside modal so getting here
 	const auth = useAuth()
 
@@ -86,7 +87,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 						onClick={() =>
 							swal.fire({
 								html: (
-									<EditProject
+									<ProjectModal
 										name={project.name}
 										managerRoles={project.managerRoles}
 										tasks={project.tasks}
@@ -94,6 +95,8 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 										currUserRoles={currUserRoles}
 										token={auth.serverToken}
 										notificationsChannel={project.notificationsChannel}
+										create={false}
+										updateProject={updateProject}
 									/>
 								),
 								background: '#202225',
