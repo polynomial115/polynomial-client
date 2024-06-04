@@ -109,7 +109,7 @@ export function TableComponent({ project, mini }: Props) {
 	]
 
 	return (
-		<div className="table">
+		<div className={`table ${mini ? 'mini-table' : 'full-table'}`}>
 			<DataTable
 				columns={columns}
 				data={taskData}

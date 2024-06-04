@@ -34,15 +34,8 @@ export function ProjectModal({ create, name, managerRoles, tasks, projectId, tok
 	const [mgmt, setMgmt] = useState<string[]>(managerRoles)
 	const [selectedChannel, setSelectedChannel] = useState<string | null>(null)
 	const [channels, setChannels] = useState<APITextChannel[]>([])
-	const [header, setHeader] = useState<string>()
-
+	const header = create ? 'Creating new project' : `Editing Project ${name}`
 	useEffect(() => {
-		if (create) {
-			setHeader('Creating new project')
-		} else {
-			setHeader(`Editing Project ${name}`)
-		}
-
 		if (notificationsChannel != null) {
 			setSelectedChannel(notificationsChannel)
 		}

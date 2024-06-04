@@ -16,12 +16,12 @@ import { type Project } from './types.ts'
 import { DiscordAvatar } from './components/User.tsx'
 import { useEvent } from './hooks/useEvent.ts'
 import { useGuildMembers } from './hooks/useGuildMembers.ts'
+import icon from './assets/icon.png'
 import { ProjectModal } from './components/project/InitProject.tsx'
 
 const swal = withReactContent(Swal)
 
 function App() {
-	const [channel, setChannel] = useState('')
 	const [projects, setProjects] = useState<Project[]>([])
 	const [activeProject, setActiveProject] = useState('')
 	const [activeProjectView, setActiveProjectView] = useState(ProjectView.Overview)
@@ -29,8 +29,6 @@ function App() {
 	const { getMember } = useGuildMembers()
 
 	useEffect(() => {
-		discordSdk.commands.getChannel({ channel_id: discordSdk.channelId! }).then(channel => setChannel(channel.name!))
-
 		const projectsQuery = query(collection(db, 'projects'), where('guildId', '==', discordSdk.guildId))
 		const unsubscribe = onSnapshot(
 			projectsQuery,
@@ -72,37 +70,39 @@ function App() {
 
 	return (
 		<div className="root-project">
-			<h3>Participants: </h3>
-			{participants.map(p => {
-				return <DiscordAvatar size={50} key={p.id} member={getMember(p.id)} />
-			})}
-			<h1>{channel}</h1>
-			<p>Projects: {projects.length}</p>
-			<button
-				onClick={() =>
-					swal.fire({
-						html: (
-							<ProjectModal
-								create={true}
-								managerRoles={[discordSdk.guildId!]}
-								tasks={[]}
-								token={auth.serverToken}
-								updateProject={updateProject}
-							/>
-						),
-						// html: <CreateProject token={auth.serverToken} updateProject={updateProject} />,
-						background: '#202225',
-						color: 'white',
-						showConfirmButton: false
-					})
-				}
-			>
-				Create Project
-			</button>
-			<ProjectList projects={projects} setActiveProject={project => updateProject({ project })} />
-			<p className="read-the-docs">
-				Connected to Firebase as user {auth.claims.user_id as string} with roles {JSON.stringify(auth.claims.roles)}
-			</p>
+			<div className="app-page">
+				<div className="app-title">
+					<img src={icon} alt="polynomial-icon" />
+					<h1>Polynomial</h1>
+				</div>
+				<button
+					onClick={() =>
+						swal.fire({
+							html: (
+								<ProjectModal
+									create={true}
+									managerRoles={[discordSdk.guildId!]}
+									tasks={[]}
+									token={auth.serverToken}
+									updateProject={updateProject}
+								/>
+							),
+							// html: <CreateProject token={auth.serverToken} updateProject={updateProject} />,
+							background: '#202225',
+							color: 'white',
+							showConfirmButton: false
+						})
+					}
+				>
+					Create Project
+				</button>
+				<ProjectList projects={projects} setActiveProject={project => updateProject({ project })} />
+			</div>
+			<div className="participants">
+				{participants.map(p => {
+					return <DiscordAvatar size={50} key={p.id} member={getMember(p.id)} toolTipLeft={true} />
+				})}
+			</div>
 		</div>
 	)
 }

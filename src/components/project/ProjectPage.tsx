@@ -12,9 +12,10 @@ import { CardView } from '../task/CardView.tsx'
 import '../../styles/ProjectView.css'
 import { TableComponent } from '../task/TableComponent.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { ProjectView } from '../../party.ts'
 import { discordSdk } from '../../services/discord.ts'
+import DeleteProject from './DeleteProject.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -30,6 +31,11 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 	const { members } = useGuildMembers() // can't access context inside modal so getting here
 	const auth = useAuth()
 
+	if (!project) {
+		// crash message in case no project load
+		return <div>No project loaded, relaunch Polynomial</div>
+	}
+
 	const ActiveView = () => {
 		switch (activeView) {
 			case ProjectView.Overview:
@@ -41,6 +47,7 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 		}
 	}
 	const currUserRoles = auth.claims.roles as string[]
+	const roleCheck = currUserRoles.filter(r => project.managerRoles.includes(r)).length > 0 || project.managerRoles.includes(discordSdk.guildId!)
 	return (
 		<div>
 			<div className="top-blur" />
@@ -84,33 +91,31 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 			<div className="project-top">
 				<p className="project-title">{project.name}</p>
 				<div className="task-button-row">
-					{project.managerRoles.length > 0 &&
-						(currUserRoles.filter(r => project.managerRoles.includes(r)).length > 0 ||
-							project.managerRoles.includes(discordSdk.guildId!)) && (
-							<button
-								onClick={() =>
-									swal.fire({
-										html: (
-											<ProjectModal
-												name={project.name}
-												managerRoles={project.managerRoles}
-												tasks={project.tasks}
-												projectId={project.id}
-												token={auth.serverToken}
-												notificationsChannel={project.notificationsChannel}
-												create={false}
-												updateProject={updateProject}
-											/>
-										),
-										background: '#202225',
-										color: 'white',
-										showConfirmButton: false
-									})
-								}
-							>
-								<FontAwesomeIcon icon={faEdit} /> Edit Project
-							</button>
-						)}
+					{roleCheck && (
+						<button
+							onClick={() =>
+								swal.fire({
+									html: (
+										<ProjectModal
+											name={project.name}
+											managerRoles={project.managerRoles}
+											tasks={project.tasks}
+											projectId={project.id}
+											token={auth.serverToken}
+											notificationsChannel={project.notificationsChannel}
+											create={false}
+											updateProject={updateProject}
+										/>
+									),
+									background: '#202225',
+									color: 'white',
+									showConfirmButton: false
+								})
+							}
+						>
+							<FontAwesomeIcon icon={faEdit} /> Edit Project
+						</button>
+					)}
 					<button
 						onClick={() =>
 							swal.fire({
@@ -124,6 +129,22 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 					>
 						<FontAwesomeIcon icon={faPlus} /> Create Task
 					</button>
+					{roleCheck && (
+						<button
+							onClick={() =>
+								swal.fire({
+									html: <DeleteProject project={project} closeProject={close} />,
+									background: '#202225',
+									icon: 'warning',
+									color: 'white',
+									showConfirmButton: false,
+									width: '800px'
+								})
+							}
+						>
+							<FontAwesomeIcon icon={faTrash} /> Delete Project
+						</button>
+					)}
 				</div>
 				{ActiveView()}
 			</div>
