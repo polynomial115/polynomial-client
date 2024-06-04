@@ -123,10 +123,11 @@ export function TableComponent({ project, mini }: Props) {
 		},
 		{
 			name: 'Deadline',
-			selector: (row: TaskRow) =>
-				// we use invisible character here to differentiate a task named "None" and the special nullable field
-				row.deadline != null ? new Date(row.deadline).toLocaleDateString('en', { month: 'short', day: 'numeric' }) : 'None‎',
+			// -1 because 0 case should be always sorted at the bottom
+			selector: (row: TaskRow) => row.deadline - 1,
 			sortable: true,
+			cell: (row: TaskRow) =>
+				row.deadline != Deadline.Never ? new Date(row.deadline).toLocaleDateString('en', { month: 'short', day: 'numeric' }) : 'None',
 			right: true
 		}
 	]
@@ -138,10 +139,10 @@ export function TableComponent({ project, mini }: Props) {
 
 			let comparison = 0
 
-			// this forces None to always be at the bottom of sorting
-			if (aField === 'None‎') {
-				comparison = bField === 'None‎' ? 0 : 1
-			} else if (bField === 'None‎') {
+			// this forces None in date to always be at the bottom of sorting
+			if (aField === -1) {
+				comparison = bField === 0 ? 0 : 1
+			} else if (bField === -1) {
 				comparison = -1
 			} else {
 				comparison = (aField < bField ? -1 : 1) * (direction === 'desc' ? -1 : 1)
