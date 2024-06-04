@@ -65,7 +65,7 @@ export default function TaskDetails(props: Props) {
 					onClick={() => {
 						if (task) {
 							swal.fire({
-								html: <ManageTask project={project} members={members} currTask={task} token={token} create={false} />,
+								html: <ManageTask project={project} members={members} currTask={task} token={token} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,

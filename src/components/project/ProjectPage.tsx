@@ -119,7 +119,7 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 					<button
 						onClick={() =>
 							swal.fire({
-								html: <ManageTask create={true} project={project} members={members} token={auth.serverToken} />,
+								html: <ManageTask project={project} members={members} currTask={null} token={auth.serverToken} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,

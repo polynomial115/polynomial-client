@@ -19,14 +19,13 @@ type FormData = Omit<Task, 'id' | 'deadline'> & {
 }
 
 interface Props {
-	create: boolean
 	project: Project
 	members: APIGuildMember[]
-	currTask?: Task
+	currTask: Task | null // if null, create a new task
 	token: string
 }
 
-export function ManageTask({ create, project, members, currTask, token }: Props) {
+export function ManageTask({ project, members, currTask, token }: Props) {
 	const [formData, setFormData] = useState<FormData>(
 		currTask
 			? {
@@ -56,21 +55,21 @@ export function ManageTask({ create, project, members, currTask, token }: Props)
 		}
 
 		let taskData: Task
-		if (create) {
+		if (!currTask) {
 			taskData = { ...formData, id: doc(collection(db, 'tasks')).id, deadline: formData.deadline ?? 0 } // generate random id
 		} else {
-			taskData = { ...formData, id: currTask!.id, deadline: formData.deadline ?? 0 }
+			taskData = { ...formData, id: currTask.id, deadline: formData.deadline ?? 0 }
 		}
 		const projectDoc = doc(db, 'projects', project.id)
 
 		try {
-			if (create) {
+			if (!currTask) {
 				await updateDoc(projectDoc, {
 					tasks: arrayUnion(taskData)
 				})
 			} else {
 				await updateDoc(projectDoc, {
-					tasks: project.tasks.map(t => (t.id === currTask!.id ? taskData : t))
+					tasks: project.tasks.map(t => (t.id === currTask.id ? taskData : t))
 				})
 			}
 
@@ -101,11 +100,10 @@ export function ManageTask({ create, project, members, currTask, token }: Props)
 	const handleInputChange = (name: keyof FormData, value: string | string[] | number | Date | null) => {
 		setFormData(prev => ({ ...prev, [name]: value }))
 	}
-	const header = create ? 'Create Task' : `Edit Task: ${currTask!.name}`
 
 	return (
 		<div className="task-modal">
-			<h2>{header}</h2>
+			<h2>{!currTask ? 'Create Task' : `Edit Task: ${currTask.name}`}</h2>
 			{error && <div className="error">{error}</div>}
 			<form onSubmit={handleSubmit}>
 				<input
