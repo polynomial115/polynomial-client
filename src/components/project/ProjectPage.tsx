@@ -141,6 +141,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 							swal.fire({
 								html: <DeleteProject project={project} close={close} />,
 								background: '#202225',
+								icon: 'warning',
 								color: 'white',
 								showConfirmButton: false,
 								width: '800px'
