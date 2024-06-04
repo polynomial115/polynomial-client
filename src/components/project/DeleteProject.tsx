@@ -12,9 +12,10 @@ interface Props {
 		name: string
 	}
 	close: () => void
+	closeModal: () => void
 }
 
-function DeleteProject({ project, close }: Props) {
+function DeleteProject({ project, close, closeModal }: Props) {
 	const [isDeleting, setIsDeleting] = useState(false)
 
 	const handleDelete = async () => {
@@ -22,9 +23,12 @@ function DeleteProject({ project, close }: Props) {
 		try {
 			// Delete the project from Firestore
 			await deleteDoc(doc(db, 'projects', project.id))
+			close()
 			// Notify success and close modal
 			ReactSwal.fire({
 				title: 'Deleted!',
+				background: '#202225',
+				color: 'white',
 				text: `The project "${project.name}" has been successfully deleted.`,
 				icon: 'success',
 				timer: 2000,
@@ -45,7 +49,7 @@ function DeleteProject({ project, close }: Props) {
 			<button className="delete-project-button" onClick={handleDelete} disabled={isDeleting}>
 				Delete Project
 			</button>
-			<button className="cancel-button" onClick={close}>
+			<button className="cancel-button" onClick={closeModal}>
 				Cancel
 			</button>
 		</div>

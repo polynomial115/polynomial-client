@@ -139,7 +139,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 					<button
 						onClick={() =>
 							swal.fire({
-								html: <DeleteProject project={project} close={close} />,
+								html: <DeleteProject project={project} close={close} closeModal={() => Swal.close()} />,
 								background: '#202225',
 								icon: 'warning',
 								color: 'white',
