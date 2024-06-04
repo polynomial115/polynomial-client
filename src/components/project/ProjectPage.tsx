@@ -12,8 +12,10 @@ import { CardView } from '../task/CardView.tsx'
 import '../../styles/ProjectView.css'
 import { TableComponent } from '../task/TableComponent.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { ProjectView } from '../../party.ts'
+import { DeleteTask } from '../task/DeleteTask.tsx'
+import DeleteProject from './DeleteProject.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -116,6 +118,19 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 						}
 					>
 						<FontAwesomeIcon icon={faPlus} /> Create Task
+					</button>
+					<button
+						onClick={() =>
+							swal.fire({
+								html: <DeleteProject project={project} />,
+								background: '#202225',
+								color: 'white',
+								showConfirmButton: false,
+								width: '800px'
+							})
+						}
+					>
+						<FontAwesomeIcon icon={faTrash} /> <text className="delete-task-text-color">Delete Project</text>
 					</button>
 				</div>
 				{ActiveView()}
