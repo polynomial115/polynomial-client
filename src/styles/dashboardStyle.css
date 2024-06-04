@@ -68,6 +68,10 @@ body {
 	.rdt_TableBody > * {
 		background: none;
 	}
+
+	h2 {
+		margin-top: .25em;
+	}
 }
 
 .project-title {
