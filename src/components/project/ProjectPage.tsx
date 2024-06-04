@@ -4,7 +4,7 @@ import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
 import { CreateTask } from '../task/CreateTask.tsx'
 import { useGuildMembers } from '../../hooks/useGuildMembers.ts'
-import { ProjectModal } from './InitProject.tsx'
+import { ManageProject } from './ManageProject.tsx'
 import { useAuth } from '../../hooks/useAuth.ts'
 import { ChoiceButtons } from '../ChoiceButtons.tsx'
 import { Dashboard } from '../Dashboard.tsx'
@@ -96,7 +96,7 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 							onClick={() =>
 								swal.fire({
 									html: (
-										<ProjectModal
+										<ManageProject
 											name={project.name}
 											managerRoles={project.managerRoles}
 											tasks={project.tasks}

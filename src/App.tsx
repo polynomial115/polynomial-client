@@ -17,7 +17,7 @@ import { DiscordAvatar } from './components/User.tsx'
 import { useEvent } from './hooks/useEvent.ts'
 import { useGuildMembers } from './hooks/useGuildMembers.ts'
 import icon from './assets/icon.png'
-import { ProjectModal } from './components/project/InitProject.tsx'
+import { ManageProject } from './components/project/ManageProject.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -79,7 +79,7 @@ function App() {
 					onClick={() =>
 						swal.fire({
 							html: (
-								<ProjectModal
+								<ManageProject
 									create={true}
 									managerRoles={[discordSdk.guildId!]}
 									tasks={[]}
@@ -87,7 +87,6 @@ function App() {
 									updateProject={updateProject}
 								/>
 							),
-							// html: <CreateProject token={auth.serverToken} updateProject={updateProject} />,
 							background: '#202225',
 							color: 'white',
 							showConfirmButton: false

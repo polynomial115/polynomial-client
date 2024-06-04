@@ -9,7 +9,8 @@ import { Task } from '../../types.ts'
 import Swal from 'sweetalert2'
 import { ProjectView } from '../../party.ts'
 
-const transformColor = (color: number) => (color ? '#' + color.toString(16).padStart(6, '0') : 'white')
+const transformColor = (color: number | undefined) => (color ? '#' + color.toString(16).padStart(6, '0') : 'white')
+
 interface Props {
 	create: boolean
 	name?: string | null
@@ -21,50 +22,39 @@ interface Props {
 	updateProject: ({ project, projectView }: { project?: string; projectView?: ProjectView }) => void
 }
 
-interface mockAPIRole {
-	name: string
-	id: string
-	color: string
-}
-
-export function ProjectModal({ create, name, managerRoles, tasks, projectId, token, notificationsChannel, updateProject }: Props) {
+export function ManageProject({ create, name, managerRoles, tasks, projectId, token, notificationsChannel, updateProject }: Props) {
 	const [roles, setRoles] = useState<APIRole[]>([])
-	const [selectedRoles, setSelectedRoles] = useState<mockAPIRole[]>([])
-	const nameInputRef = createRef<HTMLInputElement>()
-	const [mgmt, setMgmt] = useState<string[]>(managerRoles)
-	const [selectedChannel, setSelectedChannel] = useState<string | null>(null)
+	const [selectedRoles, setSelectedRoles] = useState<string[]>(managerRoles)
+	const [selectedChannel, setSelectedChannel] = useState<string | null>(notificationsChannel ?? null)
 	const [channels, setChannels] = useState<APITextChannel[]>([])
-	const header = create ? 'Creating new project' : `Editing Project ${name}`
-	useEffect(() => {
-		if (notificationsChannel != null) {
-			setSelectedChannel(notificationsChannel)
-		}
+	const nameInputRef = createRef<HTMLInputElement>()
 
+	const getRole = (id: string) => roles.find(c => c.id === id)
+	const getChannel = (id: string) => channels.find(c => c.id === id)
+
+	useEffect(() => {
 		fetch('/api/roles', { headers: { Authorization: token } })
 			.then(r => r.json())
 			.then(roles => {
 				setRoles((roles as APIRole[]).sort((a, b) => b.position - a.position))
-				setSelectedRoles(
-					(roles as APIRole[])
-						.filter(r => mgmt.includes(r.id))
-						.map(r => ({ name: r.name, id: r.id, color: transformColor(r.color) }) as mockAPIRole)
-				)
 			})
 		fetch('/api/channels', { headers: { Authorization: token } })
 			.then(r => r.json())
 			.then(channels => setChannels((channels as APITextChannel[]).sort((a, b) => a.position - b.position)))
-	}, [create, mgmt, name, notificationsChannel, token])
+	}, [token])
+
+	if (!roles.length || !channels.length) return <div className="loading-project-modal">Loading...</div>
 
 	return (
 		<div className="project-modal">
-			<h2>{header}</h2>
+			<h2>{create ? 'Creating new project' : `Editing Project ${name}`}</h2>
 			<form
 				onSubmit={async (e: { preventDefault: () => void }) => {
 					e.preventDefault()
 					const submitData = {
 						guildId: discordSdk.guildId,
 						name: nameInputRef.current?.value,
-						managerRoles: selectedRoles.map(r => r.id),
+						managerRoles: selectedRoles,
 						memberRoles: [],
 						managerUsers: [],
 						memberUsers: [],
@@ -102,24 +92,26 @@ export function ProjectModal({ create, name, managerRoles, tasks, projectId, tok
 					defaultValue={name ? name : ''}
 				/>
 				<Select
+					className="project-select"
 					isMulti
 					required
-					onChange={selected => {
-						setSelectedRoles(selected.map(e => ({ name: e.label, id: e.value, color: e.color }) as mockAPIRole))
-						setMgmt(selected.map(e => e.value as string))
-					}}
+					onChange={selected => setSelectedRoles(selected.map(r => r.value as string))}
 					placeholder="Select the roles with manager permissions"
-					value={selectedRoles.map(r => ({ value: r.id, label: r.name, color: r.color }))}
+					defaultValue={managerRoles.map(rid => ({
+						value: rid,
+						label: getRole(rid)?.name ?? 'Unknown Role',
+						color: transformColor(getRole(rid)?.color)
+					}))}
 					options={roles.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
 					styles={selectStyles}
 					name="roles"
 					menuPosition="fixed"
 				/>
-				<br />
 				<Select
+					className="project-select"
 					isMulti={false}
 					options={[{ value: null, label: 'None' }, ...channels.map(r => ({ value: r.id, label: '#' + r.name }))]}
-					value={selectedChannel ? channels.filter(r => r.id == selectedChannel).map(r => ({ value: r.id, label: '#' + r.name })) : null}
+					defaultValue={selectedChannel ? { value: selectedChannel, label: '#' + getChannel(selectedChannel)?.name } : null}
 					styles={selectStyles}
 					placeholder="Notifications channel"
 					onChange={selected => setSelectedChannel(selected?.value as string)}
