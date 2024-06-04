@@ -127,6 +127,7 @@
 
 .project-modal {
 	height: 400px;
+	overflow-x: hidden;
 }
 
 .project-back-button {
