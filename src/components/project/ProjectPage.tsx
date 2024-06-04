@@ -2,9 +2,8 @@ import '../../styles/ProjectView.css'
 import { type Project, taskStatuses } from '../../types.ts'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
-import { CreateTask } from '../task/CreateTask.tsx'
 import { useGuildMembers } from '../../hooks/useGuildMembers.ts'
-import { EditProject } from './EditProject.tsx'
+import { ManageProject } from './ManageProject.tsx'
 import { useAuth } from '../../hooks/useAuth.ts'
 import { ChoiceButtons } from '../ChoiceButtons.tsx'
 import { Dashboard } from '../Dashboard.tsx'
@@ -14,7 +13,9 @@ import { TableComponent } from '../task/TableComponent.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { ProjectView } from '../../party.ts'
+import { discordSdk } from '../../services/discord.ts'
 import DeleteProject from './DeleteProject.tsx'
+import { ManageTask } from '../task/ManageTask.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -23,9 +24,10 @@ interface ProjectProps {
 	close: () => void
 	activeView: ProjectView
 	setActiveView: (view: ProjectView) => void
+	updateProject: ({ project, projectView }: { project?: string; projectView?: ProjectView }) => void
 }
 
-export function ProjectPage({ project, close, activeView, setActiveView }: ProjectProps) {
+export function ProjectPage({ project, close, activeView, setActiveView, updateProject }: ProjectProps) {
 	const { members } = useGuildMembers() // can't access context inside modal so getting here
 	const auth = useAuth()
 
@@ -45,6 +47,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 		}
 	}
 	const currUserRoles = auth.claims.roles as string[]
+	const roleCheck = currUserRoles.filter(r => project.managerRoles.includes(r)).length > 0 || project.managerRoles.includes(discordSdk.guildId!)
 	return (
 		<div>
 			<div className="top-blur" />
@@ -88,32 +91,35 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 			<div className="project-top">
 				<p className="project-title">{project.name}</p>
 				<div className="task-button-row">
+					{roleCheck && (
+						<button
+							onClick={() =>
+								swal.fire({
+									html: (
+										<ManageProject
+											name={project.name}
+											managerRoles={project.managerRoles}
+											tasks={project.tasks}
+											projectId={project.id}
+											token={auth.serverToken}
+											notificationsChannel={project.notificationsChannel}
+											create={false}
+											updateProject={updateProject}
+										/>
+									),
+									background: '#202225',
+									color: 'white',
+									showConfirmButton: false
+								})
+							}
+						>
+							<FontAwesomeIcon icon={faEdit} /> Edit Project
+						</button>
+					)}
 					<button
 						onClick={() =>
 							swal.fire({
-								html: (
-									<EditProject
-										name={project.name}
-										managerRoles={project.managerRoles}
-										tasks={project.tasks}
-										projectId={project.id}
-										currUserRoles={currUserRoles}
-										token={auth.serverToken}
-										notificationsChannel={project.notificationsChannel}
-									/>
-								),
-								background: '#202225',
-								color: 'white',
-								showConfirmButton: false
-							})
-						}
-					>
-						<FontAwesomeIcon icon={faEdit} /> Edit Project
-					</button>
-					<button
-						onClick={() =>
-							swal.fire({
-								html: <CreateTask project={project} members={members} token={auth.serverToken} />,
+								html: <ManageTask project={project} members={members} currTask={null} token={auth.serverToken} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,
@@ -123,20 +129,22 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 					>
 						<FontAwesomeIcon icon={faPlus} /> Create Task
 					</button>
-					<button
-						onClick={() =>
-							swal.fire({
-								html: <DeleteProject project={project} closeProject={close} />,
-								background: '#202225',
-								icon: 'warning',
-								color: 'white',
-								showConfirmButton: false,
-								width: '800px'
-							})
-						}
-					>
-						<FontAwesomeIcon icon={faTrash} /> Delete Project
-					</button>
+					{roleCheck && (
+						<button
+							onClick={() =>
+								swal.fire({
+									html: <DeleteProject project={project} closeProject={close} />,
+									background: '#202225',
+									icon: 'warning',
+									color: 'white',
+									showConfirmButton: false,
+									width: '800px'
+								})
+							}
+						>
+							<FontAwesomeIcon icon={faTrash} /> Delete Project
+						</button>
+					)}
 				</div>
 				{ActiveView()}
 			</div>

@@ -10,7 +10,6 @@ import { db } from './services/firebase.ts'
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import { CreateProject } from './components/project/CreateProject.tsx'
 import { ProjectList } from './components/project/ProjectList.tsx'
 import { ProjectPage } from './components/project/ProjectPage.tsx'
 import { type Project } from './types.ts'
@@ -18,6 +17,7 @@ import { DiscordAvatar } from './components/User.tsx'
 import { useEvent } from './hooks/useEvent.ts'
 import { useGuildMembers } from './hooks/useGuildMembers.ts'
 import icon from './assets/icon.png'
+import { ManageProject } from './components/project/ManageProject.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -64,6 +64,7 @@ function App() {
 				close={() => updateProject({ project: '', projectView: ProjectView.Overview })}
 				activeView={activeProjectView}
 				setActiveView={view => updateProject({ projectView: view })}
+				updateProject={updateProject}
 			/>
 		)
 
@@ -77,7 +78,15 @@ function App() {
 				<button
 					onClick={() =>
 						swal.fire({
-							html: <CreateProject token={auth.serverToken} updateProject={updateProject} />,
+							html: (
+								<ManageProject
+									create={true}
+									managerRoles={[discordSdk.guildId!]}
+									tasks={[]}
+									token={auth.serverToken}
+									updateProject={updateProject}
+								/>
+							),
 							background: '#202225',
 							color: 'white',
 							showConfirmButton: false

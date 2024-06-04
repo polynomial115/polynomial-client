@@ -115,7 +115,7 @@
 	border: 1px;
 	border-radius: 4px;
 	padding: 12px;
-	margin: 12.5px 0px;
+	margin: 12.5px 0;
 	width: 100%;
 	font-size: 16px;
 	color: white;
@@ -125,8 +125,19 @@
 	color: rgb(149, 149, 149);
 }
 
+.loading-project-modal {
+	min-height: 400px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .project-modal {
-	height: 400px;
+	overflow-x: hidden;
+}
+
+.project-select {
+	margin-bottom: 25px;
 }
 
 .project-back-button {
