@@ -85,8 +85,8 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 				<p className="project-title">{project.name}</p>
 				<div className="task-button-row">
 					{project.managerRoles.length > 0 &&
-						currUserRoles.filter(r => project.managerRoles.includes(r)).length > 0 &&
-						project.managerRoles.includes(discordSdk.guildId!) && (
+						(currUserRoles.filter(r => project.managerRoles.includes(r)).length > 0 ||
+							project.managerRoles.includes(discordSdk.guildId!)) && (
 							<button
 								onClick={() =>
 									swal.fire({
