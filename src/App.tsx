@@ -86,7 +86,6 @@ function App() {
 								create={true}
 								managerRoles={[discordSdk.guildId!]}
 								tasks={[]}
-								currUserRoles={[]}
 								token={auth.serverToken}
 								updateProject={updateProject}
 							/>

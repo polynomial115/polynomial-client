@@ -16,7 +16,6 @@ interface Props {
 	managerRoles: string[]
 	tasks: Task[]
 	projectId?: string | null
-	currUserRoles: string[]
 	token: string
 	notificationsChannel?: string | null
 	updateProject: ({ project, projectView }: { project?: string; projectView?: ProjectView }) => void
@@ -28,7 +27,7 @@ interface mockAPIRole {
 	color: string
 }
 
-export function ProjectModal({ create, name, managerRoles, tasks, projectId, currUserRoles, token, notificationsChannel, updateProject }: Props) {
+export function ProjectModal({ create, name, managerRoles, tasks, projectId, token, notificationsChannel, updateProject }: Props) {
 	const [roles, setRoles] = useState<APIRole[]>([])
 	const [selectedRoles, setSelectedRoles] = useState<mockAPIRole[]>([])
 	const nameInputRef = createRef<HTMLInputElement>()
@@ -63,19 +62,6 @@ export function ProjectModal({ create, name, managerRoles, tasks, projectId, cur
 			.then(channels => setChannels((channels as APITextChannel[]).sort((a, b) => a.position - b.position)))
 	}, [create, mgmt, name, notificationsChannel, token])
 
-	// checks if currnet user has manager role or @everyone has manager role
-	if (
-		// we are not in create mode
-		!create &&
-		// there are managerial roles
-		managerRoles.length &&
-		// user does not have manager role
-		!currUserRoles.filter(r => managerRoles.includes(r)).length &&
-		// manager roles does not include @everyone
-		!managerRoles.includes(discordSdk.guildId!)
-	) {
-		return <div>You do not have permissions to edit this project!</div>
-	}
 	return (
 		<div className="project-modal">
 			<h2>{header}</h2>
@@ -124,11 +110,12 @@ export function ProjectModal({ create, name, managerRoles, tasks, projectId, cur
 				/>
 				<Select
 					isMulti
+					required
 					onChange={selected => {
 						setSelectedRoles(selected.map(e => ({ name: e.label, id: e.value, color: e.color }) as mockAPIRole))
 						setMgmt(selected.map(e => e.value as string))
 					}}
-					placeholder="Select the roles with manager permissions(sets to @everyone if left empty)"
+					placeholder="Select the roles with manager permissions"
 					value={selectedRoles.map(r => ({ value: r.id, label: r.name, color: r.color }))}
 					options={roles.map(r => ({ value: r.id, label: r.name, color: transformColor(r.color) }))}
 					styles={selectStyles}
