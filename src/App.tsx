@@ -18,15 +18,18 @@ import { DiscordAvatar } from './components/User.tsx'
 import { useEvent } from './hooks/useEvent.ts'
 import { useGuildMembers } from './hooks/useGuildMembers.ts'
 import icon from './assets/icon.png'
+import { LayoutMode, useLayoutMode } from './hooks/useLayoutMode.tsx'
 
 const swal = withReactContent(Swal)
 
 function App() {
 	const [projects, setProjects] = useState<Project[]>([])
-	const [activeProject, setActiveProject] = useState('')
+	const [activeProjectId, setActiveProjectId] = useState('')
 	const [activeProjectView, setActiveProjectView] = useState(ProjectView.Overview)
 	const participants = useParticipants()
 	const { getMember } = useGuildMembers()
+	const auth = useAuth()
+	const layoutMode = useLayoutMode()
 
 	useEffect(() => {
 		const projectsQuery = query(collection(db, 'projects'), where('guildId', '==', discordSdk.guildId))
@@ -45,22 +48,34 @@ function App() {
 	}, [])
 
 	useEvent(PayloadType.PageUpdate, data => {
-		setActiveProject(data.project)
+		setActiveProjectId(data.project)
 		setActiveProjectView(data.projectView)
 	})
 
-	const auth = useAuth()
-
 	function updateProject({ project, projectView }: { project?: string; projectView?: ProjectView }) {
-		if (project !== undefined) setActiveProject(project)
+		if (project !== undefined) setActiveProjectId(project)
 		if (projectView !== undefined) setActiveProjectView(projectView)
-		sendPayload(PayloadType.PageUpdate, { project: project ?? activeProject, projectView: projectView ?? activeProjectView })
+		sendPayload(PayloadType.PageUpdate, { project: project ?? activeProjectId, projectView: projectView ?? activeProjectView })
 	}
+
+	const activeProject = projects.find(p => p.id === activeProjectId)
+
+	if (layoutMode === LayoutMode.PIP)
+		return (
+			<div className="pip">
+				<div className="app-title" onClick={() => console.log(layoutMode)}>
+					<img src={icon} alt="polynomial-icon" />
+					<h1>Polynomial</h1>
+				</div>
+				{activeProject && <p>{activeProject.name}</p>}
+				<p>Double-click to reopen Polynomial!</p>
+			</div>
+		)
 
 	if (activeProject)
 		return (
 			<ProjectPage
-				project={projects.find(p => p.id === activeProject)!}
+				project={activeProject}
 				close={() => updateProject({ project: '', projectView: ProjectView.Overview })}
 				activeView={activeProjectView}
 				setActiveView={view => updateProject({ projectView: view })}
