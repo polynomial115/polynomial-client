@@ -16,6 +16,9 @@ import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus, 
 import { ProjectView } from '../../party.ts'
 import { DeleteTask } from '../task/DeleteTask.tsx'
 import DeleteProject from './DeleteProject.tsx'
+import { useState } from 'react'
+import { sendPayload } from '../../party'
+import { PayloadType } from '../../party'
 
 const swal = withReactContent(Swal)
 
@@ -29,6 +32,20 @@ interface ProjectProps {
 export function ProjectPage({ project, close, activeView, setActiveView }: ProjectProps) {
 	const { members } = useGuildMembers() // can't access context inside modal so getting here
 	const auth = useAuth()
+
+	if (!project) {
+		// crash message in case no project load
+		return <div>No project loaded, relaunch Polynomial</div>
+	}
+
+	const [activeProject, setActiveProject] = useState('')
+	const [activeProjectView, setActiveProjectView] = useState(ProjectView.Overview)
+
+	function updateProject({ project, projectView }: { project?: string; projectView?: ProjectView }) {
+		if (project !== undefined) setActiveProject(project)
+		if (projectView !== undefined) setActiveProjectView(projectView)
+		sendPayload(PayloadType.PageUpdate, { project: project ?? activeProject, projectView: projectView ?? activeProjectView })
+	}
 
 	const ActiveView = () => {
 		switch (activeView) {
@@ -122,7 +139,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 					<button
 						onClick={() =>
 							swal.fire({
-								html: <DeleteProject project={project} />,
+								html: <DeleteProject project={project} close={close} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,
@@ -130,7 +147,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 							})
 						}
 					>
-						<FontAwesomeIcon icon={faTrash} /> <text className="delete-task-text-color">Delete Project</text>
+						<FontAwesomeIcon icon={faTrash} /> <span className="delete-task-text-color">Delete Project</span>
 					</button>
 				</div>
 				{ActiveView()}

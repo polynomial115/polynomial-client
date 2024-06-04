@@ -11,51 +11,42 @@ interface Props {
 		id: string
 		name: string
 	}
+	close: () => void
 }
 
-function DeleteProject({ project }: Props) {
+function DeleteProject({ project, close }: Props) {
 	const [isDeleting, setIsDeleting] = useState(false)
 
 	const handleDelete = async () => {
-		// Confirm deletion dialog
-		const result = await ReactSwal.fire({
-			title: 'Are you sure?',
-			text: `You are about to delete the project "${project.name}". This action cannot be undone.`,
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#d33',
-			cancelButtonColor: '#3085d6',
-			confirmButtonText: 'Delete',
-			cancelButtonText: 'Cancel'
-		})
-
-		if (result.isConfirmed) {
-			setIsDeleting(true)
-			try {
-				// Delete the project from Firestore
-				await deleteDoc(doc(db, 'projects', project.id))
-
-				// Automatically close the modal on success
-				ReactSwal.fire({
-					title: 'Deleted!',
-					text: `The project "${project.name}" has been successfully deleted.`,
-					icon: 'success',
-					timer: 2000,
-					showConfirmButton: false
-				}).then(() => ReactSwal.clickConfirm())
-			} catch (error) {
-				console.error('Error deleting project:', error)
-				ReactSwal.fire('Error', 'Failed to delete the project. Please try again.', 'error')
-			} finally {
-				setIsDeleting(false)
-			}
+		setIsDeleting(true)
+		try {
+			// Delete the project from Firestore
+			await deleteDoc(doc(db, 'projects', project.id))
+			// Notify success and close modal
+			ReactSwal.fire({
+				title: 'Deleted!',
+				text: `The project "${project.name}" has been successfully deleted.`,
+				icon: 'success',
+				timer: 2000,
+				showConfirmButton: false
+			}).then(() => {
+				close() // Close the modal after the operation
+			})
+		} catch (error) {
+			console.error('Error deleting project:', error)
+			ReactSwal.fire('Error', 'Failed to delete the project. Please try again.', 'error')
+			setIsDeleting(false)
 		}
 	}
 
 	return (
 		<div>
+			<p>Are you sure you want to delete the project "{project.name}"? This action cannot be undone.</p>
 			<button className="delete-project-button" onClick={handleDelete} disabled={isDeleting}>
-				Confirm Delete
+				Delete Project
+			</button>
+			<button className="cancel-button" onClick={close}>
+				Cancel
 			</button>
 		</div>
 	)
