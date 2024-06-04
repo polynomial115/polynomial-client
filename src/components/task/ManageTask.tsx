@@ -3,7 +3,6 @@ import Select from 'react-select'
 import { selectStyles } from '../../styles/select-styles.ts'
 import { db } from '../../services/firebase.ts'
 import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore'
-import { APIGuildMember } from 'discord-api-types/v10'
 import { ChoiceButtons } from '../ChoiceButtons.tsx'
 import { Task, priorities, taskStatuses, deadlines, Deadline, Project, TaskStatus, Priority } from '../../types.ts'
 import TaskDetails from './TaskDetails'
@@ -11,6 +10,7 @@ import calculateDeadline from '../../scripts/CalculateDeadline.ts'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { getAuth } from 'firebase/auth'
+import type { GuildMember } from '../../hooks/useGuildMembers.ts'
 
 const firebaseAuth = getAuth()
 
@@ -20,7 +20,7 @@ type FormData = Omit<Task, 'id' | 'deadline'> & {
 
 interface Props {
 	project: Project
-	members: APIGuildMember[]
+	members: GuildMember[]
 	currTask: Task | null // if null, create a new task
 	token: string
 }
@@ -128,13 +128,11 @@ export function ManageTask({ project, members, currTask, token }: Props) {
 				<Select
 					isMulti={true}
 					name="assignees"
-					options={members.map((m: APIGuildMember) => ({
-						value: m.user!.id,
-						label: m.user!.username
+					options={members.map(m => ({
+						value: m.user.id,
+						label: m.user.username
 					}))}
-					value={members
-						.filter((m: APIGuildMember) => formData.assignees.includes(m.user!.id))
-						.map(m => ({ value: m.user!.id, label: m.user!.username }))}
+					value={members.filter(m => formData.assignees.includes(m.user.id)).map(m => ({ value: m.user.id, label: m.user.username }))}
 					placeholder="Select assignees..."
 					onChange={selected =>
 						handleInputChange(

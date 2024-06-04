@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { getAvatar, getDisplayName } from '../util'
-import { APIGuildMember } from 'discord-api-types/v10'
+import type { GuildMember } from '../hooks/useGuildMembers'
 
 interface DiscordAvatarProps {
-	member: APIGuildMember | undefined
+	member: GuildMember | undefined
 	size?: number
 	toolTipLeft?: boolean
 }

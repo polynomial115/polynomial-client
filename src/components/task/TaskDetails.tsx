@@ -1,26 +1,25 @@
 import { Task, Project, getStatus, getPriority } from '../../types'
 import { DeleteTask } from './DeleteTask'
-import { APIGuildMember } from 'discord-api-types/v10'
+import type { GuildMember } from '../../hooks/useGuildMembers'
 import { DiscordAvatar } from '../User'
 import '../../styles/TaskModal.css'
-
+import { ManageTask } from './ManageTask'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import { ManageTask } from './ManageTask'
 
 const swal = withReactContent(Swal)
 
 interface Props {
 	project: Project
 	task: Task
-	members: APIGuildMember[]
+	members: GuildMember[]
 	token: string
 }
 
 export default function TaskDetails(props: Props) {
 	const { project, task, members, token } = props
 
-	const getMember = (id: string) => members.find(m => m.user?.id === id)
+	const getMember = (id: string) => members.find(m => m.user.id === id)
 
 	const reopen = () =>
 		swal.fire({

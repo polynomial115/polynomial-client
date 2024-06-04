@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
-import { APIGuildMember } from 'discord-api-types/v10'
 import { FetchStatus } from '../types.ts'
-import { GuildMembersContext } from '../hooks/useGuildMembers.ts'
+import { GuildMember, GuildMembersContext } from '../hooks/useGuildMembers.ts'
 import { useAuth } from '../hooks/useAuth.ts'
 
 export function GuildMembersProvider({ children }: { children: React.ReactNode }) {
-	const [members, setMembers] = useState<APIGuildMember[]>([])
+	const [members, setMembers] = useState<GuildMember[]>([])
 	const [status, setStatus] = useState(FetchStatus.Loading)
 	const settingUp = useRef(false)
 	const auth = useAuth()
@@ -13,7 +12,7 @@ export function GuildMembersProvider({ children }: { children: React.ReactNode }
 	useEffect(() => {
 		function setup() {
 			fetch('/api/members', { headers: { Authorization: auth.serverToken } })
-				.then(response => response.json() as Promise<APIGuildMember[] | { error: string }>)
+				.then(response => response.json() as Promise<GuildMember[] | { error: string }>)
 				.then(data => {
 					if (Array.isArray(data)) {
 						setMembers(data)
@@ -34,7 +33,7 @@ export function GuildMembersProvider({ children }: { children: React.ReactNode }
 		}
 	}, [auth.serverToken])
 
-	const getMember = (id: string) => members.find(m => m.user?.id === id)
+	const getMember = (id: string) => members.find(m => m.user.id === id)
 
 	const getRoleMembers = (roleId: string) => members.filter(m => m.roles.includes(roleId))
 
