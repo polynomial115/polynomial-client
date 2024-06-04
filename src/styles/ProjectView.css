@@ -161,8 +161,3 @@ ul {
 	top: 4vh;
 	z-index: 2;
 }
-
-.delete-task-text-color {
-	/* color: rgb(255, 0, 0); */
-	color: white;
-}

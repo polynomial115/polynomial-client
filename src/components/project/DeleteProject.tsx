@@ -4,18 +4,17 @@ import { db } from '../../services/firebase'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 
-const ReactSwal = withReactContent(Swal)
+const swal = withReactContent(Swal)
 
 interface Props {
 	project: {
 		id: string
 		name: string
 	}
-	close: () => void
-	closeModal: () => void
+	closeProject: () => void
 }
 
-function DeleteProject({ project, close, closeModal }: Props) {
+function DeleteProject({ project, closeProject }: Props) {
 	const [isDeleting, setIsDeleting] = useState(false)
 
 	const handleDelete = async () => {
@@ -23,9 +22,9 @@ function DeleteProject({ project, close, closeModal }: Props) {
 		try {
 			// Delete the project from Firestore
 			await deleteDoc(doc(db, 'projects', project.id))
-			close()
+			closeProject()
 			// Notify success and close modal
-			ReactSwal.fire({
+			swal.fire({
 				title: 'Deleted!',
 				background: '#202225',
 				color: 'white',
@@ -33,12 +32,10 @@ function DeleteProject({ project, close, closeModal }: Props) {
 				icon: 'success',
 				timer: 2000,
 				showConfirmButton: false
-			}).then(() => {
-				close() // Close the modal after the operation
 			})
 		} catch (error) {
 			console.error('Error deleting project:', error)
-			ReactSwal.fire('Error', 'Failed to delete the project. Please try again.', 'error')
+			swal.fire('Error', 'Failed to delete the project. Please try again.', 'error')
 			setIsDeleting(false)
 		}
 	}
@@ -49,7 +46,7 @@ function DeleteProject({ project, close, closeModal }: Props) {
 			<button className="delete-project-button" onClick={handleDelete} disabled={isDeleting}>
 				Delete Project
 			</button>
-			<button className="cancel-button" onClick={closeModal}>
+			<button className="cancel-button" onClick={() => Swal.close()}>
 				Cancel
 			</button>
 		</div>

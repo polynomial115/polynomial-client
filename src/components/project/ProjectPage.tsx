@@ -126,7 +126,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 					<button
 						onClick={() =>
 							swal.fire({
-								html: <DeleteProject project={project} close={close} closeModal={() => Swal.close()} />,
+								html: <DeleteProject project={project} closeProject={close} />,
 								background: '#202225',
 								icon: 'warning',
 								color: 'white',
@@ -135,7 +135,7 @@ export function ProjectPage({ project, close, activeView, setActiveView }: Proje
 							})
 						}
 					>
-						<FontAwesomeIcon icon={faTrash} /> <span className="delete-task-text-color">Delete Project</span>
+						<FontAwesomeIcon icon={faTrash} /> Delete Project
 					</button>
 				</div>
 				{ActiveView()}
