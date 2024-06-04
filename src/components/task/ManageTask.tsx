@@ -5,30 +5,47 @@ import { db } from '../../services/firebase.ts'
 import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { ChoiceButtons } from '../ChoiceButtons.tsx'
-import { Priority, Task, TaskStatus, priorities, taskStatuses, deadlines, Deadline, Project } from '../../types.ts'
+import { Task, priorities, taskStatuses, deadlines, Deadline, Project, TaskStatus, Priority } from '../../types.ts'
+import TaskDetails from './TaskDetails'
 import calculateDeadline from '../../scripts/CalculateDeadline.ts'
 import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 import { getAuth } from 'firebase/auth'
-
-type FormData = Omit<Task, 'id'>
-
-interface Props {
-	project: Project
-	members: APIGuildMember[]
-	token: string
-}
 
 const firebaseAuth = getAuth()
 
-export function CreateTask({ project, members, token }: Props) {
-	const [formData, setFormData] = useState<FormData>({
-		status: TaskStatus.ToDo,
-		priority: Priority.Normal,
-		assignees: [],
-		deadline: 0,
-		name: '',
-		description: ''
-	})
+type FormData = Omit<Task, 'id' | 'deadline'> & {
+	deadline: number | null
+}
+
+interface Props {
+	create: boolean
+	project: Project
+	members: APIGuildMember[]
+	currTask?: Task
+	token: string
+}
+
+export function ManageTask({ create, project, members, currTask, token }: Props) {
+	const [formData, setFormData] = useState<FormData>(
+		currTask
+			? {
+					status: currTask.status,
+					priority: currTask.priority,
+					assignees: currTask.assignees,
+					deadline: calculateDeadline({ deadlineType: currTask.deadline }),
+					name: currTask.name,
+					description: currTask.description ?? ''
+				}
+			: {
+					status: TaskStatus.ToDo,
+					priority: Priority.Normal,
+					assignees: [],
+					deadline: 0,
+					name: '',
+					description: ''
+				}
+	)
 	const [error, setError] = useState('')
 
 	const handleSubmit = async (event: FormEvent) => {
@@ -38,14 +55,24 @@ export function CreateTask({ project, members, token }: Props) {
 			return
 		}
 
-		const taskData = { ...formData, id: doc(collection(db, 'tasks')).id } // generate random id
-
+		let taskData: Task
+		if (create) {
+			taskData = { ...formData, id: doc(collection(db, 'tasks')).id, deadline: formData.deadline ?? 0 } // generate random id
+		} else {
+			taskData = { ...formData, id: currTask!.id, deadline: formData.deadline ?? 0 }
+		}
 		const projectDoc = doc(db, 'projects', project.id)
 
 		try {
-			await updateDoc(projectDoc, {
-				tasks: arrayUnion(taskData)
-			})
+			if (create) {
+				await updateDoc(projectDoc, {
+					tasks: arrayUnion(taskData)
+				})
+			} else {
+				await updateDoc(projectDoc, {
+					tasks: project.tasks.map(t => (t.id === currTask!.id ? taskData : t))
+				})
+			}
 
 			if (project.notificationsChannel) {
 				await fetch(`/api/projects/${project.id}/tasks/${taskData.id}/notify`, {
@@ -54,23 +81,31 @@ export function CreateTask({ project, members, token }: Props) {
 						Authorization: token,
 						'Firebase-Token': await firebaseAuth.currentUser!.getIdToken()
 					},
-					body: JSON.stringify({ oldTask: null })
+					body: JSON.stringify({ oldTask: currTask })
 				})
 			}
 
-			Swal.close()
+			withReactContent(Swal).fire({
+				html: <TaskDetails project={project} task={taskData} members={members} token={token} />,
+				background: '#202225',
+				color: 'white',
+				showConfirmButton: false,
+				width: '800px'
+			})
 		} catch (error) {
 			console.error('Error adding document:', error)
-			setError('Failed to create task.')
+			setError('Failed to edit task.')
 		}
 	}
 
 	const handleInputChange = (name: keyof FormData, value: string | string[] | number | Date | null) => {
 		setFormData(prev => ({ ...prev, [name]: value }))
 	}
+	const header = create ? 'Create Task' : `Edit Task: ${currTask!.name}`
+
 	return (
 		<div className="task-modal">
-			<h2>Create Task</h2>
+			<h2>{header}</h2>
 			{error && <div className="error">{error}</div>}
 			<form onSubmit={handleSubmit}>
 				<input
@@ -99,6 +134,9 @@ export function CreateTask({ project, members, token }: Props) {
 						value: m.user!.id,
 						label: m.user!.username
 					}))}
+					value={members
+						.filter((m: APIGuildMember) => formData.assignees.includes(m.user!.id))
+						.map(m => ({ value: m.user!.id, label: m.user!.username }))}
 					placeholder="Select assignees..."
 					onChange={selected =>
 						handleInputChange(
@@ -110,26 +148,35 @@ export function CreateTask({ project, members, token }: Props) {
 					menuPosition="fixed"
 				/>
 				<h3 className="label">Set Priority</h3>
-				<ChoiceButtons choices={priorities} setValueCallback={value => handleInputChange('priority', value)} defaultValue={NaN} />
+				<ChoiceButtons
+					choices={priorities}
+					setValueCallback={value => handleInputChange('priority', value)}
+					defaultValue={formData.priority}
+				/>
 
 				<h3 className="label">Set Status</h3>
-				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} defaultValue={NaN} />
+				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} defaultValue={formData.status} />
 				<br />
 				<h3 className="label">When will this task be due?</h3>
+
 				<Select
 					isMulti={false}
 					name="deadline"
 					options={deadlines}
 					placeholder="Select deadline..."
 					onChange={selected => {
-						const dl = calculateDeadline({ deadlineType: selected!.value as Deadline })
-						handleInputChange('deadline', dl)
+						if (selected) {
+							const dl = calculateDeadline({ deadlineType: selected.value as Deadline })
+							handleInputChange('deadline', dl)
+						} else {
+							console.error('Selected deadline is null or undefined')
+						}
 					}}
 					styles={selectStyles}
 					menuPosition="fixed"
 				/>
 
-				<button type="submit">Create Task</button>
+				<button type="submit">Save</button>
 			</form>
 		</div>
 	)

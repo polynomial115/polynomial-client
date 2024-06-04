@@ -2,7 +2,6 @@ import '../../styles/ProjectView.css'
 import { type Project, taskStatuses } from '../../types.ts'
 import withReactContent from 'sweetalert2-react-content'
 import Swal from 'sweetalert2'
-import { CreateTask } from '../task/CreateTask.tsx'
 import { useGuildMembers } from '../../hooks/useGuildMembers.ts'
 import { ManageProject } from './ManageProject.tsx'
 import { useAuth } from '../../hooks/useAuth.ts'
@@ -16,6 +15,7 @@ import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus, 
 import { ProjectView } from '../../party.ts'
 import { discordSdk } from '../../services/discord.ts'
 import DeleteProject from './DeleteProject.tsx'
+import { ManageTask } from '../task/ManageTask.tsx'
 
 const swal = withReactContent(Swal)
 
@@ -119,7 +119,7 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 					<button
 						onClick={() =>
 							swal.fire({
-								html: <CreateTask project={project} members={members} token={auth.serverToken} />,
+								html: <ManageTask create={true} project={project} members={members} token={auth.serverToken} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,

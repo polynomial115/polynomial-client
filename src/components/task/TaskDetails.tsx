@@ -1,5 +1,4 @@
 import { Task, Project, getStatus, getPriority } from '../../types'
-import { EditTask } from './EditTask'
 import { DeleteTask } from './DeleteTask'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { DiscordAvatar } from '../User'
@@ -7,6 +6,7 @@ import '../../styles/TaskModal.css'
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { ManageTask } from './ManageTask'
 
 const swal = withReactContent(Swal)
 
@@ -65,7 +65,7 @@ export default function TaskDetails(props: Props) {
 					onClick={() => {
 						if (task) {
 							swal.fire({
-								html: <EditTask project={project} members={members} currTask={task} token={token} />,
+								html: <ManageTask project={project} members={members} currTask={task} token={token} create={false} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,
