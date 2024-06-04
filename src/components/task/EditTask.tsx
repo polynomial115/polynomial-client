@@ -5,22 +5,27 @@ import { db } from '../../services/firebase.ts'
 import { doc, updateDoc } from 'firebase/firestore'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { ChoiceButtons } from '../ChoiceButtons.tsx'
-import { Task, priorities, taskStatuses, deadlines, Deadline } from '../../types.ts'
+import { Task, priorities, taskStatuses, deadlines, Deadline, Project } from '../../types.ts'
+import TaskDetails from './TaskDetails'
 import calculateDeadline from '../../scripts/CalculateDeadline.ts'
 import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import { getAuth } from 'firebase/auth'
+
+const firebaseAuth = getAuth()
 
 type FormData = Omit<Task, 'id' | 'deadline'> & {
-	deadline: Date | null
+	deadline: number | null
 }
 
 interface EditTaskProps {
-	projectId: string
+	project: Project
 	members: APIGuildMember[]
 	currTask: Task
-	allTasks: Task[]
+	token: string
 }
 
-export function EditTask({ projectId, members, currTask, allTasks }: EditTaskProps) {
+export function EditTask({ project, members, currTask, token }: EditTaskProps) {
 	const [formData, setFormData] = useState<FormData>({
 		status: currTask.status,
 		priority: currTask.priority,
@@ -40,14 +45,31 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 
 		const taskData = { ...formData, id: currTask.id }
 
-		const projectDoc = doc(db, 'projects', projectId)
+		const projectDoc = doc(db, 'projects', project.id)
 
 		try {
 			await updateDoc(projectDoc, {
-				tasks: allTasks.map(t => (t.id === currTask.id ? taskData : t))
+				tasks: project.tasks.map(t => (t.id === currTask.id ? taskData : t))
 			})
-			setError('Edited task successfully.')
-			Swal.close()
+
+			if (project.notificationsChannel) {
+				await fetch(`/api/projects/${project.id}/tasks/${currTask.id}/notify`, {
+					method: 'POST',
+					headers: {
+						Authorization: token,
+						'Firebase-Token': await firebaseAuth.currentUser!.getIdToken()
+					},
+					body: JSON.stringify({ oldTask: currTask })
+				})
+			}
+
+			withReactContent(Swal).fire({
+				html: <TaskDetails project={project} task={taskData as Task} members={members} token={token} />,
+				background: '#202225',
+				color: 'white',
+				showConfirmButton: false,
+				width: '800px'
+			})
 		} catch (error) {
 			console.error('Error adding document:', error)
 			setError('Failed to edit task.')
@@ -59,13 +81,13 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 	}
 
 	return (
-		<div style={{ padding: '20px' }}>
+		<div className="task-modal">
 			<h2>Edit Task: {currTask.name}</h2>
-			{error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
+			{error && <div className="error">{error}</div>}
 			<form onSubmit={handleSubmit}>
 				<input
 					id="task-name"
-					className="textbox"
+					className="textbox name-textbox"
 					type="text"
 					value={formData.name}
 					onChange={e => handleInputChange('name', e.target.value)}
@@ -74,14 +96,14 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 				/>
 				<textarea
 					id="task-description"
-					className="textbox"
+					className="textbox description-textbox"
 					value={formData.description}
 					onChange={e => handleInputChange('description', e.target.value)}
 					placeholder="Enter task description..."
 					maxLength={1000}
 				/>
 				<br />
-				<br />
+				<h3 className="label">Add Assignees</h3>
 				<Select
 					isMulti={true}
 					name="assignees"
@@ -100,18 +122,19 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 						)
 					}
 					styles={selectStyles}
+					menuPosition="fixed"
 				/>
-				<h3 style={{ marginBottom: 5 }}>Set Priority</h3>
+				<h3 className="label">Set Priority</h3>
 				<ChoiceButtons
 					choices={priorities}
 					setValueCallback={value => handleInputChange('priority', value)}
 					defaultValue={currTask.priority}
 				/>
 
-				<h3 style={{ marginBottom: 5 }}>Set Status</h3>
+				<h3 className="label">Set Status</h3>
 				<ChoiceButtons choices={taskStatuses} setValueCallback={value => handleInputChange('status', value)} defaultValue={currTask.status} />
 				<br />
-				<h3 style={{ marginBottom: 5 }}>When will this task be due?</h3>
+				<h3 className="label">When will this task be due?</h3>
 
 				<Select
 					isMulti={false}
@@ -127,6 +150,7 @@ export function EditTask({ projectId, members, currTask, allTasks }: EditTaskPro
 						}
 					}}
 					styles={selectStyles}
+					menuPosition="fixed"
 				/>
 
 				<button type="submit">Save</button>

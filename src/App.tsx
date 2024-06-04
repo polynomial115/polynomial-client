@@ -16,6 +16,7 @@ import { ProjectPage } from './components/project/ProjectPage.tsx'
 import { type Project } from './types.ts'
 import { DiscordAvatar } from './components/User.tsx'
 import { useEvent } from './hooks/useEvent.ts'
+import { useGuildMembers } from './hooks/useGuildMembers.ts'
 
 const swal = withReactContent(Swal)
 
@@ -25,6 +26,7 @@ function App() {
 	const [activeProject, setActiveProject] = useState('')
 	const [activeProjectView, setActiveProjectView] = useState(ProjectView.Overview)
 	const participants = useParticipants()
+	const { getMember } = useGuildMembers()
 
 	useEffect(() => {
 		discordSdk.commands.getChannel({ channel_id: discordSdk.channelId! }).then(channel => setChannel(channel.name!))
@@ -68,17 +70,17 @@ function App() {
 		)
 
 	return (
-		<div className="RootProject">
+		<div className="root-project">
 			<h3>Participants: </h3>
 			{participants.map(p => {
-				return <DiscordAvatar size={50} key={p.id} memberId={p.id} />
+				return <DiscordAvatar size={50} key={p.id} member={getMember(p.id)} />
 			})}
 			<h1>{channel}</h1>
 			<p>Projects: {projects.length}</p>
 			<button
 				onClick={() =>
 					swal.fire({
-						html: <CreateProject token={auth.serverToken} />,
+						html: <CreateProject token={auth.serverToken} updateProject={updateProject} />,
 						background: '#202225',
 						color: 'white',
 						showConfirmButton: false

@@ -1,4 +1,3 @@
-import { discordSdk } from '../services/discord.ts'
 import { useEffect, useRef, useState } from 'react'
 import { APIGuildMember } from 'discord-api-types/v10'
 import { FetchStatus } from '../types.ts'
@@ -13,7 +12,7 @@ export function GuildMembersProvider({ children }: { children: React.ReactNode }
 
 	useEffect(() => {
 		function setup() {
-			fetch(`/api/members/${discordSdk.guildId}`, { headers: { Authorization: auth.serverToken } })
+			fetch('/api/members', { headers: { Authorization: auth.serverToken } })
 				.then(response => response.json() as Promise<APIGuildMember[] | { error: string }>)
 				.then(data => {
 					if (Array.isArray(data)) {

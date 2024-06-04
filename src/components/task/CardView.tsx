@@ -1,35 +1,66 @@
-import { Choice, Task } from '../../types.ts'
+import { Choice, Project, Task } from '../../types.ts'
 import { useEffect } from 'react'
-import { DndContext, DragEndEvent } from '@dnd-kit/core'
+import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { CardColumn } from '../CardColumn.tsx'
 import { doc, updateDoc } from 'firebase/firestore'
 import { db } from '../../services/firebase.ts'
 import '../../styles/CardView.css'
+import { useAuth } from '../../hooks/useAuth.ts'
+import { getAuth } from 'firebase/auth'
+
+const firebaseAuth = getAuth()
 
 interface CardViewProps {
-	projectId: string
-	tasks: Task[]
+	project: Project
 	columns: Choice[]
 	property: keyof Task
 }
 
-export const CardView = ({ projectId, tasks, columns, property }: CardViewProps) => {
+export const CardView = ({ project, columns, property }: CardViewProps) => {
 	useEffect(() => {
 		window.scrollTo(0, 0)
 	}, [])
 
+	const auth = useAuth()
+
 	async function handleDragEnd(event: DragEndEvent) {
 		if (event.over) {
 			const taskId = event.active.id
+			const task = project.tasks.find(task => task.id === taskId)!
 			const newValue = event.over.id
-			await updateDoc(doc(db, 'projects', projectId), {
-				tasks: tasks.map(task => (task.id === taskId ? { ...task, [property]: newValue } : task))
-			})
+
+			if (task[property] !== newValue) {
+				await updateDoc(doc(db, 'projects', project.id), {
+					tasks: project.tasks.map(task => (task.id === taskId ? { ...task, [property]: newValue } : task))
+				})
+
+				if (project.notificationsChannel) {
+					await fetch(`/api/projects/${project.id}/tasks/${task.id}/notify`, {
+						method: 'POST',
+						headers: {
+							Authorization: auth.serverToken,
+							'Firebase-Token': await firebaseAuth.currentUser!.getIdToken()
+						},
+						body: JSON.stringify({ oldTask: task })
+					})
+				}
+			}
 		}
 	}
 
+	const pointerSensor = useSensor(PointerSensor, {
+		activationConstraint: {
+			distance: 0.01
+		}
+	})
+	const mouseSensor = useSensor(MouseSensor)
+	const touchSensor = useSensor(TouchSensor)
+	const keyboardSensor = useSensor(KeyboardSensor)
+
+	const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor, pointerSensor)
+
 	return (
-		<DndContext onDragEnd={handleDragEnd} autoScroll={false}>
+		<DndContext onDragEnd={handleDragEnd} autoScroll={false} sensors={sensors}>
 			<div className="card-view">
 				{columns.map(card => (
 					<CardColumn
@@ -38,7 +69,8 @@ export const CardView = ({ projectId, tasks, columns, property }: CardViewProps)
 						title={card.label}
 						color={card.color}
 						numCols={columns.length}
-						tasks={tasks.filter(task => (task[property] as number) === card.value)}
+						tasks={project.tasks.filter(task => (task[property] as number) === card.value)}
+						project={project}
 					/>
 				))}
 			</div>

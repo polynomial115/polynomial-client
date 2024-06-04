@@ -1,0 +1,89 @@
+.description {
+	white-space: pre-line;
+	text-align: left;
+	margin: 30px 0;
+	font-size: 15px;
+}
+
+.task-modal {
+	padding: 20px;
+}
+
+.label {
+	margin-bottom: 7.5px;
+}
+
+.error {
+	color: red;
+	margin-bottom: 10px;
+}
+
+.container {
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
+	justify-content: space-between;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.left-column {
+	background-color: rgb(20, 21, 22);
+	border-radius: 10px;
+	width: 50%;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+.right-column {
+	background-color: rgb(20, 21, 22);
+	border-radius: 10px;
+	flex: 1;
+	width: 27%;
+	margin-left: 20px;
+	justify-content: center;
+	vertical-align: middle;
+}
+
+.modal {
+	padding: 20px;
+}
+
+.name-textbox {
+	margin-bottom: 2.5px;
+}
+
+.description-textbox {
+	margin-bottom: 2.5px;
+	height: 125px;
+}
+
+.task-name {
+	margin: 0px;
+	font-size: 40px;
+}
+
+.margin-text {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+.status-text {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+
+.deadline-text {
+	margin-top: 30px;
+	margin-bottom: 30px;
+	color: #ff5544;
+}
+
+.assign-header {
+	margin-top: 30px;
+	margin-bottom: 4px;
+}
+
+.assignee-avatars {
+	margin: 5px 0 30px 0;
+}

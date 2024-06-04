@@ -9,7 +9,8 @@ export const selectStyles: StylesConfig<{ value: unknown; label: string; color?:
 		...provided,
 		background: '#202225',
 		padding: 4,
-		color: 'white'
+		color: 'white',
+		margin: '10px 0px'
 	}),
 	menu: provided => ({
 		...provided,

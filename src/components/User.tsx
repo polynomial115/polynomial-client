@@ -1,31 +1,28 @@
 import { useState } from 'react'
-import { useGuildMembers } from '../hooks/useGuildMembers'
 import { getAvatar, getDisplayName } from '../util'
 import { APIGuildMember } from 'discord-api-types/v10'
 
 interface DiscordAvatarProps {
-	memberId: string
+	member: APIGuildMember | undefined
 	size?: number
 }
 
-export function DiscordAvatar({ memberId, size }: DiscordAvatarProps) {
+export function DiscordAvatar({ member, size }: DiscordAvatarProps) {
 	const [animate, setAnimate] = useState(false)
-	const { getMember } = useGuildMembers()
-	const member: APIGuildMember | undefined = getMember(memberId)
 	if (!member) return null
 	if (!size) size = 35 // Default avatar size
 	const name = getDisplayName(member)
 	return (
-		<div className="AvatarContainer">
+		<div className="avatar-container">
 			<img
-				className="Avatar"
+				className="avatar"
 				src={getAvatar(member, 128, animate)}
-				style={{ margin: 3.5, width: size, height: size }}
+				style={{ width: size, height: size }}
 				alt={name}
 				onMouseEnter={() => setAnimate(true)}
 				onMouseLeave={() => setAnimate(false)}
 			/>
-			<div className="ToolTip">{name}</div>
+			<div className="tooltip">{name}</div>
 		</div>
 	)
 }
