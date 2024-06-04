@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 import DataTable from 'react-data-table-component'
-import { getPriority, getStatus, priorities, Priority, Project, TaskStatus } from '../../types'
+import { getPriority, getStatus, priorities, Priority, Project, TaskStatus, Deadline, taskStatuses } from '../../types'
 import { DiscordAvatar } from '../User'
 import { useGuildMembers } from '../../hooks/useGuildMembers'
 import TaskDetails from './TaskDetails'
 import { useAuth } from '../../hooks/useAuth'
+import '../../styles/TableStyles.css'
 
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -21,9 +22,12 @@ interface TaskRow {
 	name: string
 	status: TaskStatus
 	assignees: string
-	deadline: string
+	deadline: Deadline
 	priority: Priority
 }
+
+const statusRank = (status: TaskStatus) => taskStatuses.findIndex(s => s.value === status)
+const priorityRank = (priority: Priority) => priorities.findIndex(p => p.value === priority)
 
 export function TableComponent({ project, mini }: Props) {
 	useEffect(() => {
@@ -36,7 +40,9 @@ export function TableComponent({ project, mini }: Props) {
 	// Determine the tasks array based on the input props
 	let taskList = project.tasks
 
-	// Limit the number of tasks to 5 in the mini task list
+	// If mini, remove completed tasks, then sort by deadline & priority. Show 5 top tasks
+	if (mini) taskList = taskList.filter(task => task.status !== TaskStatus.Completed)
+	taskList.sort((t1, t2) => (t1.deadline || Infinity) - (t2.deadline || Infinity) || priorityRank(t2.priority) - priorityRank(t1.priority))
 	if (mini) taskList = taskList.slice(0, 5)
 
 	// Map tasks to TaskRow format
@@ -46,17 +52,9 @@ export function TableComponent({ project, mini }: Props) {
 		status: task.status,
 		description: task.description,
 		assignees: task.assignees.join(', '),
-		deadline: new Date(task.deadline).toUTCString(),
+		deadline: task.deadline,
 		priority: task.priority
 	})) satisfies TaskRow[]
-
-	// Auto-sort by priority if no project is provided
-	if (!project) {
-		taskData.sort((a, b) => {
-			const priorityOrder = priorities.map(p => p.value)
-			return priorityOrder.indexOf(a.priority) - priorityOrder.indexOf(b.priority)
-		})
-	}
 
 	// Define columns
 	const columns = [
@@ -64,18 +62,20 @@ export function TableComponent({ project, mini }: Props) {
 			name: 'Name',
 			selector: (row: TaskRow) => row.name,
 			sortable: true,
-			cell: (row: TaskRow) => {
-				return <span style={{ fontWeight: 'bold' }}>{row.name}</span>
-			}
+			cell: (row: TaskRow) => <span className="row-name">{row.name}</span>
 		},
 		{
 			name: 'Status',
 			width: '125px',
-			selector: (row: TaskRow) => row.status,
+			selector: (row: TaskRow) => statusRank(row.status),
 			sortable: true,
 			cell: (row: TaskRow) => {
 				const status = getStatus(row.status)
-				return <span style={{ fontWeight: 'bolder', color: status.color }}>{status.label}</span>
+				return (
+					<span className="row-status" style={{ color: status.color }}>
+						{status.label}
+					</span>
+				)
 			}
 		},
 		{
@@ -93,7 +93,7 @@ export function TableComponent({ project, mini }: Props) {
 		{
 			name: 'Priority',
 			width: '115px',
-			selector: (row: TaskRow) => row.priority,
+			selector: (row: TaskRow) => priorityRank(row.priority),
 			sortable: true,
 			cell: (row: TaskRow) => {
 				const priority = getPriority(row.priority)
@@ -102,8 +102,10 @@ export function TableComponent({ project, mini }: Props) {
 		},
 		{
 			name: 'Deadline',
-			selector: (row: TaskRow) => row.deadline,
+			selector: (row: TaskRow) => row.deadline || Infinity,
 			sortable: true,
+			cell: (row: TaskRow) =>
+				row.deadline !== Deadline.Never ? new Date(row.deadline).toLocaleDateString('en', { month: 'short', day: 'numeric' }) : 'None',
 			right: true
 		}
 	]

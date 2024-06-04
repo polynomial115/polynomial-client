@@ -60,6 +60,7 @@ body {
 	border-radius: 10px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 	overflow-x: hidden;
+	justify-content: center;
 
 	.rdt_TableHeader,
 	.rdt_Table,
