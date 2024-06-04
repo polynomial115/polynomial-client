@@ -123,6 +123,10 @@ ul {
 	max-width: 1000px;
 }
 
+.full-table {
+	min-height: 50vh;
+}
+
 .table-cell {
 	display: flex;
 	flex-wrap: nowrap;
