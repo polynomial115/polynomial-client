@@ -61,7 +61,7 @@ function App() {
 	}
 
 	const activeProject = projects.find(p => p.id === activeProjectId)
-
+	const currUserRoles = auth.claims.roles as string[]
 	if (layoutMode === LayoutMode.PIP)
 		return (
 			<div className="pip">
@@ -102,6 +102,7 @@ function App() {
 									tasks={[]}
 									token={auth.serverToken}
 									updateProject={updateProject}
+									currUserRoles={currUserRoles}
 								/>
 							),
 							background: '#202225',

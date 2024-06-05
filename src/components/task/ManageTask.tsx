@@ -11,8 +11,11 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import { getAuth } from 'firebase/auth'
 import type { GuildMember } from '../../hooks/useGuildMembers.ts'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faFloppyDisk, faTrash } from '@fortawesome/free-solid-svg-icons'
 
 const firebaseAuth = getAuth()
+const swal = withReactContent(Swal)
 
 type FormData = Omit<Task, 'id' | 'deadline'> & {
 	deadline: number | null
@@ -23,6 +26,35 @@ interface Props {
 	members: GuildMember[]
 	currTask: Task | null // if null, create a new task
 	token: string
+}
+
+interface DeleteProps {
+	projectId: string
+	tasks: Task[]
+	delTask: Task
+}
+export function DeleteTask({ projectId, tasks, delTask }: DeleteProps) {
+	const projectDoc = doc(db, 'projects', projectId)
+
+	const handleYes = async () => {
+		await updateDoc(projectDoc, { tasks: tasks.filter(t => t.id !== delTask.id) })
+		Swal.fire({
+			title: `Deleted Task ${delTask.name}`,
+			background: '#202225',
+			color: 'white',
+			icon: 'success',
+			timer: 2000,
+			showConfirmButton: false
+		})
+	}
+
+	return (
+		<div>
+			<h2>Are you sure you want to delete {delTask.name}?</h2> <br />
+			<button onClick={() => handleYes()}> Yes </button>
+			<button onClick={() => Swal.close()}> No </button>
+		</div>
+	)
 }
 
 export function ManageTask({ project, members, currTask, token }: Props) {
@@ -172,7 +204,23 @@ export function ManageTask({ project, members, currTask, token }: Props) {
 					menuPosition="fixed"
 				/>
 
-				<button type="submit">Save</button>
+				{currTask && (
+					<button
+						onClick={() =>
+							swal.fire({
+								html: <DeleteTask projectId={project.id} tasks={project.tasks} delTask={currTask} />,
+								background: '#202225',
+								color: 'white',
+								showConfirmButton: false
+							})
+						}
+					>
+						<FontAwesomeIcon icon={faTrash} /> Delete Task
+					</button>
+				)}
+				<button type="submit">
+					<FontAwesomeIcon icon={faFloppyDisk} /> Save
+				</button>
 			</form>
 		</div>
 	)

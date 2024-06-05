@@ -1,11 +1,12 @@
 import { Task, Project, getStatus, getPriority } from '../../types'
-import { DeleteTask } from './DeleteTask'
 import type { GuildMember } from '../../hooks/useGuildMembers'
 import { DiscordAvatar } from '../User'
 import '../../styles/TaskModal.css'
-import { ManageTask } from './ManageTask'
+import { DeleteTask, ManageTask } from './ManageTask'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const swal = withReactContent(Swal)
 
@@ -76,7 +77,7 @@ export default function TaskDetails(props: Props) {
 						}
 					}}
 				>
-					Edit Task
+					<FontAwesomeIcon icon={faEdit} /> Edit Task
 				</button>
 
 				<button
@@ -94,7 +95,7 @@ export default function TaskDetails(props: Props) {
 						}
 					}}
 				>
-					Delete Task
+					<FontAwesomeIcon icon={faTrash} /> Delete Task
 				</button>
 			</div>
 		</div>
