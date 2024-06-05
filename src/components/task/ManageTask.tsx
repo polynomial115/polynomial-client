@@ -17,9 +17,7 @@ import { faFloppyDisk, faTrash } from '@fortawesome/free-solid-svg-icons'
 const firebaseAuth = getAuth()
 const swal = withReactContent(Swal)
 
-type FormData = Omit<Task, 'id' | 'deadline'> & {
-	deadline: number | null
-}
+type FormData = Omit<Task, 'id'>
 
 interface Props {
 	project: Project
@@ -59,23 +57,14 @@ export function DeleteTask({ projectId, tasks, delTask }: DeleteProps) {
 
 export function ManageTask({ project, members, currTask, token }: Props) {
 	const [formData, setFormData] = useState<FormData>(
-		currTask
-			? {
-					status: currTask.status,
-					priority: currTask.priority,
-					assignees: currTask.assignees,
-					deadline: calculateDeadline({ deadlineType: currTask.deadline }),
-					name: currTask.name,
-					description: currTask.description ?? ''
-				}
-			: {
-					status: TaskStatus.ToDo,
-					priority: Priority.Normal,
-					assignees: [],
-					deadline: 0,
-					name: '',
-					description: ''
-				}
+		currTask ?? {
+			status: TaskStatus.ToDo,
+			priority: Priority.Normal,
+			assignees: [],
+			deadline: 0,
+			name: '',
+			description: ''
+		}
 	)
 	const [error, setError] = useState('')
 
@@ -88,9 +77,9 @@ export function ManageTask({ project, members, currTask, token }: Props) {
 
 		let taskData: Task
 		if (!currTask) {
-			taskData = { ...formData, id: doc(collection(db, 'tasks')).id, deadline: formData.deadline ?? 0 } // generate random id
+			taskData = { ...formData, id: doc(collection(db, 'tasks')).id } // generate random id
 		} else {
-			taskData = { ...formData, id: currTask.id, deadline: formData.deadline ?? 0 }
+			taskData = { ...formData, id: currTask.id }
 		}
 		const projectDoc = doc(db, 'projects', project.id)
 
