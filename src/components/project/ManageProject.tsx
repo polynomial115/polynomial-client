@@ -31,6 +31,7 @@ export function ManageProject({ create, name, managerRoles, tasks, projectId, to
 
 	const getRole = (id: string) => roles.find(c => c.id === id)
 	const getChannel = (id: string) => channels.find(c => c.id === id)
+	const NullLabel = { value: null, label: 'None' }
 
 	useEffect(() => {
 		fetch('/api/roles', { headers: { Authorization: token } })
@@ -67,6 +68,7 @@ export function ManageProject({ create, name, managerRoles, tasks, projectId, to
 						const submittedDoc = await addDoc(collection(db, 'projects'), submitData)
 						projId = submittedDoc.id
 					} else {
+						// projectId will not be null in the case where create is not true
 						await updateDoc(doc(db, 'projects', projectId!), submitData)
 						projId = projectId!
 					}
@@ -81,7 +83,7 @@ export function ManageProject({ create, name, managerRoles, tasks, projectId, to
 					})
 				}}
 			>
-				Project name:{' '}
+				<h3 className="label">Project Name</h3>
 				<input
 					type="text"
 					name="name"
@@ -91,12 +93,13 @@ export function ManageProject({ create, name, managerRoles, tasks, projectId, to
 					placeholder="Enter your project name here"
 					defaultValue={name ? name : ''}
 				/>
+				<h3 className="label">Managers of the project has this role</h3>
 				<Select
 					className="project-select"
 					isMulti
 					required
 					onChange={selected => setSelectedRoles(selected.map(r => r.value as string))}
-					placeholder="Select the roles with manager permissions"
+					placeholder="Select manager roles"
 					defaultValue={managerRoles.map(rid => ({
 						value: rid,
 						label: getRole(rid)?.name ?? 'Unknown Role',
@@ -107,11 +110,12 @@ export function ManageProject({ create, name, managerRoles, tasks, projectId, to
 					name="roles"
 					menuPosition="fixed"
 				/>
+				<h3 className="label">Notifications will be sent here:</h3>
 				<Select
 					className="project-select"
 					isMulti={false}
-					options={[{ value: null, label: 'None' }, ...channels.map(r => ({ value: r.id, label: '#' + r.name }))]}
-					defaultValue={selectedChannel ? { value: selectedChannel, label: '#' + getChannel(selectedChannel)?.name } : null}
+					options={[NullLabel, ...channels.map(r => ({ value: r.id, label: '#' + r.name }))]}
+					defaultValue={selectedChannel ? { value: selectedChannel, label: '#' + getChannel(selectedChannel)?.name } : NullLabel}
 					styles={selectStyles}
 					placeholder="Notifications channel"
 					onChange={selected => setSelectedChannel(selected?.value as string)}
