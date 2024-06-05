@@ -95,7 +95,7 @@ export default function TaskDetails(props: Props) {
 						}
 					}}
 				>
-					<FontAwesomeIcon icon={faTrash} /> Delete Project
+					<FontAwesomeIcon icon={faTrash} /> Delete Task
 				</button>
 			</div>
 		</div>
