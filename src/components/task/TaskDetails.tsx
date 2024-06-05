@@ -77,7 +77,7 @@ export default function TaskDetails(props: Props) {
 						}
 					}}
 				>
-					<FontAwesomeIcon icon={faEdit} color="yellow" /> Edit Task
+					<FontAwesomeIcon icon={faEdit} /> Edit Task
 				</button>
 
 				<button
@@ -95,7 +95,7 @@ export default function TaskDetails(props: Props) {
 						}
 					}}
 				>
-					<FontAwesomeIcon icon={faTrash} color="red" /> Delete Project
+					<FontAwesomeIcon icon={faTrash} /> Delete Project
 				</button>
 			</div>
 		</div>

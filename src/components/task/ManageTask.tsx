@@ -215,11 +215,11 @@ export function ManageTask({ project, members, currTask, token }: Props) {
 							})
 						}
 					>
-						<FontAwesomeIcon icon={faTrash} color="red" /> Delete Project
+						<FontAwesomeIcon icon={faTrash} /> Delete Task
 					</button>
 				)}
 				<button type="submit">
-					<FontAwesomeIcon icon={faFloppyDisk} color="green" /> Save
+					<FontAwesomeIcon icon={faFloppyDisk} /> Save
 				</button>
 			</form>
 		</div>
