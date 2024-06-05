@@ -1,0 +1,33 @@
+.assignees-container {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+}
+
+.remaining-text {
+	padding: 7px;
+	font-size: 15px;
+	color: grey;
+	white-space: nowrap;
+}
+
+.mini-assignees {
+	font-size: 14px;
+}
+
+.row-name {
+	font-weight: bold;
+	text-align: left;
+}
+
+.row-status {
+	font-weight: bolder;
+}
+
+.table-empty {
+	margin: 25px;
+}
+
+.rdt_TableCell span {
+	pointer-events: none;
+}

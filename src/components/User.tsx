@@ -1,13 +1,14 @@
 import { useState } from 'react'
-import { getAvatar, getDisplayName } from '../util'
-import { APIGuildMember } from 'discord-api-types/v10'
+import { getAvatar, getDisplayName } from '../scripts/memberDisplay'
+import type { GuildMember } from '../hooks/useGuildMembers'
 
 interface DiscordAvatarProps {
-	member: APIGuildMember | undefined
+	member: GuildMember | undefined
 	size?: number
+	toolTipLeft?: boolean
 }
 
-export function DiscordAvatar({ member, size }: DiscordAvatarProps) {
+export function DiscordAvatar({ member, size, toolTipLeft }: DiscordAvatarProps) {
 	const [animate, setAnimate] = useState(false)
 	if (!member) return null
 	if (!size) size = 35 // Default avatar size
@@ -22,7 +23,7 @@ export function DiscordAvatar({ member, size }: DiscordAvatarProps) {
 				onMouseEnter={() => setAnimate(true)}
 				onMouseLeave={() => setAnimate(false)}
 			/>
-			<div className="tooltip">{name}</div>
+			<div className={`tooltip${toolTipLeft ? ' tooltip-left' : ''}`}>{name}</div>
 		</div>
 	)
 }

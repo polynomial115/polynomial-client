@@ -56,6 +56,8 @@
 .description-textbox {
 	margin-bottom: 2.5px;
 	height: 125px;
+	min-height: 125px;
+	resize: vertical;
 }
 
 .task-name {

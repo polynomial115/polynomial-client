@@ -14,34 +14,35 @@ ul {
 }
 
 .grid-item {
+	display: flex;
+	flex-direction: column;
 	font-family: 'Roboto', sans-serif;
-	background: #333;
+	background: #181818;
 	color: white;
 	padding: 20px;
-	text-align: left;
-	border-radius: 0;
-	border: none;
+	border-radius: 8px;
 	transition: ease-in-out 0.2s;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
 
 	&:hover {
-		padding: 17px;
+		padding: 20px;
 	}
+}
+
+.grid-item-title {
+	font-size: 20px;
 }
 
 .grid-container .grid-item p {
 	margin: 0;
 	overflow-wrap: break-word;
-	word-break: break-all;
 }
 
 .grid-container .grid-item p.id {
 	font-size: clamp(0.1rem, 2.5vw, 0.5rem);
 	text-align: center;
-}
-
-.grid-container .grid-item:hover {
-	background: #444;
-	cursor: pointer;
 }
 
 .task-container {
@@ -109,10 +110,13 @@ ul {
 	z-index: 1000;
 }
 
+.tooltip-left {
+	transform: translate(-100%, -160%);
+	left: -10px;
+}
+
 .avatar:hover + .tooltip {
-	transition:
-		visibility 0.25s,
-		opacity 0.25s linear;
+	transition: opacity 0.25s linear;
 	opacity: 1;
 	visibility: visible;
 }
@@ -123,9 +127,18 @@ ul {
 	max-width: 1000px;
 }
 
+.full-table {
+	min-height: 50vh;
+}
+
 .table-cell {
 	display: flex;
 	flex-wrap: nowrap;
+}
+
+.task-count {
+	font-weight: bold;
+	font-size: 20px;
 }
 
 .rdt_TableRow {
@@ -135,8 +148,6 @@ ul {
 .rdt_Table,
 .rdt_TableHeadRow {
 	border-radius: 5px 5px 0 0;
-	/* box-shadow: 0px 0px 3px black; */
-	/* overflow: visible; */
 }
 
 .rdt_Pagination {

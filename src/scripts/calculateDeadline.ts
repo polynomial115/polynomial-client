@@ -19,10 +19,6 @@ const calculateDeadline = ({ deadlineType }: Props): number | null => {
 	}
 
 	const days = deadlineToDays[deadlineType]
-	if (days === undefined) {
-		console.warn('Invalid deadline value')
-		return null
-	}
 
 	const currentDate = Date.now()
 	const finalDate = currentDate + days * 86400000

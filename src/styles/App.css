@@ -6,83 +6,65 @@
 	width: 100%;
 }
 
+#root:has(> .pip) {
+	padding: 0;
+
+	~ .swal2-container {
+		display: none;
+	}
+}
+
+.pip {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	justify-content: space-evenly;
+
+	.app-title {
+		gap: 10px;
+
+		h1 {
+			font-size: 2em;
+			margin: 0;
+		}
+
+		img {
+			width: 40px;
+			height: 40px;
+		}
+	}
+
+	p {
+		margin: 0;
+	}
+}
+
 .root-project {
+	display: flex;
 	max-width: 1280px;
 	margin: 0 auto;
 	padding: 2rem;
 	text-align: center;
+	gap: 50px;
 }
 
-.logo {
-	height: 6em;
-	padding: 1.5em;
-	will-change: filter;
-	transition: filter 300ms;
+.app-page {
+	flex-grow: 1;
 }
 
-.logo:hover {
-	filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-	filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-.flexbox-container {
+.app-title {
+	gap: 20px;
 	display: flex;
-	flex-direction: row;
-	margin: 10px;
+	align-items: center;
+	justify-content: center;
 }
 
-.project-card {
-	transition: ease-in-out 300ms;
-	background-color: #181818;
-}
-
-.projectCard:hover {
-	transform: scale(1.025);
-}
-
-@keyframes logo-spin {
-	from {
-		transform: rotate(0deg);
-	}
-
-	to {
-		transform: rotate(360deg);
-	}
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	a:nth-of-type(2) .logo {
-		animation: logo-spin infinite 20s linear;
-	}
-}
-
-.card {
-	padding: 2em;
-}
-
-.read-the-docs {
-	color: #888;
-}
-
-.background-color {
-	background-color: rgb(255, 255, 255);
-}
-
-@media (prefers-color-scheme: dark) {
-	.background-color {
-		background-color: rgb(32, 64, 37);
-	}
-}
-
-.project-card-container {
-	overflow-x: auto;
-}
-
-.edit-project-button {
-	background-color: #202225;
+.participants {
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	right: 30px;
+	top: 30px;
 }
 
 .task-button-row {
@@ -94,7 +76,7 @@
 	border: 1px;
 	border-radius: 4px;
 	padding: 12px;
-	margin: 12.5px 0px;
+	margin: 12.5px 0;
 	width: 100%;
 	font-size: 16px;
 	color: white;
@@ -104,8 +86,19 @@
 	color: rgb(149, 149, 149);
 }
 
+.loading-project-modal {
+	min-height: 400px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .project-modal {
-	height: 400px;
+	overflow-x: hidden;
+}
+
+.project-select {
+	margin-bottom: 25px;
 }
 
 .project-back-button {
@@ -137,4 +130,18 @@
 	&:last-child {
 		border-radius: 0 4px 4px 0;
 	}
+}
+
+img {
+	width: 60px;
+	height: 60px;
+}
+
+.dev {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background-color: #3a3a3a;
+	padding: 3px 10px;
+	border-top-left-radius: 10px;
 }

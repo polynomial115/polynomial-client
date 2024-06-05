@@ -35,14 +35,13 @@ body {
 	justify-content: center;
 	align-items: center;
 	width: 100%;
-	height: 70vh;
+	min-height: 50vh;
+	height: 100%;
 }
 
 .empty-tasks-message {
-	/* display: flex; */
 	justify-content: center;
 	align-items: center;
-	/* height: 75vh; */
 	text-align: center;
 	border-radius: 10px;
 	padding: 20px;
@@ -57,14 +56,19 @@ body {
 	padding: 20px;
 	background-color: #3a3a3a;
 	border-radius: 10px;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 	overflow-x: hidden;
+	justify-content: center;
 
 	.rdt_TableHeader,
 	.rdt_Table,
 	.rdt_TableHeadRow,
 	.rdt_TableBody > * {
 		background: none;
+	}
+
+	h2 {
+		margin-top: 0.25em;
 	}
 }
 

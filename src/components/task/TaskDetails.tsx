@@ -1,26 +1,26 @@
 import { Task, Project, getStatus, getPriority } from '../../types'
-import { EditTask } from './EditTask'
-import { DeleteTask } from './DeleteTask'
-import { APIGuildMember } from 'discord-api-types/v10'
+import type { GuildMember } from '../../hooks/useGuildMembers'
 import { DiscordAvatar } from '../User'
 import '../../styles/TaskModal.css'
-
+import { DeleteTask, ManageTask } from './ManageTask'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const swal = withReactContent(Swal)
 
 interface Props {
 	project: Project
 	task: Task
-	members: APIGuildMember[]
+	members: GuildMember[]
 	token: string
 }
 
 export default function TaskDetails(props: Props) {
 	const { project, task, members, token } = props
 
-	const getMember = (id: string) => members.find(m => m.user?.id === id)
+	const getMember = (id: string) => members.find(m => m.user.id === id)
 
 	const reopen = () =>
 		swal.fire({
@@ -65,7 +65,7 @@ export default function TaskDetails(props: Props) {
 					onClick={() => {
 						if (task) {
 							swal.fire({
-								html: <EditTask project={project} members={members} currTask={task} token={token} />,
+								html: <ManageTask project={project} members={members} currTask={task} token={token} />,
 								background: '#202225',
 								color: 'white',
 								showConfirmButton: false,
@@ -77,7 +77,7 @@ export default function TaskDetails(props: Props) {
 						}
 					}}
 				>
-					Edit Task
+					<FontAwesomeIcon icon={faEdit} /> Edit Task
 				</button>
 
 				<button
@@ -95,7 +95,7 @@ export default function TaskDetails(props: Props) {
 						}
 					}}
 				>
-					Delete Task
+					<FontAwesomeIcon icon={faTrash} /> Delete Task
 				</button>
 			</div>
 		</div>
