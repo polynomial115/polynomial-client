@@ -117,6 +117,7 @@ function App() {
 					return <DiscordAvatar size={50} key={p.id} member={getMember(p.id)} toolTipLeft={true} />
 				})}
 			</div>
+			{import.meta.env.DEV && <div className="dev">Development Build</div>}
 		</div>
 	)
 }

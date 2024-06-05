@@ -208,3 +208,12 @@ img {
 	width: 60px;
 	height: 60px;
 }
+
+.dev {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	background-color: #3a3a3a;
+	padding: 3px 10px;
+	border-top-left-radius: 10px;
+}
