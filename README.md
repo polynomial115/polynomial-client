@@ -28,7 +28,8 @@ tracking progress and deadlines.
 -   **Notifications:** Receive updates about task progress directly in the designated Discord channel.
 
 ## System Requirements
--   **Node.js** 
+
+-   **Node.js**
 -   **pnpm**
 -   **Discord:** Account and server for integration
 
