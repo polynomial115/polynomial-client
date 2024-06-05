@@ -81,7 +81,7 @@ export function ManageProject({ create, name, managerRoles, tasks, projectId, to
 					})
 				}}
 			>
-				Project name:{' '}
+				<h3 className="label">Project Name</h3>
 				<input
 					type="text"
 					name="name"
@@ -91,6 +91,7 @@ export function ManageProject({ create, name, managerRoles, tasks, projectId, to
 					placeholder="Enter your project name here"
 					defaultValue={name ? name : ''}
 				/>
+				<h3 className="label">Management Roles</h3>
 				<Select
 					className="project-select"
 					isMulti
@@ -107,6 +108,7 @@ export function ManageProject({ create, name, managerRoles, tasks, projectId, to
 					name="roles"
 					menuPosition="fixed"
 				/>
+				<h3 className="label">Channel for Notification Pings</h3>
 				<Select
 					className="project-select"
 					isMulti={false}
