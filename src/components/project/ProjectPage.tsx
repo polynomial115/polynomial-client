@@ -11,10 +11,9 @@ import { CardView } from '../task/CardView.tsx'
 import '../../styles/ProjectView.css'
 import { TableComponent } from '../task/TableComponent.tsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faBarsStaggered, faChartPie, faEdit, faListCheck, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { ProjectView } from '../../services/party.ts'
 import { discordSdk } from '../../services/discord.ts'
-import DeleteProject from './DeleteProject.tsx'
 import { ManageTask } from '../task/ManageTask.tsx'
 
 const swal = withReactContent(Swal)
@@ -105,6 +104,7 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 											notificationsChannel={project.notificationsChannel}
 											create={false}
 											updateProject={updateProject}
+											currUserRoles={currUserRoles}
 										/>
 									),
 									background: '#202225',
@@ -129,22 +129,6 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 					>
 						<FontAwesomeIcon icon={faPlus} /> Create Task
 					</button>
-					{roleCheck && (
-						<button
-							onClick={() =>
-								swal.fire({
-									html: <DeleteProject project={project} closeProject={close} />,
-									background: '#202225',
-									icon: 'warning',
-									color: 'white',
-									showConfirmButton: false,
-									width: '800px'
-								})
-							}
-						>
-							<FontAwesomeIcon icon={faTrash} /> Delete Project
-						</button>
-					)}
 				</div>
 				{ActiveView()}
 			</div>
