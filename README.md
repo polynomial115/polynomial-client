@@ -10,7 +10,6 @@
 -   [Known Issues](#known-issues)
 -   [Future Enhancements](#future-enhancements)
 -   [Contributing](#contributing)
--   [License](#license)
 
 ## Introduction
 
@@ -29,9 +28,8 @@ tracking progress and deadlines.
 -   **Notifications:** Receive updates about task progress directly in the designated Discord channel.
 
 ## System Requirements
-
--   **Node.js:** v14.x or later
--   **npm:** v6.x or later
+-   **Node.js** 
+-   **pnpm**
 -   **Discord:** Account and server for integration
 
 ## Installation
