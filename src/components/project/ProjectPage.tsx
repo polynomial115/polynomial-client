@@ -113,7 +113,7 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 								})
 							}
 						>
-							<FontAwesomeIcon icon={faEdit} /> Edit Project
+							<FontAwesomeIcon icon={faEdit} color="yellow" /> Edit Project
 						</button>
 					)}
 					<button
@@ -127,7 +127,7 @@ export function ProjectPage({ project, close, activeView, setActiveView, updateP
 							})
 						}
 					>
-						<FontAwesomeIcon icon={faPlus} /> Create Task
+						<FontAwesomeIcon icon={faPlus} color="green" /> Create Task
 					</button>
 				</div>
 				{ActiveView()}
