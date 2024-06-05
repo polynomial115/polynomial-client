@@ -27,3 +27,7 @@
 .table-empty {
 	margin: 25px;
 }
+
+.rdt_TableCell span {
+	pointer-events: none;
+}
