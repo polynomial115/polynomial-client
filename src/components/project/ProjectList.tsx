@@ -10,7 +10,7 @@ export function ProjectList({ projects, setActiveProject }: Props) {
 	return (
 		<div className="grid-container">
 			{projects.map(p => (
-				<button key={p.id} className="grid-item" onClick={() => setActiveProject(p.id)} aria-label={`Edit project ${p.name}`}>
+				<button key={p.id} className="grid-item" onClick={() => setActiveProject(p.id)} aria-label={`Open project ${p.name}`}>
 					<p className="grid-item-title">
 						<b>{p.name}</b>
 					</p>

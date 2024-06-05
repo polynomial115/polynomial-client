@@ -23,3 +23,7 @@
 .row-status {
 	font-weight: bolder;
 }
+
+.table-empty {
+	margin: 25px;
+}

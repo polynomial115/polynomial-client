@@ -160,6 +160,7 @@ export function TableComponent({ project, mini }: Props) {
 						}
 					}
 				}}
+				noDataComponent={<div className="table-empty">This project is empty. Add some tasks to get started!</div>}
 			/>
 		</div>
 	)

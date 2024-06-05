@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { getAvatar, getDisplayName } from '../scripts/util'
+import { getAvatar, getDisplayName } from '../scripts/memberDisplay'
 import type { GuildMember } from '../hooks/useGuildMembers'
 
 interface DiscordAvatarProps {

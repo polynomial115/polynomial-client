@@ -19,6 +19,8 @@ import { useGuildMembers } from './hooks/useGuildMembers.ts'
 import icon from './assets/icon.png'
 import { ManageProject } from './components/project/ManageProject.tsx'
 import { LayoutMode, useLayoutMode } from './hooks/useLayoutMode.ts'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 const swal = withReactContent(Swal)
 
@@ -108,7 +110,7 @@ function App() {
 						})
 					}
 				>
-					Create Project
+					<FontAwesomeIcon icon={faPlus} /> Create Project
 				</button>
 				<ProjectList projects={projects} setActiveProject={project => updateProject({ project })} />
 			</div>
