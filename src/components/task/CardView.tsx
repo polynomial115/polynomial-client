@@ -1,5 +1,5 @@
 import { Choice, Project, Task } from '../../types.ts'
-import { useEffect } from 'react'
+import { useScrollToTop } from '../../hooks/useScrollToTop.ts'
 import { DndContext, DragEndEvent, KeyboardSensor, MouseSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { CardColumn } from '../CardColumn.tsx'
 import { doc, updateDoc } from 'firebase/firestore'
@@ -17,9 +17,7 @@ interface CardViewProps {
 }
 
 export const CardView = ({ project, columns, property }: CardViewProps) => {
-	useEffect(() => {
-		window.scrollTo(0, 0)
-	}, [])
+	useScrollToTop()
 
 	const auth = useAuth()
 

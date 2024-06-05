@@ -3,7 +3,7 @@ import { PieChart } from './task/PieChart'
 import { TableComponent } from './task/TableComponent'
 import { taskStatuses } from '../types'
 import '../styles/dashboardStyle.css'
-import { useEffect } from 'react'
+import { useScrollToTop } from '../hooks/useScrollToTop'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderOpen } from '@fortawesome/free-regular-svg-icons'
 
@@ -12,9 +12,7 @@ interface DashboardProps {
 }
 
 export const Dashboard = ({ project }: DashboardProps) => {
-	useEffect(() => {
-		window.scrollTo(0, 0)
-	}, [])
+	useScrollToTop()
 
 	if (!project.tasks.length)
 		return (

@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Choice, Task } from '../../types.ts'
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js'
 import { Doughnut } from 'react-chartjs-2'
@@ -13,20 +12,6 @@ interface PieChartProps {
 }
 
 export function PieChart({ label, property, tasks, data }: PieChartProps) {
-	console.log(label, property, tasks, data)
-
-	useEffect(() => {
-		console.log('tasks:', tasks)
-		if (!tasks || tasks.length === 0) {
-			console.log('Tasks array is empty or undefined')
-			return
-		}
-		if (!(property in tasks[0])) {
-			console.error(`Key ${property} not found in Task interface`)
-			return
-		}
-	}, [tasks, property])
-
 	return (
 		<div className="doughnut-wrapper">
 			<Doughnut

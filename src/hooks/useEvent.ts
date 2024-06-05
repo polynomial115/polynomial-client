@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { conn, Payload, PayloadData, payloadIsType, PayloadType } from '../party'
+import { conn, Payload, PayloadData, payloadIsType, PayloadType } from '../services/party'
 
 export function useEvent<T extends PayloadType>(event: T, func: (data: PayloadData[T]) => void) {
 	useEffect(() => {

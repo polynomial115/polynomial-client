@@ -1,5 +1,5 @@
 import PartySocket from 'partysocket'
-import { discordSdk } from './services/discord.ts'
+import { discordSdk } from './discord.ts'
 
 export const conn = new PartySocket({
 	host: location.origin + '/api',

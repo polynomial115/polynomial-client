@@ -54,8 +54,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 				.json()
 				.catch(() => setLoadingState('Failed to log in'))) as LoginResponse
 
-			console.log({ discordToken, firebaseToken })
-
 			setLoadingState('Authenticating...')
 
 			// Authenticate with Discord client (using the access_token)
@@ -71,7 +69,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			setAuth({ serverToken, ...data })
 		}
 
-		console.log(settingUp.current)
 		if (!settingUp.current) {
 			settingUp.current = true
 			setup()

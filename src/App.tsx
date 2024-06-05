@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import './styles/App.css'
 import './providers/auth.tsx'
-import { ProjectView, PayloadType, sendPayload } from './party'
+import { ProjectView, PayloadType, sendPayload } from './services/party.ts'
 import { discordSdk } from './services/discord.ts'
 import { useAuth } from './hooks/useAuth.ts'
 import { useParticipants } from './hooks/useParticipants.ts'
@@ -18,7 +18,7 @@ import { useEvent } from './hooks/useEvent.ts'
 import { useGuildMembers } from './hooks/useGuildMembers.ts'
 import icon from './assets/icon.png'
 import { ManageProject } from './components/project/ManageProject.tsx'
-import { LayoutMode, useLayoutMode } from './hooks/useLayoutMode.tsx'
+import { LayoutMode, useLayoutMode } from './hooks/useLayoutMode.ts'
 
 const swal = withReactContent(Swal)
 
@@ -63,7 +63,7 @@ function App() {
 	if (layoutMode === LayoutMode.PIP)
 		return (
 			<div className="pip">
-				<div className="app-title" onClick={() => console.log(layoutMode)}>
+				<div className="app-title">
 					<img src={icon} alt="polynomial-icon" />
 					<h1>Polynomial</h1>
 				</div>

@@ -7,15 +7,10 @@ interface Props {
 }
 
 export function ProjectList({ projects, setActiveProject }: Props) {
-	const handleCardClick = (projectId: string) => {
-		console.log('Project card clicked', projectId)
-		setActiveProject(projectId)
-	}
-
 	return (
 		<div className="grid-container">
 			{projects.map(p => (
-				<button key={p.id} className="grid-item" onClick={() => handleCardClick(p.id)} aria-label={`Edit project ${p.name}`}>
+				<button key={p.id} className="grid-item" onClick={() => setActiveProject(p.id)} aria-label={`Edit project ${p.name}`}>
 					<p className="grid-item-title">
 						<b>{p.name}</b>
 					</p>

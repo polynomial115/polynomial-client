@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useScrollToTop } from '../../hooks/useScrollToTop'
 import DataTable from 'react-data-table-component'
 import { getPriority, getStatus, priorities, Priority, Project, TaskStatus, Deadline, taskStatuses } from '../../types'
 import { DiscordAvatar } from '../User'
@@ -30,9 +30,7 @@ const statusRank = (status: TaskStatus) => taskStatuses.findIndex(s => s.value =
 const priorityRank = (priority: Priority) => priorities.findIndex(p => p.value === priority)
 
 export function TableComponent({ project, mini }: Props) {
-	useEffect(() => {
-		window.scrollTo(0, 0)
-	}, [])
+	useScrollToTop()
 
 	const { members, getMember } = useGuildMembers()
 	const auth = useAuth()

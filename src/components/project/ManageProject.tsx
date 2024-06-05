@@ -7,7 +7,7 @@ import { Timestamp, addDoc, collection, doc, updateDoc } from 'firebase/firestor
 import { db } from '../../services/firebase.ts'
 import { Task } from '../../types.ts'
 import Swal from 'sweetalert2'
-import { ProjectView } from '../../party.ts'
+import { ProjectView } from '../../services/party.ts'
 
 const transformColor = (color: number | undefined) => (color ? '#' + color.toString(16).padStart(6, '0') : 'white')
 
